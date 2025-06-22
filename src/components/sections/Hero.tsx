@@ -64,15 +64,21 @@ export function Hero() {
               className="flex flex-col md:flex-row gap-6"
             >
               <Button
+                asChild
                 className="bg-black hover:bg-black/90 text-white rounded-full px-8 py-6 text-lg shadow-soft"
               >
-                Explore Products
+                <a href="#products">
+                  Explore Products
+                </a>
               </Button>
               <Button
+                asChild
                 variant="outline"
                 className="border-2 border-black/10 hover:bg-black/5 text-black rounded-full px-8 py-6 text-lg"
               >
-                Learn More
+                <a href="#innovation">
+                  Learn More
+                </a>
               </Button>
             </motion.div>
           </motion.div>

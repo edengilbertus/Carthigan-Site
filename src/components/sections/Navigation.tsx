@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
 export function Navigation() {
@@ -17,9 +18,11 @@ export function Navigation() {
         </div>
         <div className="hidden md:flex items-center space-x-10">
           <a href="#products" className="text-black/60 hover:text-black transition-colors">Products</a>
-          <a href="#carthageos" className="text-black/60 hover:text-black transition-colors">CarthageOS</a>
+          <Link href="/supply" className="text-black/60 hover:text-black transition-colors">Supply</Link>
+          <Link href="/education" className="text-black/60 hover:text-black transition-colors">Education</Link>
+          <a href="#roadmap" className="text-black/60 hover:text-black transition-colors">CarthageOS</a>
           <a href="#innovation" className="text-black/60 hover:text-black transition-colors">Innovation</a>
-          <a href="#pulse" className="text-black/60 hover:text-black transition-colors">Pulse</a>
+          <Link href="/blog" className="text-black/60 hover:text-black transition-colors">Pulse</Link>
         </div>
         <div className="flex items-center space-x-4">
           <Button 

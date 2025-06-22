@@ -16,14 +16,14 @@ export default function BlogPage() {
             <Link href="/#products" className="text-black/60 hover:text-black transition-colors">
               Products
             </Link>
-            <Link href="/#carthageos" className="text-black/60 hover:text-black transition-colors">
+            <Link href="/#roadmap" className="text-black/60 hover:text-black transition-colors">
               CarthageOS
             </Link>
             <Link href="/#innovation" className="text-black/60 hover:text-black transition-colors">
               Innovation
             </Link>
-            <Link href="/#pulse" className="text-black/60 hover:text-black transition-colors">
-              Pulse
+            <Link href="/" className="text-black/60 hover:text-black transition-colors">
+              Home
             </Link>
           </div>
         </nav>

@@ -8,19 +8,19 @@ const articles = [
   {
     title: "The Future of RISC-V in African Tech",
     category: "Technology",
-    image: "https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg",
+    image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=450&fit=crop&auto=format",
     excerpt: "How open-source architecture is revolutionizing computing in emerging markets."
   },
   {
     title: "Building Digital Infrastructure",
     category: "Innovation",
-    image: "https://images.pexels.com/photos/1036936/pexels-photo-1036936.jpeg",
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=450&fit=crop&auto=format",
     excerpt: "Creating the backbone for Africa's next technological revolution."
   },
   {
     title: "The Rise of Local Tech Manufacturing",
     category: "Industry",
-    image: "https://images.pexels.com/photos/3912981/pexels-photo-3912981.jpeg",
+    image: "https://images.unsplash.com/photo-1565514020179-026b92b84bb6?w=800&h=450&fit=crop&auto=format",
     excerpt: "How domestic production is changing the technology landscape."
   }
 ]

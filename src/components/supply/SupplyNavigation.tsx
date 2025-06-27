@@ -11,6 +11,7 @@ import { ShoppingCart, Search, Menu, User } from "lucide-react"
 const categories = [
   { name: "Electronics & Components", href: "/supply/category/electronics" },
   { name: "Sensors & Modules", href: "/supply/category/sensors" },
+  { name: "Power Components", href: "/supply/category/power" },
   { name: "Microcontrollers", href: "/supply/category/microcontrollers" },
   { name: "Development Boards", href: "/supply/category/dev-boards" },
   { name: "Tools & Equipment", href: "/supply/category/tools" },
@@ -134,7 +135,7 @@ export function SupplyNavigation() {
                 <Menu className="h-4 w-4" />
                 <span>All Categories</span>
               </Button>
-              {categories.slice(0, 5).map((category) => (
+              {categories.map((category) => (
                 <Link
                   key={category.name}
                   href={category.href}

@@ -104,15 +104,15 @@ const itemVariants = {
 }
 
 export function FeaturedProducts() {
-  const { addToCart } = useCartStore()
+  const { addItem } = useCartStore()
 
   const handleAddToCart = (product: typeof featuredProducts[0]) => {
-    addToCart({
+    addItem({
       id: product.id,
       name: product.name,
       price: product.price,
       image: product.image,
-      quantity: 1
+      sku: product.id
     })
   }
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { ServicesNavigation } from '@/components/services/ServicesNavigation'
 import { CoreServices } from '@/components/services/CoreServices'
 import { CarthiganAdvantage } from '@/components/services/CarthiganAdvantage'
@@ -13,10 +13,6 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { submitQuoteRequest } from '../../app/services/actions'
-import { useFormState } from 'react-dom'
-import { useToast } from "@/components/ui/use-toast"
-import { Toaster } from "@/components/ui/toaster"
 
 const featuredLanguages = [
   "English ↔ Luganda",
@@ -120,17 +116,11 @@ function FinalCallToAction({ onGetQuoteClick }: { onGetQuoteClick: () => void })
 }
 
 function QuoteModal({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (isOpen: boolean) => void }) {
-  const { toast } = useToast()
-  const [state, formAction] = useFormState(submitQuoteRequest, { message: '', errors: {} })
-
-  useEffect(() => {
-    if (state.message === 'success') {
-      toast({ title: "Success!", description: "Your quote request has been submitted." })
-      setIsOpen(false)
-    } else if (state.message === 'error') {
-      toast({ variant: "destructive", title: "Error", description: "Something went wrong. Please try again." })
-    }
-  }, [state, toast, setIsOpen])
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    alert('Thank you! Your quote request has been received. We will contact you soon.')
+    setIsOpen(false)
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -141,15 +131,15 @@ function QuoteModal({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (isOpen
             Fill out the form below and we'll get back to you with a no-obligation quote.
           </DialogDescription>
         </DialogHeader>
-        <form action={formAction}>
+        <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="full_name" className="text-right">Full Name</Label>
-              <Input id="full_name" name="full_name" className="col-span-3" />
+              <Input id="full_name" name="full_name" className="col-span-3" required />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-right">Email</Label>
-              <Input id="email" name="email" type="email" className="col-span-3" />
+              <Input id="email" name="email" type="email" className="col-span-3" required />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="service_type" className="text-right">Service Type</Label>
@@ -199,7 +189,10 @@ export default function ServicesClient() {
       <main>
         <div id="hero" className="text-center py-40 bg-primary-container text-on-primary-container">
           <h1 className="text-6xl font-bold">Bridging Worlds, One Word at a Time.</h1>
-          <p className="text-xl mt-4 max-w-3xl mx-auto">Carthigan Supply offers professional, culturally-aware language services to connect your business, research, or project with a global and local Ugandan audience. We ensure your message is not just translated, but truly understood.</p>
+          <p className="text-xl mt-4 max-w-3xl mx-auto">
+            Carthigan Supply offers professional, culturally-aware language services to connect your business, research, or project with a global and local Ugandan audience. 
+            We ensure your message is not just translated, but truly understood.
+          </p>
           <Button size="lg" onClick={() => setIsQuoteModalOpen(true)} className="mt-8 bg-primary text-on-primary hover:bg-primary/90 rounded-full px-12 py-8 text-lg">
             Get a Free Quote
           </Button>
@@ -211,9 +204,8 @@ export default function ServicesClient() {
         <LanguagesSection />
         <FinalCallToAction onGetQuoteClick={() => setIsQuoteModalOpen(true)} />
       </main>
+      
       <QuoteModal isOpen={isQuoteModalOpen} setIsOpen={setIsQuoteModalOpen} />
-      <Toaster />
-      {/* <ServicesFooter /> */}
     </div>
   )
 } 

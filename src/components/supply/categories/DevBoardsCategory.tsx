@@ -227,8 +227,8 @@ function DevBoardCard({ board, onAddToCart, viewMode }: {
                 </p>
                 {board.studentPrice && (
                   <p className="text-sm text-success">
-                    Student: UGX {board.studentPrice.toLocaleString()}
-                  </p>
+                  Student: UGX {board.studentPrice.toLocaleString()}
+                </p>
                 )}
               </div>
             </div>
@@ -313,8 +313,8 @@ function DevBoardCard({ board, onAddToCart, viewMode }: {
             </p>
             {board.studentPrice && (
               <p className="text-xs text-success">
-                Student: UGX {board.studentPrice.toLocaleString()}
-              </p>
+              Student: UGX {board.studentPrice.toLocaleString()}
+            </p>
             )}
           </div>
         </div>

@@ -7037,7 +7037,7 @@ export const allElectronicsData: ElectronicComponent[] = [
   ...specializedComponents,
   ...moreConnectors,
   ...finalComponents,
-  // Add the previously missing arrays
+  ...final5Components,  // Add the previously missing arrays
   ...electromechanicalData,
   ...connectorsData,
   ...sensorsData,

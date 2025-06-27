@@ -4,6 +4,7 @@ import { MCUChip, allMCUChips } from './mcu-chips'
 import { ToolProduct, allTools } from './tools'
 import { EducationalKit, allEducationalKits } from './educational-kits'
 import { SensorModule, allSensorsModules } from './sensors-modules'
+import { PowerComponent, allPowerComponents } from './power-components'
 
 // Unified product interface
 export interface UnifiedProduct {
@@ -24,7 +25,7 @@ export interface UnifiedProduct {
   projects: string[]
   leadTime: string
   tags: string[]
-  type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool' | 'educational-kit' | 'sensor-module'
+  type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool' | 'educational-kit' | 'sensor-module' | 'power-component'
   // Additional fields that may exist in some products
   supplier?: string
   keyFeatures?: string[]
@@ -56,23 +57,23 @@ const electronicsAsUnified: UnifiedProduct[] = allElectronicsData.map(item => ({
   specifications: item.specifications || {}
 }))
 
-// Convert dev boards to unified format (including extensions from electronics)  
-const devBoardsAsUnified: UnifiedProduct[] = [...allDevelopmentBoards, ...devBoardExtensions].map(board => ({
+// Convert dev boards to unified format
+const devBoardsAsUnified: UnifiedProduct[] = allDevelopmentBoards.map(board => ({
   ...board,
   type: 'development-board' as const,
   supplier: `Lead time: ${board.leadTime}`,
   specifications: board.specifications || {},
   overview: board.overview ? {
     type: `${board.category} Development Board`,
-    keySpecs: 'processor' in board.overview ? `${board.overview.processor}, ${board.overview.memory}` : board.overview.keySpecs,
-    applications: (board.projects || []).join(', '),
-    keyFeatures: typeof board.overview.keyFeatures === 'string' ? board.overview.keyFeatures : board.overview.keyFeatures?.join(', ') || '',
-    bestFor: board.overview.bestFor
+    keySpecs: board.overview.processor ? `${board.overview.processor}, ${board.overview.memory}` : 'Development Board',
+    applications: 'Development Projects',
+    keyFeatures: typeof board.overview.keyFeatures === 'string' ? board.overview.keyFeatures : 'Advanced Features',
+    bestFor: board.overview.bestFor || 'Development Projects'
   } : undefined
 }))
 
-// Convert MCU chips to unified format (including extensions from electronics)
-const mcuChipsAsUnified: UnifiedProduct[] = [...allMCUChips, ...microcontrollerExtensions].map(chip => ({
+// Convert MCU chips to unified format
+const mcuChipsAsUnified: UnifiedProduct[] = allMCUChips.map(chip => ({
   ...chip,
   type: 'mcu-chip' as const,
   specifications: chip.specifications || {}
@@ -119,6 +120,13 @@ const sensorsModulesAsUnified: UnifiedProduct[] = allSensorsModules.map(sensor =
   specifications: sensor.specifications || {}
 }))
 
+// Convert power components to unified format
+const powerComponentsAsUnified: UnifiedProduct[] = allPowerComponents.map(component => ({
+  ...component,
+  type: 'power-component' as const,
+  specifications: component.specifications || {}
+}))
+
 // All products combined
 export const allProducts: UnifiedProduct[] = [
   ...electronicsAsUnified,
@@ -126,7 +134,8 @@ export const allProducts: UnifiedProduct[] = [
   ...mcuChipsAsUnified,
   ...toolsAsUnified,
   ...educationalKitsAsUnified,
-  ...sensorsModulesAsUnified
+  ...sensorsModulesAsUnified,
+  ...powerComponentsAsUnified
 ]
 
 // Helper functions
@@ -138,7 +147,7 @@ export function getProductsByCategory(category: string): UnifiedProduct[] {
   return allProducts.filter(product => product.category === category)
 }
 
-export function getProductsByType(type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool' | 'educational-kit' | 'sensor-module'): UnifiedProduct[] {
+export function getProductsByType(type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool' | 'educational-kit' | 'sensor-module' | 'power-component'): UnifiedProduct[] {
   return allProducts.filter(product => product.type === type)
 }
 
@@ -185,5 +194,10 @@ export const productCategories = {
     name: 'Sensors & Modules',
     count: sensorsModulesAsUnified.length,
     href: '/supply/category/sensors'
+  },
+  'power-components': {
+    name: 'Power Components',
+    count: powerComponentsAsUnified.length,
+    href: '/supply/category/power'
   }
 }

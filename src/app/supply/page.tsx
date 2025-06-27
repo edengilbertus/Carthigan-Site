@@ -1,22 +1,28 @@
 import { Metadata } from 'next'
 import { SupplyNavigation } from '@/components/supply/SupplyNavigation'
 import { SupplyHero } from '@/components/supply/SupplyHero'
-import { FeaturedCategories } from '@/components/supply/FeaturedCategories'
-import { PopularProducts } from '@/components/supply/PopularProducts'
+import { ProductCategories } from '@/components/supply/ProductCategories'
+import { FeaturedProducts } from '@/components/supply/FeaturedProducts'
+import { ServicesShowcase } from '@/components/supply/ServicesShowcase'
+import { TechStats } from '@/components/supply/TechStats'
+import { NewsletterSection } from '@/components/supply/NewsletterSection'
 import { SupplyFooter } from '@/components/supply/SupplyFooter'
 
 export const metadata: Metadata = {
-  title: 'Carthigan Supply - Electronics & Tech Components for Africa',
-  description: 'Your premier destination for electronics, development boards, tools, and educational materials. Powering African innovation.',
+  title: 'Carthigan Supply - Your Comprehensive Technology Platform | Uganda',
+  description: 'Your one-stop platform for electronics, microcontrollers, development tools, 3D printing, and professional tech services. Empowering African innovation with quality components and expert support.',
 }
 
 export default function SupplyHomePage() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-surface">
       <SupplyNavigation />
       <SupplyHero />
-      <FeaturedCategories />
-      <PopularProducts />
+      <ProductCategories />
+      <FeaturedProducts />
+      <TechStats />
+      <ServicesShowcase />
+      <NewsletterSection />
       <SupplyFooter />
     </main>
   )

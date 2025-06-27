@@ -1,196 +1,211 @@
 "use client"
 
-import Image from "next/image"
-import Link from "next/link"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Truck, Shield, Headphones } from "lucide-react"
+import { ArrowRight, Shield, Truck, Award, Cpu, Wrench, Code, Zap } from "lucide-react"
+import Link from "next/link"
 
-const featuredProducts = [
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.3,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+    },
+  },
+}
+
+const valueProps = [
   {
-    id: "1",
-    name: "Orange Pi 5 Plus",
-    price: 245000,
-    originalPrice: 280000,
-    image: "https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=400&h=300&fit=crop",
-    badge: "FEATURED"
+    icon: Truck,
+    title: "Same-Day Delivery",
+    description: "Free delivery within Kampala",
   },
   {
-    id: "2", 
-    name: "Arduino Mega 2560",
-    price: 85000,
-    originalPrice: 95000,
-    image: "https://images.unsplash.com/photo-1553406830-ef2513450d76?w=400&h=300&fit=crop",
-    badge: "BESTSELLER"
-  }
+    icon: Shield,
+    title: "Quality Guaranteed",
+    description: "12-month warranty on all products",
+  },
+  {
+    icon: Award,
+    title: "Local Support",
+    description: "Expert technical assistance",
+  },
+]
+
+const techCategories = [
+  { icon: Cpu, label: "Microcontrollers", count: "45+" },
+  { icon: Wrench, label: "Tools & Equipment", count: "120+" },
+  { icon: Code, label: "Dev Services", count: "25+" },
+  { icon: Zap, label: "Components", count: "800+" },
 ]
 
 export function SupplyHero() {
   return (
-    <section className="bg-gradient-to-br from-orange-50 to-white py-16">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section className="relative min-h-screen bg-gradient-to-br from-primary-container to-secondary-container overflow-hidden">
+      {/* Material 3 Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-20 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 -left-40 w-80 h-80 bg-secondary/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-tertiary/5 rounded-full blur-2xl" />
+      </div>
+
+      <div className="container mx-auto px-6 pt-32 pb-20 relative">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+        >
           {/* Left Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="space-y-8"
-          >
-            <div className="space-y-4">
-              <Badge className="bg-orange-500 text-white px-4 py-2 rounded-full text-sm">
-                🚀 Now Live in Uganda
+          <div className="space-y-8">
+            <motion.div variants={itemVariants}>
+              <Badge className="bg-primary text-on-primary px-4 py-2 rounded-full text-sm font-medium shadow-sm">
+                🚀 Now Live in Kampala, Uganda
               </Badge>
-              <h1 className="text-4xl md:text-6xl font-display font-bold text-gray-900 leading-tight">
-                Your Complete
-                <span className="text-orange-500 block">Tech Ecosystem</span>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="space-y-6">
+              <h1 className="text-5xl md:text-7xl font-display font-bold text-on-surface leading-tight">
+                Your Comprehensive
+                <span className="text-primary block mt-2">
+                  Supply Platform
+                </span>
               </h1>
-              <p className="text-xl text-gray-600 max-w-lg">
-                From Arduino boards to 3D printers. Everything you need to build, learn, and innovate. 
-                Made for African makers.
+              
+              <p className="text-xl md:text-2xl text-on-surface/70 max-w-2xl font-light leading-relaxed">
+                A detailed catalog of products and services for Uganda's burgeoning tech and creative sectors. 
+                <span className="text-primary font-medium"> Empowering innovation across Africa.</span>
               </p>
-            </div>
+            </motion.div>
 
             {/* Value Propositions */}
-            <div className="flex flex-wrap gap-6">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Truck className="h-5 w-5 text-orange-500" />
-                <span>Same-day delivery in Kampala</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Shield className="h-5 w-5 text-orange-500" />
-                <span>1-year warranty</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Headphones className="h-5 w-5 text-orange-500" />
-                <span>Local tech support</span>
-              </div>
-            </div>
+            <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {valueProps.map((prop, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 p-4 bg-surface-variant/50 rounded-2xl backdrop-blur-sm border border-outline-variant/20"
+                >
+                  <div className="p-2 bg-primary/10 rounded-xl">
+                    <prop.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-on-surface text-sm">{prop.title}</div>
+                    <div className="text-on-surface/60 text-xs">{prop.description}</div>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            {/* CTA Buttons */}
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
               <Button 
                 size="lg" 
-                className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 text-lg"
+                className="bg-primary hover:bg-primary/90 text-on-primary px-8 py-6 text-lg rounded-full shadow-lg"
                 asChild
               >
-                <Link href="/supply/category/electronics">
-                  Browse Products
+                <Link href="#categories">
+                  Explore Catalog
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
+              
               <Button 
                 variant="outline" 
                 size="lg"
-                className="border-orange-500 text-orange-500 hover:bg-orange-50 px-8 py-4 text-lg"
+                className="border-2 border-primary text-primary hover:bg-primary/5 px-8 py-6 text-lg rounded-full"
                 asChild
               >
-                <Link href="/supply/education">View Educational Kits</Link>
+                <Link href="#services">Browse Services</Link>
               </Button>
-            </div>
+            </motion.div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-8 border-t border-gray-200">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">300+</div>
-                <div className="text-sm text-gray-600">Products</div>
+            {/* Tech Categories Overview */}
+            <motion.div variants={itemVariants} className="pt-8 border-t border-outline-variant/20">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {techCategories.map((category, index) => (
+                  <div key={index} className="text-center">
+                    <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-2xl mb-2">
+                      <category.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <div className="text-lg font-bold text-on-surface">{category.count}</div>
+                    <div className="text-sm text-on-surface/60">{category.label}</div>
+                  </div>
+                ))}
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">50+</div>
-                <div className="text-sm text-gray-600">Universities</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">24h</div>
-                <div className="text-sm text-gray-600">Support</div>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
 
-          {/* Right Content - Featured Products */}
+          {/* Right Content - Interactive Product Showcase */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="space-y-6"
+            variants={itemVariants}
+            className="relative"
           >
-            {/* Main Featured Product */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-              <div className="flex justify-between items-start mb-4">
-                <Badge className="bg-orange-500 text-white">
-                  {featuredProducts[0].badge}
+            {/* Main Product Card */}
+            <div className="bg-surface rounded-3xl shadow-2xl p-8 border border-outline-variant/20 backdrop-blur-sm">
+              <div className="flex justify-between items-start mb-6">
+                <Badge className="bg-error text-on-error rounded-full px-3 py-1">
+                  FEATURED
                 </Badge>
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-gray-900">
-                    UGX {featuredProducts[0].price.toLocaleString()}
-                  </div>
-                  <div className="text-sm text-gray-500 line-through">
-                    UGX {featuredProducts[0].originalPrice.toLocaleString()}
-                  </div>
+                  <div className="text-sm text-on-surface/60">Starting from</div>
+                  <div className="text-3xl font-bold text-primary">UGX 245K</div>
                 </div>
               </div>
               
-              <div className="aspect-[4/3] relative mb-4 rounded-xl overflow-hidden">
-                <Image
-                  src={featuredProducts[0].image}
-                  alt={featuredProducts[0].name}
-                  fill
-                  className="object-cover"
-                />
+              <div className="aspect-[4/3] bg-primary-container rounded-2xl mb-6 flex items-center justify-center">
+                <div className="text-6xl">🔧</div>
               </div>
               
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {featuredProducts[0].name}
+              <h3 className="text-2xl font-bold text-on-surface mb-2">
+                Orange Pi 5 Plus Series
               </h3>
-              <p className="text-gray-600 text-sm mb-4">
-                Powerful single-board computer perfect for AI projects and edge computing applications.
+              <p className="text-on-surface/70 mb-6">
+                Powerful single-board computers perfect for AI projects, edge computing, and IoT applications.
               </p>
               
-              <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white">
-                Add to Cart
+              <Button className="w-full bg-primary hover:bg-primary/90 text-on-primary rounded-2xl py-3">
+                View Collection
               </Button>
             </div>
 
-            {/* Secondary Featured Product */}
-            <div className="bg-white rounded-xl shadow-md p-4 border border-gray-100">
-              <div className="flex gap-4">
-                <div className="w-20 h-20 relative rounded-lg overflow-hidden flex-shrink-0">
-                  <Image
-                    src={featuredProducts[1].image}
-                    alt={featuredProducts[1].name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="flex-1">
-                  <Badge className="bg-green-500 text-white text-xs mb-1">
-                    {featuredProducts[1].badge}
-                  </Badge>
-                  <h4 className="font-semibold text-gray-900 text-sm">
-                    {featuredProducts[1].name}
-                  </h4>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="font-bold text-gray-900">
-                      UGX {featuredProducts[1].price.toLocaleString()}
-                    </span>
-                    <span className="text-xs text-gray-500 line-through">
-                      UGX {featuredProducts[1].originalPrice.toLocaleString()}
-                    </span>
-                  </div>
-                </div>
+            {/* Floating Stats */}
+            <div className="absolute -top-8 -right-8 bg-secondary text-on-secondary rounded-2xl p-6 shadow-xl">
+              <div className="text-center">
+                <div className="text-2xl font-bold">800+</div>
+                <div className="text-sm opacity-80">Components</div>
               </div>
             </div>
 
-            {/* Promotion Banner */}
-            <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-xl p-6 text-white">
+            <div className="absolute -bottom-8 -left-8 bg-tertiary text-on-tertiary rounded-2xl p-6 shadow-xl">
               <div className="text-center">
-                <div className="text-sm font-medium opacity-90 mb-1">Limited Time Offer</div>
-                <div className="text-lg font-bold mb-2">Student Discount 15% OFF</div>
-                <div className="text-sm opacity-90">Valid with university ID verification</div>
+                <div className="text-2xl font-bold">25+</div>
+                <div className="text-sm opacity-80">Services</div>
               </div>
             </div>
+
+            {/* Student Discount Banner */}
+            <div className="mt-8 bg-gradient-to-r from-error to-error-container rounded-2xl p-6 text-center">
+              <div className="text-on-error font-semibold mb-1">Student Discount Available</div>
+              <div className="text-2xl font-bold text-on-error mb-2">15% OFF</div>
+              <div className="text-on-error/80 text-sm">With valid university ID verification</div>
+            </div>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

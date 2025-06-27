@@ -1,4 +1,4 @@
-import { ElectronicComponent, allElectronicsData } from './electronics'
+import { ElectronicComponent, allElectronicsData, microcontrollerExtensions, devBoardExtensions } from './electronics'
 import { DevelopmentBoard, allDevelopmentBoards } from './dev-boards'
 import { MCUChip, allMCUChips } from './mcu-chips'
 import { ToolProduct, allTools } from './tools'
@@ -55,23 +55,23 @@ const electronicsAsUnified: UnifiedProduct[] = allElectronicsData.map(item => ({
   specifications: item.specifications || {}
 }))
 
-// Convert dev boards to unified format
-const devBoardsAsUnified: UnifiedProduct[] = allDevelopmentBoards.map(board => ({
+// Convert dev boards to unified format (including extensions from electronics)  
+const devBoardsAsUnified: UnifiedProduct[] = [...allDevelopmentBoards, ...devBoardExtensions].map(board => ({
   ...board,
   type: 'development-board' as const,
   supplier: `Lead time: ${board.leadTime}`,
   specifications: board.specifications || {},
   overview: board.overview ? {
     type: `${board.category} Development Board`,
-    keySpecs: `${board.overview.processor}, ${board.overview.memory}`,
+    keySpecs: 'processor' in board.overview ? `${board.overview.processor}, ${board.overview.memory}` : board.overview.keySpecs,
     applications: board.projects.join(', '),
-    keyFeatures: board.overview.keyFeatures,
+    keyFeatures: typeof board.overview.keyFeatures === 'string' ? board.overview.keyFeatures : board.overview.keyFeatures?.join(', ') || '',
     bestFor: board.overview.bestFor
   } : undefined
 }))
 
-// Convert MCU chips to unified format
-const mcuChipsAsUnified: UnifiedProduct[] = allMCUChips.map(chip => ({
+// Convert MCU chips to unified format (including extensions from electronics)
+const mcuChipsAsUnified: UnifiedProduct[] = [...allMCUChips, ...microcontrollerExtensions].map(chip => ({
   ...chip,
   type: 'mcu-chip' as const,
   specifications: chip.specifications || {}

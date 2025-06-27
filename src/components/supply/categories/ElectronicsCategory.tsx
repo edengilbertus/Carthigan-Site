@@ -20,7 +20,7 @@ import {
   Package
 } from "lucide-react"
 import { CategoryHeader } from "./CategoryHeader"
-import { allElectronicsData, categories } from "@/lib/data/electronics"
+import { allElectronicsData, electronicsSubcategories } from "@/lib/data/electronics"
 import { useCartStore } from "@/lib/store/cart"
 
 type ViewMode = 'grid' | 'list'
@@ -197,18 +197,18 @@ export function ElectronicsCategory() {
               <div className="bg-surface rounded-3xl p-6 border border-outline-variant/20 sticky top-32">
                 <h3 className="text-xl font-bold text-on-surface mb-6">Filters</h3>
                 
-                {/* Category Filter */}
+                {/* Subcategory Filter */}
                 <div className="mb-6">
-                  <h4 className="font-semibold text-on-surface mb-3">Category</h4>
+                  <h4 className="font-semibold text-on-surface mb-3">Subcategory</h4>
                   <select 
-                    value={selectedCategory} 
-                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    value={selectedSubcategory} 
+                    onChange={(e) => setSelectedSubcategory(e.target.value)}
                     className="w-full px-3 py-2 border border-outline-variant rounded-xl bg-surface text-on-surface"
                   >
-                    <option value="all">All Categories</option>
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
+                    <option value="all">All Subcategories</option>
+                    {electronicsSubcategories.map((subcategory) => (
+                      <option key={subcategory} value={subcategory}>
+                        {subcategory}
                       </option>
                     ))}
                   </select>

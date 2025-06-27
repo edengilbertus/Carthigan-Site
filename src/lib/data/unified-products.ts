@@ -2,6 +2,7 @@ import { ElectronicComponent, allElectronicsData } from './electronics'
 import { DevelopmentBoard, allDevelopmentBoards } from './dev-boards'
 import { MCUChip, allMCUChips } from './mcu-chips'
 import { ToolProduct, allTools } from './tools'
+import { EducationalKit, allEducationalKits } from './educational-kits'
 
 // Unified product interface
 export interface UnifiedProduct {
@@ -17,12 +18,12 @@ export interface UnifiedProduct {
   stockLevel: number
   rating: number
   reviews: number
-  specifications: Record<string, string>
+  specifications?: Record<string, string>
   compatibility: string[]
   projects: string[]
   leadTime: string
   tags: string[]
-  type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool'
+  type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool' | 'educational-kit'
   // Additional fields that may exist in some products
   supplier?: string
   keyFeatures?: string[]
@@ -30,20 +31,28 @@ export interface UnifiedProduct {
     type: string
     keySpecs: string
     applications: string
-    keyFeatures: string
-    bestFor: string
+    keyFeatures?: string | string[]
+    bestFor?: string
   }
   // Tool-specific fields
   keySpecs?: Record<string, string>
   bestFor?: string
   proTip?: string
   features?: string[]
+  // Educational kit specific fields
+  targetAudience?: string
+  whatYouLearn?: string[]
+  kitContents?: string[]
+  estimatedProjectTime?: string
+  difficultyLevel?: string
+  ageRange?: string
 }
 
 // Convert electronics to unified format
 const electronicsAsUnified: UnifiedProduct[] = allElectronicsData.map(item => ({
   ...item,
-  type: 'electronics' as const
+  type: 'electronics' as const,
+  specifications: item.specifications || {}
 }))
 
 // Convert dev boards to unified format
@@ -51,6 +60,7 @@ const devBoardsAsUnified: UnifiedProduct[] = allDevelopmentBoards.map(board => (
   ...board,
   type: 'development-board' as const,
   supplier: `Lead time: ${board.leadTime}`,
+  specifications: board.specifications || {},
   overview: board.overview ? {
     type: `${board.category} Development Board`,
     keySpecs: `${board.overview.processor}, ${board.overview.memory}`,
@@ -63,7 +73,8 @@ const devBoardsAsUnified: UnifiedProduct[] = allDevelopmentBoards.map(board => (
 // Convert MCU chips to unified format
 const mcuChipsAsUnified: UnifiedProduct[] = allMCUChips.map(chip => ({
   ...chip,
-  type: 'mcu-chip' as const
+  type: 'mcu-chip' as const,
+  specifications: chip.specifications || {}
 }))
 
 // Convert tools to unified format
@@ -73,6 +84,7 @@ const toolsAsUnified: UnifiedProduct[] = allTools.map(tool => ({
   compatibility: [],
   projects: [],
   leadTime: 'In Stock',
+  specifications: tool.specifications || {},
   overview: tool.overview ? {
     type: `Electronics Tool`,
     keySpecs: Object.entries(tool.keySpecs || {}).map(([key, value]) => `${key}: ${value}`).join(', '),
@@ -82,12 +94,30 @@ const toolsAsUnified: UnifiedProduct[] = allTools.map(tool => ({
   } : undefined
 }))
 
+// Convert educational kits to unified format
+const educationalKitsAsUnified: UnifiedProduct[] = allEducationalKits.map(kit => ({
+  ...kit,
+  type: 'educational-kit' as const,
+  compatibility: [],
+  projects: kit.whatYouLearn || [],
+  leadTime: 'In Stock',
+  specifications: kit.specifications || {},
+  overview: {
+    type: `Educational Kit - ${kit.difficultyLevel}`,
+    keySpecs: `${kit.estimatedProjectTime}, ${kit.ageRange}`,
+    applications: kit.targetAudience || 'Educational use',
+    keyFeatures: kit.features?.join(', ') || '',
+    bestFor: kit.targetAudience || 'Students and educators'
+  }
+}))
+
 // All products combined
 export const allProducts: UnifiedProduct[] = [
   ...electronicsAsUnified,
   ...devBoardsAsUnified,
   ...mcuChipsAsUnified,
-  ...toolsAsUnified
+  ...toolsAsUnified,
+  ...educationalKitsAsUnified
 ]
 
 // Helper functions
@@ -99,7 +129,7 @@ export function getProductsByCategory(category: string): UnifiedProduct[] {
   return allProducts.filter(product => product.category === category)
 }
 
-export function getProductsByType(type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool'): UnifiedProduct[] {
+export function getProductsByType(type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool' | 'educational-kit'): UnifiedProduct[] {
   return allProducts.filter(product => product.type === type)
 }
 
@@ -136,5 +166,10 @@ export const productCategories = {
     name: 'Tools & Equipment',
     count: toolsAsUnified.length,
     href: '/supply/category/tools'
+  },
+  'educational-kits': {
+    name: 'Educational Kits',
+    count: educationalKitsAsUnified.length,
+    href: '/supply/category/education'
   }
 }

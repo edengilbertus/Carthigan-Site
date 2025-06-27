@@ -2245,7 +2245,7 @@ const additionalSensors27: SensorModule[] = [
 // Additional 27 sensors to reach 101 total
 const finalSensors: SensorModule[] = [
   {
-    id: "sens-flow-water-new",
+    id: "sens-flow-water-backup",
     name: "Water Flow Sensor",
     description: "Turbine flow sensor for water flow rate measurement",
     category: "sensors",
@@ -2272,7 +2272,7 @@ const finalSensors: SensorModule[] = [
     tags: ["water", "flow", "turbine", "irrigation", "monitoring"]
   },
   {
-    id: "sens-ph-probe-new",
+    id: "sens-ph-probe-backup",
     name: "pH Sensor Module",
     description: "Digital pH sensor for water quality monitoring",
     category: "sensors",

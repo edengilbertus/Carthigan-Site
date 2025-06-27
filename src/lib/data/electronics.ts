@@ -274,6 +274,182 @@ const integratedCircuits: ElectronicComponent[] = [
     },
     supplier: "NXP PCF8574 original",
     bestFor: "Adding more digital pins, keypad interfaces, LCD control"
+  },
+
+  // Additional ICs from comprehensive catalog
+  {
+    id: "ic-uln2003",
+    name: "ULN2003 Darlington Array",
+    description: "Seven-channel high-current Darlington array - perfect for driving relays, motors, and LEDs.",
+    price: 2500,
+    studentPrice: 2125,
+    image: "/images/components/uln2003.jpg",
+    inStock: true,
+    stockLevel: 95,
+    rating: 4.8,
+    reviews: 134,
+    category: "Electronics & Components",
+    subcategory: "Integrated Circuits",
+    specifications: {
+      "Package": "16-pin DIP",
+      "Channels": "7 Darlington pairs",
+      "Max Current": "500mA per channel",
+      "Max Voltage": "50V",
+      "Built-in Flyback Diodes": "Yes"
+    },
+    compatibility: ["Stepper motors", "Relays", "LED arrays", "Solenoids"],
+    projects: ["Stepper motor drivers", "Relay banks", "LED matrix control", "Solenoid drivers"],
+    leadTime: "In Stock",
+    tags: ["darlington", "driver", "uln2003", "high-current", "relay"],
+    overview: {
+      type: "Darlington Driver Array",
+      keySpecs: "7 channels, 500mA per channel, built-in flyback diodes",
+      applications: "Driving stepper motors, controlling multiple relays, LED matrix displays",
+      keyFeatures: ["Built-in flyback diodes", "High current capability", "TTL compatible inputs", "Seven independent channels"],
+      bestFor: "Driving stepper motors, controlling multiple relays, LED matrix displays"
+    },
+    supplier: "STMicroelectronics ULN2003A",
+    bestFor: "Driving stepper motors, controlling multiple relays, LED matrix displays"
+  },
+
+  {
+    id: "ic-lm741",
+    name: "LM741 Op-Amp",
+    description: "The classic operational amplifier - industry standard for analog signal processing and amplification.",
+    price: 1800,
+    studentPrice: 1530,
+    image: "/images/components/lm741.jpg",
+    inStock: true,
+    stockLevel: 150,
+    rating: 4.7,
+    reviews: 198,
+    category: "Electronics & Components",
+    subcategory: "Integrated Circuits",
+    specifications: {
+      "Package": "8-pin DIP",
+      "Supply Voltage": "±3V to ±18V",
+      "Input Offset Voltage": "1mV typical",
+      "Slew Rate": "0.5 V/μs",
+      "Bandwidth": "1.5MHz"
+    },
+    compatibility: ["Audio circuits", "Signal processing", "Educational labs"],
+    projects: ["Audio amplifiers", "Active filters", "Comparators", "Voltage followers"],
+    leadTime: "In Stock",
+    tags: ["op-amp", "lm741", "classic", "analog", "amplifier"],
+    overview: {
+      type: "Operational Amplifier",
+      keySpecs: "Classic op-amp, ±18V supply, industry standard pinout",
+      applications: "Audio amplification, active filters, analog signal processing",
+      keyFeatures: ["Industry standard", "Dual supply operation", "High gain", "Stable operation"],
+      bestFor: "Audio amplification, active filters, analog signal processing"
+    },
+    supplier: "Texas Instruments LM741CN",
+    bestFor: "Audio amplification, active filters, analog signal processing"
+  },
+
+  {
+    id: "ic-lm324",
+    name: "LM324 Quad Op-Amp", 
+    description: "Four operational amplifiers in one package - perfect for multi-channel signal processing.",
+    price: 2200,
+    studentPrice: 1870,
+    image: "/images/components/lm324.jpg",
+    inStock: true,
+    stockLevel: 120,
+    rating: 4.6,
+    reviews: 156,
+    category: "Electronics & Components",
+    subcategory: "Integrated Circuits",
+    specifications: {
+      "Package": "14-pin DIP",
+      "Amplifiers": "4 independent op-amps",
+      "Supply Voltage": "3V to 32V (single supply)",
+      "Input Offset Voltage": "2mV typical",
+      "Bandwidth": "1.2MHz"
+    },
+    compatibility: ["Multi-channel sensors", "Audio mixers", "Signal conditioning"],
+    projects: ["Sensor arrays", "Audio mixers", "Multi-channel filters", "Voltage comparators"],
+    leadTime: "In Stock",
+    tags: ["op-amp", "quad", "lm324", "multi-channel"],
+    overview: {
+      type: "Quad Operational Amplifier",
+      keySpecs: "Four op-amps in one package, single supply operation",
+      applications: "Multi-channel sensor processing, audio mixing, parallel signal conditioning",
+      keyFeatures: ["Four independent op-amps", "Single supply operation", "Low power consumption", "Wide supply range"],
+      bestFor: "Multi-channel sensor processing, audio mixing, parallel signal conditioning"
+    },
+    supplier: "Texas Instruments LM324N",
+    bestFor: "Multi-channel sensor processing, audio mixing, parallel signal conditioning"
+  },
+
+  {
+    id: "ic-74hc00",
+    name: "74HC00 Quad NAND Gate",
+    description: "Four 2-input NAND gates for digital logic projects - fundamental building block of digital circuits.",
+    price: 1200,
+    studentPrice: 1020,
+    image: "/images/components/74hc00.jpg",
+    inStock: true,
+    stockLevel: 180,
+    rating: 4.8,
+    reviews: 145,
+    category: "Electronics & Components",
+    subcategory: "Integrated Circuits",
+    specifications: {
+      "Package": "14-pin DIP",
+      "Logic Family": "74HC (High-speed CMOS)",
+      "Supply Voltage": "2V to 6V",
+      "Gates": "4 x 2-input NAND",
+      "Propagation Delay": "8ns typical"
+    },
+    compatibility: ["Digital logic", "Clock circuits", "Educational projects"],
+    projects: ["Logic circuits", "Clock generators", "Pulse shapers", "Digital experiments"],
+    leadTime: "In Stock",
+    tags: ["logic-gate", "nand", "74hc00", "digital", "cmos"],
+    overview: {
+      type: "Quad NAND Gate",
+      keySpecs: "Four 2-input NAND gates, 2-6V operation, high-speed CMOS",
+      applications: "Digital logic circuits, clock generation, basic computing elements",
+      keyFeatures: ["Fast switching", "Low power consumption", "Wide voltage range", "Standard logic family"],
+      bestFor: "Digital logic circuits, clock generation, basic computing elements"
+    },
+    supplier: "Texas Instruments 74HC00N",
+    bestFor: "Digital logic circuits, clock generation, basic computing elements"
+  },
+
+  {
+    id: "ic-pc817",
+    name: "PC817 Optocoupler",
+    description: "Optical isolator for safe signal transfer between circuits at different voltage levels.",
+    price: 2000,
+    studentPrice: 1700,
+    image: "/images/components/pc817.jpg",
+    inStock: true,
+    stockLevel: 110,
+    rating: 4.7,
+    reviews: 89,
+    category: "Electronics & Components",
+    subcategory: "Integrated Circuits",
+    specifications: {
+      "Package": "4-pin DIP",
+      "Isolation Voltage": "5000V",
+      "Forward Voltage": "1.2V",
+      "CTR": "50-300% (Current Transfer Ratio)",
+      "Response Time": "18μs"
+    },
+    compatibility: ["AC circuits", "High voltage isolation", "Safety circuits"],
+    projects: ["AC switching", "Voltage isolation", "Safety interlocks", "Signal isolation"],
+    leadTime: "In Stock",
+    tags: ["optocoupler", "isolation", "pc817", "safety", "high-voltage"],
+    overview: {
+      type: "Optical Isolator",
+      keySpecs: "5000V isolation, 4-pin DIP, LED-phototransistor pair",
+      applications: "Isolating microcontrollers from AC circuits, safety interlocks",
+      keyFeatures: ["High voltage isolation", "Electrical isolation", "Fast response", "Industry standard"],
+      bestFor: "Isolating microcontrollers from AC circuits, safety interlocks"
+    },
+    supplier: "Sharp PC817 optocoupler",
+    bestFor: "Isolating microcontrollers from AC circuits, safety interlocks"
   }
 ]
 
@@ -417,6 +593,252 @@ const transistorsRegulators: ElectronicComponent[] = [
     },
     supplier: "Multiple manufacturers - industry standard",
     bestFor: "Powering logic circuits, breadboard power supplies, on-board voltage regulation"
+  },
+
+  {
+    id: "reg-lm317",
+    name: "LM317 Adjustable Voltage Regulator",
+    description: "Popular adjustable linear voltage regulator capable of supplying 1.5A over a wide output voltage range.",
+    price: 2200,
+    studentPrice: 1870,
+    image: "/images/components/lm317.jpg",
+    inStock: true,
+    stockLevel: 75,
+    rating: 4.7,
+    reviews: 143,
+    category: "Electronics & Components",
+    subcategory: "Transistors & Regulators",
+    specifications: {
+      "Type": "Adjustable Linear Voltage Regulator",
+      "Output Voltage Range": "1.2V - 37V",
+      "Output Current": "1.5A",
+      "Input Voltage": "3V - 40V",
+      "Package": "TO-220"
+    },
+    compatibility: ["Adjustable power supplies", "Variable voltage sources", "Battery chargers"],
+    projects: ["Variable power supplies", "LED current regulation", "Battery charging circuits"],
+    leadTime: "In Stock",
+    tags: ["regulator", "adjustable", "lm317", "linear", "power"],
+    overview: {
+      type: "Adjustable Voltage Regulator",
+      keySpecs: "1.2-37V output, 1.5A current, adjustable with resistors",
+      applications: "Variable power supplies, current regulation, voltage references",
+      keyFeatures: ["Wide voltage range", "Current limiting", "Thermal protection", "Easy adjustment"],
+      bestFor: "Variable power supplies, current regulation, voltage references"
+    },
+    supplier: "Texas Instruments LM317 or equivalent",
+    bestFor: "Variable power supplies, current regulation, voltage references"
+  },
+
+  // Additional transistors and regulators from comprehensive catalog
+  {
+    id: "trans-2n2222",
+    name: "2N2222 NPN Transistor",
+    description: "High-speed switching transistor - ideal for fast switching applications and RF circuits.",
+    price: 400,
+    studentPrice: 340,
+    image: "/images/components/2n2222.jpg",
+    inStock: true,
+    stockLevel: 350,
+    rating: 4.8,
+    reviews: 234,
+    category: "Electronics & Components",
+    subcategory: "Transistors & Regulators",
+    specifications: {
+      "Type": "NPN Bipolar Junction Transistor",
+      "Max Collector Voltage": "40V",
+      "Max Collector Current": "800mA", 
+      "Power Dissipation": "500mW",
+      "Package": "TO-92"
+    },
+    compatibility: ["High-speed switching", "RF circuits", "Amplifiers"],
+    projects: ["Fast switching", "RF oscillators", "High-frequency amplifiers", "Timer circuits"],
+    leadTime: "In Stock",
+    tags: ["npn", "transistor", "high-speed", "2n2222", "rf"],
+    overview: {
+      type: "High-Speed NPN Transistor",
+      keySpecs: "NPN BJT, 40V max VCE, 800mA max collector current, high-speed",
+      applications: "Fast switching circuits, RF oscillators, high-frequency applications",
+      keyFeatures: ["High-speed switching", "Good frequency response", "Higher current capability", "Industry standard"],
+      bestFor: "Fast switching circuits, RF oscillators, high-frequency applications"
+    },
+    supplier: "Standard semiconductor manufacturers",
+    bestFor: "Fast switching circuits, RF oscillators, high-frequency applications"
+  },
+
+  {
+    id: "trans-irfz44n",
+    name: "IRFZ44N N-Channel MOSFET",
+    description: "High-power N-channel MOSFET for heavy-duty switching applications and motor control.",
+    price: 4200,
+    studentPrice: 3570,
+    image: "/images/components/irfz44n.jpg",
+    inStock: true,
+    stockLevel: 65,
+    rating: 4.9,
+    reviews: 156,
+    category: "Electronics & Components",
+    subcategory: "Transistors & Regulators",
+    specifications: {
+      "Type": "N-Channel Power MOSFET",
+      "Max Drain Voltage": "55V",
+      "Max Drain Current": "49A",
+      "On-Resistance": "17.5mΩ",
+      "Package": "TO-220"
+    },
+    compatibility: ["High-power switching", "Motor controllers", "Power supplies"],
+    projects: ["Motor speed control", "High-power LED drivers", "DC motor controllers", "Power switching"],
+    leadTime: "In Stock",
+    tags: ["mosfet", "n-channel", "high-power", "irfz44n", "motor-control"],
+    overview: {
+      type: "High-Power N-Channel MOSFET",
+      keySpecs: "N-Channel MOSFET, 55V max VDS, 49A max drain current, ultra-low RDS",
+      applications: "High-power motor control, LED drivers, switching power supplies",
+      keyFeatures: ["Very high current capability", "Ultra-low on-resistance", "Fast switching", "High efficiency"],
+      bestFor: "High-power motor control, LED drivers, switching power supplies"
+    },
+    supplier: "International Rectifier IRFZ44N",
+    bestFor: "High-power motor control, LED drivers, switching power supplies"
+  },
+
+  {
+    id: "trans-irf9540",
+    name: "IRF9540 P-Channel MOSFET",
+    description: "P-channel power MOSFET for high-side switching and complementary circuits.",
+    price: 4500,
+    studentPrice: 3825,
+    image: "/images/components/irf9540.jpg",
+    inStock: true,
+    stockLevel: 55,
+    rating: 4.7,
+    reviews: 98,
+    category: "Electronics & Components",
+    subcategory: "Transistors & Regulators",
+    specifications: {
+      "Type": "P-Channel Power MOSFET",
+      "Max Drain Voltage": "-100V",
+      "Max Drain Current": "-23A", 
+      "On-Resistance": "117mΩ",
+      "Package": "TO-220"
+    },
+    compatibility: ["High-side switching", "Complementary circuits", "Protection circuits"],
+    projects: ["High-side power switches", "Reverse polarity protection", "Load switches"],
+    leadTime: "In Stock",
+    tags: ["mosfet", "p-channel", "high-side", "irf9540", "protection"],
+    overview: {
+      type: "P-Channel Power MOSFET",
+      keySpecs: "P-Channel MOSFET, 100V max VDS, 23A max drain current",
+      applications: "High-side switching, reverse polarity protection, complementary switching",
+      keyFeatures: ["High-side switching capability", "High voltage rating", "Complementary to N-channel", "Protection applications"],
+      bestFor: "High-side switching, reverse polarity protection, complementary switching"
+    },
+    supplier: "International Rectifier IRF9540",
+    bestFor: "High-side switching, reverse polarity protection, complementary switching"
+  },
+
+  {
+    id: "trans-2n7000",
+    name: "2N7000 N-Channel MOSFET",
+    description: "Small signal N-channel MOSFET perfect for logic level switching and low-power applications.",
+    price: 800,
+    studentPrice: 680,
+    image: "/images/components/2n7000.jpg",
+    inStock: true,
+    stockLevel: 200,
+    rating: 4.8,
+    reviews: 167,
+    category: "Electronics & Components",
+    subcategory: "Transistors & Regulators",
+    specifications: {
+      "Type": "N-Channel Small Signal MOSFET",
+      "Max Drain Voltage": "60V",
+      "Max Drain Current": "200mA",
+      "On-Resistance": "5.1Ω",
+      "Package": "TO-92"
+    },
+    compatibility: ["Logic level switching", "Arduino outputs", "Low-power circuits"],
+    projects: ["Logic level switching", "LED drivers", "Small motor control", "Interface circuits"],
+    leadTime: "In Stock",
+    tags: ["mosfet", "n-channel", "small-signal", "logic-level", "2n7000"],
+    overview: {
+      type: "Small Signal N-Channel MOSFET",
+      keySpecs: "N-Channel MOSFET, 60V max VDS, 200mA max current, logic level",
+      applications: "Logic level switching from microcontrollers, small load switching",
+      keyFeatures: ["Logic level gate voltage", "Small TO-92 package", "Low power consumption", "Direct MCU drive"],
+      bestFor: "Logic level switching from microcontrollers, small load switching"
+    },
+    supplier: "Fairchild/ON Semiconductor 2N7000",
+    bestFor: "Logic level switching from microcontrollers, small load switching"
+  },
+
+  {
+    id: "reg-7809",
+    name: "7809 Voltage Regulator",
+    description: "Fixed 9V linear voltage regulator for powering 9V circuits and systems.",
+    price: 1300,
+    studentPrice: 1105,
+    image: "/images/components/7809.jpg",
+    inStock: true,
+    stockLevel: 120,
+    rating: 4.7,
+    reviews: 89,
+    category: "Electronics & Components",
+    subcategory: "Transistors & Regulators",
+    specifications: {
+      "Type": "Linear Voltage Regulator",
+      "Output Voltage": "9V ±4%",
+      "Max Output Current": "1A",
+      "Input Voltage": "11.5V to 35V",
+      "Package": "TO-220"
+    },
+    compatibility: ["9V systems", "Audio circuits", "Sensor supplies"],
+    projects: ["9V power supplies", "Audio amplifier supplies", "Sensor power rails"],
+    leadTime: "In Stock",
+    tags: ["voltage-regulator", "9v", "linear", "7809"],
+    overview: {
+      type: "9V Linear Voltage Regulator",
+      keySpecs: "9V output, 1A max current, TO-220 package",
+      applications: "Powering 9V circuits, audio equipment, sensor systems",
+      keyFeatures: ["Fixed 9V output", "Thermal protection", "Short circuit protection", "Standard TO-220"],
+      bestFor: "Powering 9V circuits, audio equipment, sensor systems"
+    },
+    supplier: "Multiple manufacturers - industry standard",
+    bestFor: "Powering 9V circuits, audio equipment, sensor systems"
+  },
+
+  {
+    id: "reg-7812",
+    name: "7812 Voltage Regulator",
+    description: "Fixed 12V linear voltage regulator for powering 12V systems and motor drivers.",
+    price: 1400,
+    studentPrice: 1190,
+    image: "/images/components/7812.jpg",
+    inStock: true,
+    stockLevel: 100,
+    rating: 4.8,
+    reviews: 112,
+    category: "Electronics & Components",
+    subcategory: "Transistors & Regulators",
+    specifications: {
+      "Type": "Linear Voltage Regulator",
+      "Output Voltage": "12V ±4%",
+      "Max Output Current": "1A",
+      "Input Voltage": "14.5V to 35V",
+      "Package": "TO-220"
+    },
+    compatibility: ["12V systems", "Motor drivers", "Op-amp supplies"],
+    projects: ["12V power supplies", "Motor driver supplies", "Op-amp dual supplies"],
+    leadTime: "In Stock",
+    tags: ["voltage-regulator", "12v", "linear", "7812"],
+    overview: {
+      type: "12V Linear Voltage Regulator",
+      keySpecs: "12V output, 1A max current, TO-220 package",
+      applications: "Powering 12V circuits, motor drivers, op-amp supplies",
+      keyFeatures: ["Fixed 12V output", "Thermal protection", "Short circuit protection", "Motor driver compatible"],
+      bestFor: "Powering 12V circuits, motor drivers, op-amp supplies"
+    },
+    supplier: "Multiple manufacturers - industry standard",
+    bestFor: "Powering 12V circuits, motor drivers, op-amp supplies"
   }
 ]
 
@@ -525,6 +947,398 @@ const diodesLEDs: ElectronicComponent[] = [
     },
     supplier: "High-quality RGB LED with clear lens",
     bestFor: "Creating dynamic status indicators, mood lighting, visual effects"
+  },
+
+  // Additional diodes and LEDs from comprehensive catalog
+  {
+    id: "diode-1n4148",
+    name: "1N4148 Signal Diode",
+    description: "While the 1N4007 is for power, the 1N4148 is for speed. It's a small signal diode designed for fast switching applications where high frequency or quick response is needed. It cannot handle much current but switches much faster than a rectifier diode.",
+    price: 200,
+    studentPrice: 170,
+    image: "/images/components/1n4148.jpg",
+    inStock: true,
+    stockLevel: 800,
+    rating: 4.7,
+    reviews: 234,
+    category: "Electronics & Components",
+    subcategory: "Diodes & LEDs",
+    specifications: {
+      "Type": "Small Signal Diode",
+      "Reverse Voltage": "100V",
+      "Forward Current": "200mA",
+      "Reverse Recovery Time": "4ns",
+      "Package": "DO-35 Axial"
+    },
+    compatibility: ["Digital logic circuits", "Signal processing", "Protection circuits"],
+    projects: ["Digital logic circuits", "Signal processing", "Protecting input pins"],
+    leadTime: "In Stock",
+    tags: ["diode", "signal", "1n4148", "fast-switching", "logic"],
+    overview: {
+      type: "Fast Signal Diode",
+      keySpecs: "100V, 200mA, 4ns recovery time, fast switching",
+      applications: "Digital logic circuits, signal processing, protecting input pins",
+      keyFeatures: ["Very fast switching", "Small signal applications", "Logic compatible", "Low capacitance"],
+      bestFor: "Digital logic circuits, signal processing, protecting input pins"
+    },
+    supplier: "High-speed silicon signal diode",
+    bestFor: "Digital logic circuits, signal processing, protecting input pins"
+  },
+
+  {
+    id: "diode-1n5819",
+    name: "1N5819 Schottky Diode",
+    description: "A Schottky diode has a very low forward voltage drop (typically 0.2V-0.3V) compared to regular diodes (~0.7V). This makes it much more efficient in low-voltage applications, such as solar panel blocking or protecting circuits from reverse voltage with minimal power loss.",
+    price: 400,
+    studentPrice: 340,
+    image: "/images/components/1n5819.jpg",
+    inStock: true,
+    stockLevel: 300,
+    rating: 4.8,
+    reviews: 156,
+    category: "Electronics & Components",
+    subcategory: "Diodes & LEDs",
+    specifications: {
+      "Type": "Schottky Barrier Diode",
+      "Reverse Voltage": "40V",
+      "Forward Current": "1A",
+      "Forward Voltage Drop": "0.2V-0.3V typical",
+      "Package": "DO-41 Axial"
+    },
+    compatibility: ["Low-voltage circuits", "Solar panels", "Battery protection", "High-efficiency supplies"],
+    projects: ["High-efficiency power supplies", "Reverse polarity protection in battery circuits", "Solar panel applications"],
+    leadTime: "In Stock",
+    tags: ["diode", "schottky", "1n5819", "low-drop", "efficient"],
+    overview: {
+      type: "Schottky Barrier Diode",
+      keySpecs: "40V, 1A, 0.2-0.3V forward drop, high efficiency",
+      applications: "High-efficiency power supplies, reverse polarity protection, solar applications",
+      keyFeatures: ["Very low forward voltage", "High efficiency", "Fast switching", "Low power loss"],
+      bestFor: "High-efficiency power supplies, reverse polarity protection in battery circuits, solar panel applications"
+    },
+    supplier: "Schottky barrier diode for efficiency",
+    bestFor: "High-efficiency power supplies, reverse polarity protection in battery circuits, solar panel applications"
+  },
+
+  {
+    id: "zener-5v1",
+    name: "5.1V Zener Diode",
+    description: "A Zener diode is a special type of diode that is designed to reliably allow current to flow 'backwards' when a specific breakdown voltage (the Zener voltage) is reached. This makes it incredibly useful for creating a stable voltage reference from a higher, less stable voltage source. This 5.1V Zener is perfect for protecting 5V logic from overvoltage.",
+    price: 300,
+    studentPrice: 255,
+    image: "/images/components/zener-5v1.jpg",
+    inStock: true,
+    stockLevel: 200,
+    rating: 4.6,
+    reviews: 123,
+    category: "Electronics & Components",
+    subcategory: "Diodes & LEDs",
+    specifications: {
+      "Type": "Zener Voltage Regulator Diode",
+      "Zener Voltage": "5.1V",
+      "Power Rating": "1 Watt",
+      "Tolerance": "±5%",
+      "Package": "DO-41 Axial"
+    },
+    compatibility: ["Voltage regulation", "Overvoltage protection", "Reference circuits"],
+    projects: ["Voltage regulation", "Overvoltage protection", "Signal clipping", "Reference voltages"],
+    leadTime: "In Stock",
+    tags: ["zener", "voltage-regulator", "5v1", "protection", "reference"],
+    overview: {
+      type: "Zener Voltage Regulator Diode",
+      keySpecs: "5.1V Zener voltage, 1 Watt power rating, ±5% tolerance",
+      applications: "Voltage regulation, overvoltage protection, signal clipping",
+      keyFeatures: ["Precise voltage reference", "Overvoltage protection", "Signal clipping", "5V logic protection"],
+      bestFor: "Voltage regulation, overvoltage protection, signal clipping"
+    },
+    supplier: "Precision Zener diode",
+    bestFor: "Voltage regulation, overvoltage protection, signal clipping"
+  },
+
+  {
+    id: "led-5mm-red",
+    name: "5mm Red LED",
+    description: "A bright, clear red LED. The clear lens focuses the light into a more intense, narrow beam. This is useful for applications where brightness is more important than viewing angle, such as in simple flashlight projects or as a high-visibility warning light.",
+    price: 250,
+    studentPrice: 213,
+    image: "/images/components/led-5mm-red.jpg",
+    inStock: true,
+    stockLevel: 400,
+    rating: 4.8,
+    reviews: 312,
+    category: "Electronics & Components",
+    subcategory: "Diodes & LEDs",
+    specifications: {
+      "Size": "5mm diameter",
+      "Color": "Red",
+      "Lens": "Clear (focused beam)",
+      "Forward Voltage": "2.0V typical",
+      "Forward Current": "20mA maximum",
+      "Luminous Intensity": "8000-12000 mcd"
+    },
+    compatibility: ["Indicator circuits", "Display panels", "Warning systems"],
+    projects: ["High-visibility indicators", "Simple flashlight projects", "Warning lights", "Status displays"],
+    leadTime: "In Stock",
+    tags: ["led", "red", "5mm", "clear", "high-brightness"],
+    overview: {
+      type: "High-Brightness Red LED",
+      keySpecs: "5mm diameter, clear lens, red color, 2.0V forward voltage",
+      applications: "High-visibility indicators, warning lights, status displays",
+      keyFeatures: ["Focused bright beam", "High visibility", "Standard package", "Reliable operation"],
+      bestFor: "High-visibility indicators, simple flashlight projects, warning lights"
+    },
+    supplier: "High-brightness clear red LED",
+    bestFor: "High-visibility indicators, simple flashlight projects, warning lights"
+  },
+
+  {
+    id: "led-5mm-green",
+    name: "5mm Green LED",
+    description: "A bright, clear green LED, commonly used as a 'power on' or 'OK' status indicator. Its clear lens provides a focused, intense light.",
+    price: 250,
+    studentPrice: 213,
+    image: "/images/components/led-5mm-green.jpg",
+    inStock: true,
+    stockLevel: 350,
+    rating: 4.8,
+    reviews: 287,
+    category: "Electronics & Components",
+    subcategory: "Diodes & LEDs",
+    specifications: {
+      "Size": "5mm diameter",
+      "Color": "Green",
+      "Lens": "Clear (focused beam)",
+      "Forward Voltage": "2.2V typical",
+      "Forward Current": "20mA maximum",
+      "Luminous Intensity": "8000-12000 mcd"
+    },
+    compatibility: ["Status indicators", "Power-on displays", "Success signals"],
+    projects: ["Power On indicators", "Success/ready status lights", "Go/OK signals"],
+    leadTime: "In Stock",
+    tags: ["led", "green", "5mm", "clear", "status", "power-on"],
+    overview: {
+      type: "High-Brightness Green LED",
+      keySpecs: "5mm diameter, clear lens, green color, 2.2V forward voltage",
+      applications: "Power-on indicators, success status lights, go/ready signals",
+      keyFeatures: ["Clear focused beam", "Standard OK color", "High visibility", "Reliable indication"],
+      bestFor: "Power On indicators, success/ready status lights"
+    },
+    supplier: "High-brightness clear green LED",
+    bestFor: "Power On indicators, success/ready status lights"
+  },
+
+  {
+    id: "led-5mm-blue",
+    name: "5mm Blue LED",
+    description: "A bright, clear blue LED. Blue LEDs have a higher forward voltage than red or green LEDs and are popular for creating a modern aesthetic in project enclosures.",
+    price: 300,
+    studentPrice: 255,
+    image: "/images/components/led-5mm-blue.jpg",
+    inStock: true,
+    stockLevel: 250,
+    rating: 4.7,
+    reviews: 198,
+    category: "Electronics & Components",
+    subcategory: "Diodes & LEDs",
+    specifications: {
+      "Size": "5mm diameter",
+      "Color": "Blue",
+      "Lens": "Clear (focused beam)",
+      "Forward Voltage": "3.2V typical",
+      "Forward Current": "20mA maximum",
+      "Luminous Intensity": "6000-8000 mcd"
+    },
+    compatibility: ["Modern interfaces", "Decorative lighting", "Custom displays"],
+    projects: ["Modern user interfaces", "Custom case lighting", "Accent lighting", "Contemporary displays"],
+    leadTime: "In Stock",
+    tags: ["led", "blue", "5mm", "clear", "modern", "aesthetic"],
+    overview: {
+      type: "High-Brightness Blue LED",
+      keySpecs: "5mm diameter, clear lens, blue color, 3.2V forward voltage",
+      applications: "Modern user interfaces, decorative lighting, contemporary displays",
+      keyFeatures: ["Modern aesthetic appeal", "Higher voltage operation", "Distinctive color", "Sharp focused beam"],
+      bestFor: "Modern user interfaces, custom case lighting, accent lighting"
+    },
+    supplier: "High-brightness clear blue LED",
+    bestFor: "Modern user interfaces, custom case lighting, accent lighting"
+  },
+
+  {
+    id: "led-5mm-white",
+    name: "5mm White LED",
+    description: "A bright white LED suitable for illumination. Unlike colored LEDs, white LEDs are excellent for use in small flashlights, backlights, or for lighting up a small area.",
+    price: 400,
+    studentPrice: 340,
+    image: "/images/components/led-5mm-white.jpg",
+    inStock: true,
+    stockLevel: 300,
+    rating: 4.9,
+    reviews: 245,
+    category: "Electronics & Components",
+    subcategory: "Diodes & LEDs",
+    specifications: {
+      "Size": "5mm diameter",
+      "Color": "White (Cool White)",
+      "Lens": "Clear (focused beam)",
+      "Forward Voltage": "3.3V typical",
+      "Forward Current": "20mA maximum",
+      "Luminous Intensity": "10000-15000 mcd"
+    },
+    compatibility: ["Illumination projects", "Flashlights", "Backlighting"],
+    projects: ["Small flashlights", "Task lighting", "Backlighting for custom displays", "Work area illumination"],
+    leadTime: "In Stock",
+    tags: ["led", "white", "5mm", "clear", "illumination", "flashlight"],
+    overview: {
+      type: "High-Brightness White LED",
+      keySpecs: "5mm diameter, clear lens, white color, 3.3V forward voltage",
+      applications: "Small flashlights, task lighting, display backlighting",
+      keyFeatures: ["True illumination capability", "High brightness", "Cool white light", "Versatile lighting"],
+      bestFor: "Small flashlights, task lighting, backlighting for custom displays"
+    },
+    supplier: "High-brightness cool white LED",
+    bestFor: "Small flashlights, task lighting, backlighting for custom displays"
+  },
+
+  {
+    id: "led-3mm-red",
+    name: "3mm Red LED",
+    description: "A smaller version of the classic indicator light. Its 3mm diameter makes it perfect for compact designs, such as small handheld devices or for adding multiple indicators on a crowded panel where space is at a premium.",
+    price: 200,
+    studentPrice: 170,
+    image: "/images/components/led-3mm-red.jpg",
+    inStock: true,
+    stockLevel: 300,
+    rating: 4.6,
+    reviews: 178,
+    category: "Electronics & Components",
+    subcategory: "Diodes & LEDs",
+    specifications: {
+      "Size": "3mm diameter",
+      "Color": "Red",
+      "Lens": "Clear",
+      "Forward Voltage": "2.0V typical",
+      "Forward Current": "20mA maximum",
+      "Luminous Intensity": "4000-6000 mcd"
+    },
+    compatibility: ["Compact designs", "Dense indicator panels", "Small devices"],
+    projects: ["Compact designs", "Crowded indicator panels", "Model making", "Small device status"],
+    leadTime: "In Stock",
+    tags: ["led", "3mm", "red", "compact", "small", "indicator"],
+    overview: {
+      type: "Compact Red LED",
+      keySpecs: "3mm diameter, red color, 2.0V forward voltage",
+      applications: "Compact designs, dense indicator panels, small device status",
+      keyFeatures: ["Space-saving design", "Standard brightness", "Compact form factor", "Multiple indicator panels"],
+      bestFor: "Compact designs, crowded indicator panels, model making"
+    },
+    supplier: "Compact 3mm red LED",
+    bestFor: "Compact designs, crowded indicator panels, model making"
+  },
+
+  {
+    id: "led-10mm-red",
+    name: "10mm Red LED",
+    description: "A large, high-visibility LED. Its 10mm lens makes it impossible to miss, which is ideal for creating bold indicators, large custom displays, or for educational purposes where visibility is key.",
+    price: 500,
+    studentPrice: 425,
+    image: "/images/components/led-10mm-red.jpg",
+    inStock: true,
+    stockLevel: 150,
+    rating: 4.8,
+    reviews: 134,
+    category: "Electronics & Components",
+    subcategory: "Diodes & LEDs",
+    specifications: {
+      "Size": "10mm diameter",
+      "Color": "Red",
+      "Lens": "Clear",
+      "Forward Voltage": "2.0V typical",
+      "Forward Current": "20mA maximum",
+      "Luminous Intensity": "15000-20000 mcd"
+    },
+    compatibility: ["Large displays", "High-visibility applications", "Educational demonstrations"],
+    projects: ["Large displays", "Educational demonstrations", "High-visibility warning signals", "Bold indicators"],
+    leadTime: "In Stock",
+    tags: ["led", "10mm", "red", "large", "high-visibility", "educational"],
+    overview: {
+      type: "Large High-Visibility Red LED",
+      keySpecs: "10mm diameter, red color, 2.0V forward voltage, ultra-bright",
+      applications: "Large displays, educational demonstrations, high-visibility warning signals",
+      keyFeatures: ["Ultra-large size", "Impossible to miss", "Very high brightness", "Educational friendly"],
+      bestFor: "Large displays, educational demonstrations, high-visibility warning signals"
+    },
+    supplier: "Large 10mm high-brightness red LED",
+    bestFor: "Large displays, educational demonstrations, high-visibility warning signals"
+  },
+
+  {
+    id: "led-ir-emitter",
+    name: "IR Emitter LED",
+    description: "An Infrared (IR) LED emits light in the infrared spectrum, which is invisible to the human eye but detectable by IR receiver photodiodes. It's the core component used in all standard remote controls.",
+    price: 400,
+    studentPrice: 340,
+    image: "/images/components/led-ir-emitter.jpg",
+    inStock: true,
+    stockLevel: 200,
+    rating: 4.7,
+    reviews: 167,
+    category: "Electronics & Components",
+    subcategory: "Diodes & LEDs",
+    specifications: {
+      "Wavelength": "940nm",
+      "Size": "5mm package",
+      "Forward Voltage": "1.2V typical",
+      "Forward Current": "100mA maximum",
+      "Radiant Intensity": "20-40 mW/sr"
+    },
+    compatibility: ["Remote controls", "IR communication", "Proximity sensors"],
+    projects: ["Building custom remote controls", "Data transmission", "Security systems", "Proximity detection"],
+    leadTime: "In Stock",
+    tags: ["led", "ir", "infrared", "940nm", "remote-control", "invisible"],
+    overview: {
+      type: "Infrared Emitter LED",
+      keySpecs: "940nm wavelength, 5mm package, invisible to human eye",
+      applications: "Custom remote controls, IR data transmission, security systems",
+      keyFeatures: ["Invisible infrared light", "Standard remote frequency", "High radiant output", "Reliable communication"],
+      bestFor: "Building custom remote controls, data transmission, security systems"
+    },
+    supplier: "940nm infrared emitter LED",
+    bestFor: "Building custom remote controls, data transmission, security systems"
+  },
+
+  {
+    id: "photodiode-ir-receiver",
+    name: "IR Receiver Photodiode",
+    description: "This is the sensor that detects the signals sent by an IR Emitter LED. It's tuned to the same wavelength and is the 'eye' in any IR-based communication system, like a television set receiving commands from a remote.",
+    price: 450,
+    studentPrice: 383,
+    image: "/images/components/photodiode-ir.jpg",
+    inStock: true,
+    stockLevel: 180,
+    rating: 4.6,
+    reviews: 145,
+    category: "Electronics & Components",
+    subcategory: "Diodes & LEDs",
+    specifications: {
+      "Wavelength": "940nm detection",
+      "Size": "5mm package",
+      "Dark Current": "2nA typical",
+      "Sensitivity": "High",
+      "Response Time": "Fast"
+    },
+    compatibility: ["IR receivers", "Remote controls", "Break-beam sensors"],
+    projects: ["Receiving signals from remote controls", "Building break-beam sensors", "Robotics proximity detection"],
+    leadTime: "In Stock",
+    tags: ["photodiode", "ir-receiver", "940nm", "detector", "remote", "sensor"],
+    overview: {
+      type: "Infrared Receiver Photodiode",
+      keySpecs: "940nm detection, 5mm package, high sensitivity, fast response",
+      applications: "IR remote receivers, break-beam sensors, proximity detection",
+      keyFeatures: ["Tuned to IR emitters", "High sensitivity", "Fast response", "Low dark current"],
+      bestFor: "Receiving signals from remote controls, building break-beam sensors, robotics"
+    },
+    supplier: "940nm infrared receiver photodiode",
+    bestFor: "Receiving signals from remote controls, building break-beam sensors, robotics"
   }
 ]
 
@@ -1450,6 +2264,217 @@ const semiconductors: ElectronicComponent[] = [
     },
     supplier: "Texas Instruments LM317 or equivalent",
     bestFor: "Variable power supplies, current regulation, voltage references"
+  },
+
+  // Additional transistors and regulators from comprehensive catalog
+  {
+    id: "trans-2n2222",
+    name: "2N2222 NPN Transistor",
+    description: "High-speed switching transistor - ideal for fast switching applications and RF circuits.",
+    price: 400,
+    studentPrice: 340,
+    image: "/images/components/2n2222.jpg",
+    inStock: true,
+    stockLevel: 350,
+    rating: 4.8,
+    reviews: 234,
+    category: "Electronics & Components",
+    subcategory: "Transistors & Regulators",
+    specifications: {
+      "Type": "NPN Bipolar Junction Transistor",
+      "Max Collector Voltage": "40V",
+      "Max Collector Current": "800mA", 
+      "Power Dissipation": "500mW",
+      "Package": "TO-92"
+    },
+    compatibility: ["High-speed switching", "RF circuits", "Amplifiers"],
+    projects: ["Fast switching", "RF oscillators", "High-frequency amplifiers", "Timer circuits"],
+    leadTime: "In Stock",
+    tags: ["npn", "transistor", "high-speed", "2n2222", "rf"],
+    overview: {
+      type: "High-Speed NPN Transistor",
+      keySpecs: "NPN BJT, 40V max VCE, 800mA max collector current, high-speed",
+      applications: "Fast switching circuits, RF oscillators, high-frequency applications",
+      keyFeatures: ["High-speed switching", "Good frequency response", "Higher current capability", "Industry standard"],
+      bestFor: "Fast switching circuits, RF oscillators, high-frequency applications"
+    },
+    supplier: "Standard semiconductor manufacturers",
+    bestFor: "Fast switching circuits, RF oscillators, high-frequency applications"
+  },
+
+  {
+    id: "trans-irfz44n",
+    name: "IRFZ44N N-Channel MOSFET",
+    description: "High-power N-channel MOSFET for heavy-duty switching applications and motor control.",
+    price: 4200,
+    studentPrice: 3570,
+    image: "/images/components/irfz44n.jpg",
+    inStock: true,
+    stockLevel: 65,
+    rating: 4.9,
+    reviews: 156,
+    category: "Electronics & Components",
+    subcategory: "Transistors & Regulators",
+    specifications: {
+      "Type": "N-Channel Power MOSFET",
+      "Max Drain Voltage": "55V",
+      "Max Drain Current": "49A",
+      "On-Resistance": "17.5mΩ",
+      "Package": "TO-220"
+    },
+    compatibility: ["High-power switching", "Motor controllers", "Power supplies"],
+    projects: ["Motor speed control", "High-power LED drivers", "DC motor controllers", "Power switching"],
+    leadTime: "In Stock",
+    tags: ["mosfet", "n-channel", "high-power", "irfz44n", "motor-control"],
+    overview: {
+      type: "High-Power N-Channel MOSFET",
+      keySpecs: "N-Channel MOSFET, 55V max VDS, 49A max drain current, ultra-low RDS",
+      applications: "High-power motor control, LED drivers, switching power supplies",
+      keyFeatures: ["Very high current capability", "Ultra-low on-resistance", "Fast switching", "High efficiency"],
+      bestFor: "High-power motor control, LED drivers, switching power supplies"
+    },
+    supplier: "International Rectifier IRFZ44N",
+    bestFor: "High-power motor control, LED drivers, switching power supplies"
+  },
+
+  {
+    id: "trans-irf9540",
+    name: "IRF9540 P-Channel MOSFET",
+    description: "P-channel power MOSFET for high-side switching and complementary circuits.",
+    price: 4500,
+    studentPrice: 3825,
+    image: "/images/components/irf9540.jpg",
+    inStock: true,
+    stockLevel: 55,
+    rating: 4.7,
+    reviews: 98,
+    category: "Electronics & Components",
+    subcategory: "Transistors & Regulators",
+    specifications: {
+      "Type": "P-Channel Power MOSFET",
+      "Max Drain Voltage": "-100V",
+      "Max Drain Current": "-23A", 
+      "On-Resistance": "117mΩ",
+      "Package": "TO-220"
+    },
+    compatibility: ["High-side switching", "Complementary circuits", "Protection circuits"],
+    projects: ["High-side power switches", "Reverse polarity protection", "Load switches"],
+    leadTime: "In Stock",
+    tags: ["mosfet", "p-channel", "high-side", "irf9540", "protection"],
+    overview: {
+      type: "P-Channel Power MOSFET",
+      keySpecs: "P-Channel MOSFET, 100V max VDS, 23A max drain current",
+      applications: "High-side switching, reverse polarity protection, complementary switching",
+      keyFeatures: ["High-side switching capability", "High voltage rating", "Complementary to N-channel", "Protection applications"],
+      bestFor: "High-side switching, reverse polarity protection, complementary switching"
+    },
+    supplier: "International Rectifier IRF9540",
+    bestFor: "High-side switching, reverse polarity protection, complementary switching"
+  },
+
+  {
+    id: "trans-2n7000",
+    name: "2N7000 N-Channel MOSFET",
+    description: "Small signal N-channel MOSFET perfect for logic level switching and low-power applications.",
+    price: 800,
+    studentPrice: 680,
+    image: "/images/components/2n7000.jpg",
+    inStock: true,
+    stockLevel: 200,
+    rating: 4.8,
+    reviews: 167,
+    category: "Electronics & Components",
+    subcategory: "Transistors & Regulators",
+    specifications: {
+      "Type": "N-Channel Small Signal MOSFET",
+      "Max Drain Voltage": "60V",
+      "Max Drain Current": "200mA",
+      "On-Resistance": "5.1Ω",
+      "Package": "TO-92"
+    },
+    compatibility: ["Logic level switching", "Arduino outputs", "Low-power circuits"],
+    projects: ["Logic level switching", "LED drivers", "Small motor control", "Interface circuits"],
+    leadTime: "In Stock",
+    tags: ["mosfet", "n-channel", "small-signal", "logic-level", "2n7000"],
+    overview: {
+      type: "Small Signal N-Channel MOSFET",
+      keySpecs: "N-Channel MOSFET, 60V max VDS, 200mA max current, logic level",
+      applications: "Logic level switching from microcontrollers, small load switching",
+      keyFeatures: ["Logic level gate voltage", "Small TO-92 package", "Low power consumption", "Direct MCU drive"],
+      bestFor: "Logic level switching from microcontrollers, small load switching"
+    },
+    supplier: "Fairchild/ON Semiconductor 2N7000",
+    bestFor: "Logic level switching from microcontrollers, small load switching"
+  },
+
+  {
+    id: "reg-7809",
+    name: "7809 Voltage Regulator",
+    description: "Fixed 9V linear voltage regulator for powering 9V circuits and systems.",
+    price: 1300,
+    studentPrice: 1105,
+    image: "/images/components/7809.jpg",
+    inStock: true,
+    stockLevel: 120,
+    rating: 4.7,
+    reviews: 89,
+    category: "Electronics & Components",
+    subcategory: "Transistors & Regulators",
+    specifications: {
+      "Type": "Linear Voltage Regulator",
+      "Output Voltage": "9V ±4%",
+      "Max Output Current": "1A",
+      "Input Voltage": "11.5V to 35V",
+      "Package": "TO-220"
+    },
+    compatibility: ["9V systems", "Audio circuits", "Sensor supplies"],
+    projects: ["9V power supplies", "Audio amplifier supplies", "Sensor power rails"],
+    leadTime: "In Stock",
+    tags: ["voltage-regulator", "9v", "linear", "7809"],
+    overview: {
+      type: "9V Linear Voltage Regulator",
+      keySpecs: "9V output, 1A max current, TO-220 package",
+      applications: "Powering 9V circuits, audio equipment, sensor systems",
+      keyFeatures: ["Fixed 9V output", "Thermal protection", "Short circuit protection", "Standard TO-220"],
+      bestFor: "Powering 9V circuits, audio equipment, sensor systems"
+    },
+    supplier: "Multiple manufacturers - industry standard",
+    bestFor: "Powering 9V circuits, audio equipment, sensor systems"
+  },
+
+  {
+    id: "reg-7812",
+    name: "7812 Voltage Regulator",
+    description: "Fixed 12V linear voltage regulator for powering 12V systems and motor drivers.",
+    price: 1400,
+    studentPrice: 1190,
+    image: "/images/components/7812.jpg",
+    inStock: true,
+    stockLevel: 100,
+    rating: 4.8,
+    reviews: 112,
+    category: "Electronics & Components",
+    subcategory: "Transistors & Regulators",
+    specifications: {
+      "Type": "Linear Voltage Regulator",
+      "Output Voltage": "12V ±4%",
+      "Max Output Current": "1A",
+      "Input Voltage": "14.5V to 35V",
+      "Package": "TO-220"
+    },
+    compatibility: ["12V systems", "Motor drivers", "Op-amp supplies"],
+    projects: ["12V power supplies", "Motor driver supplies", "Op-amp dual supplies"],
+    leadTime: "In Stock",
+    tags: ["voltage-regulator", "12v", "linear", "7812"],
+    overview: {
+      type: "12V Linear Voltage Regulator",
+      keySpecs: "12V output, 1A max current, TO-220 package",
+      applications: "Powering 12V circuits, motor drivers, op-amp supplies",
+      keyFeatures: ["Fixed 12V output", "Thermal protection", "Short circuit protection", "Motor driver compatible"],
+      bestFor: "Powering 12V circuits, motor drivers, op-amp supplies"
+    },
+    supplier: "Multiple manufacturers - industry standard",
+    bestFor: "Powering 12V circuits, motor drivers, op-amp supplies"
   }
 ]
 
@@ -1558,6 +2583,182 @@ const modules: ElectronicComponent[] = [
     },
     supplier: "Texas Instruments ADS1115 chip",
     bestFor: "High-precision sensor readings, battery monitoring, scientific measurements"
+  },
+
+  // Additional essential modules from comprehensive catalog
+  {
+    id: "sensor-dht22",
+    name: "DHT22 Temperature & Humidity Sensor",
+    description: "High-precision digital temperature and humidity sensor with better accuracy than DHT11.",
+    price: 6500,
+    studentPrice: 5525,
+    image: "/images/components/dht22.jpg",
+    inStock: true,
+    stockLevel: 85,
+    rating: 4.8,
+    reviews: 234,
+    category: "Electronics & Components",
+    subcategory: "Sensors & Detection",
+    specifications: {
+      "Temperature Range": "-40°C to +80°C",
+      "Humidity Range": "0-100% RH",
+      "Temperature Accuracy": "±0.5°C",
+      "Humidity Accuracy": "±2-5% RH",
+      "Interface": "Single-wire digital"
+    },
+    compatibility: ["Arduino", "ESP32", "Raspberry Pi", "Most microcontrollers"],
+    projects: ["Weather stations", "Environmental monitoring", "HVAC systems", "Greenhouse automation"],
+    leadTime: "In Stock",
+    tags: ["dht22", "temperature", "humidity", "environmental", "digital"],
+    overview: {
+      type: "Digital Temperature & Humidity Sensor",
+      keySpecs: "±0.5°C temp accuracy, ±2-5% humidity accuracy, single-wire interface",
+      applications: "Weather monitoring, environmental control systems, HVAC automation",
+      keyFeatures: ["High accuracy", "Digital output", "Low power consumption", "Calibrated and compensated"],
+      bestFor: "Weather monitoring, environmental control systems, HVAC automation"
+    },
+    supplier: "ASAIR DHT22 sensor",
+    bestFor: "Weather monitoring, environmental control systems, HVAC automation"
+  },
+
+  {
+    id: "sensor-hc-sr04",
+    name: "HC-SR04 Ultrasonic Distance Sensor",
+    description: "Popular ultrasonic sensor for distance measurement from 2cm to 4m with high accuracy.",
+    price: 4500,
+    studentPrice: 3825,
+    image: "/images/components/hc-sr04.jpg",
+    inStock: true,
+    stockLevel: 120,
+    rating: 4.7,
+    reviews: 378,
+    category: "Electronics & Components",
+    subcategory: "Sensors & Detection",
+    specifications: {
+      "Range": "2cm to 400cm",
+      "Accuracy": "±3mm",
+      "Working Voltage": "5V DC",
+      "Working Current": "15mA",
+      "Frequency": "40KHz"
+    },
+    compatibility: ["Arduino", "Raspberry Pi", "All 5V microcontrollers"],
+    projects: ["Obstacle avoidance robots", "Parking sensors", "Liquid level monitoring", "Security systems"],
+    leadTime: "In Stock",
+    tags: ["ultrasonic", "distance", "hc-sr04", "sonar", "ranging"],
+    overview: {
+      type: "Ultrasonic Distance Sensor",
+      keySpecs: "2-400cm range, ±3mm accuracy, 40KHz ultrasonic, 5V operation",
+      applications: "Robot navigation, parking assistance, liquid level sensing, security systems",
+      keyFeatures: ["Non-contact measurement", "High accuracy", "Wide detection range", "Easy interface"],
+      bestFor: "Robot navigation, parking assistance, liquid level sensing"
+    },
+    supplier: "HC-SR04 ultrasonic ranging module",
+    bestFor: "Robot navigation, parking assistance, liquid level sensing"
+  },
+
+  {
+    id: "motor-driver-l298n",
+    name: "L298N Motor Driver Module",
+    description: "Dual H-bridge motor driver module capable of controlling two DC motors or one stepper motor.",
+    price: 8500,
+    studentPrice: 7225,
+    image: "/images/components/l298n-module.jpg",
+    inStock: true,
+    stockLevel: 75,
+    rating: 4.9,
+    reviews: 267,
+    category: "Electronics & Components",
+    subcategory: "Modules",
+    specifications: {
+      "Motor Channels": "2 independent channels",
+      "Motor Voltage": "5V to 35V",
+      "Logic Voltage": "5V",
+      "Current per Channel": "2A continuous, 3A peak",
+      "Size": "43mm x 43mm"
+    },
+    compatibility: ["Arduino", "Raspberry Pi", "ESP32", "DC motors", "Stepper motors"],
+    projects: ["Robot cars", "Rover platforms", "Automated systems", "Motor speed control"],
+    leadTime: "In Stock",
+    tags: ["motor-driver", "l298n", "h-bridge", "robotics", "dual-motor"],
+    overview: {
+      type: "Dual H-Bridge Motor Driver",
+      keySpecs: "Controls 2 DC motors, 2A per channel, 5-35V motor voltage",
+      applications: "Robot vehicles, automated systems, motor speed and direction control",
+      keyFeatures: ["Built-in voltage regulator", "LED indicators", "Heat sink included", "Enable pins for PWM"],
+      bestFor: "Robot vehicles, automated systems, motor speed and direction control"
+    },
+    supplier: "L298N dual H-bridge module",
+    bestFor: "Robot vehicles, automated systems, motor speed and direction control"
+  },
+
+  {
+    id: "sensor-mpu6050",
+    name: "MPU6050 6-Axis Gyroscope & Accelerometer",
+    description: "6-axis motion tracking device combining 3-axis gyroscope and 3-axis accelerometer with I2C interface.",
+    price: 7500,
+    studentPrice: 6375,
+    image: "/images/components/mpu6050.jpg",
+    inStock: true,
+    stockLevel: 95,
+    rating: 4.8,
+    reviews: 189,
+    category: "Electronics & Components",
+    subcategory: "Sensors & Detection", 
+    specifications: {
+      "Gyroscope": "3-axis, ±250, ±500, ±1000, ±2000°/sec",
+      "Accelerometer": "3-axis, ±2g, ±4g, ±8g, ±16g",
+      "Interface": "I2C",
+      "Supply Voltage": "3-5V",
+      "Built-in DMP": "Digital Motion Processor"
+    },
+    compatibility: ["Arduino", "ESP32", "Raspberry Pi", "Motion control systems"],
+    projects: ["Quadcopters", "Self-balancing robots", "Gesture control", "Motion tracking"],
+    leadTime: "In Stock",
+    tags: ["mpu6050", "gyroscope", "accelerometer", "motion", "6-axis"],
+    overview: {
+      type: "6-Axis Motion Sensor",
+      keySpecs: "3-axis gyro + 3-axis accelerometer, I2C interface, built-in DMP",
+      applications: "Quadcopter stabilization, self-balancing robots, motion tracking",
+      keyFeatures: ["Built-in Digital Motion Processor", "Configurable sensitivity", "Low power modes", "Temperature sensor"],
+      bestFor: "Quadcopter stabilization, self-balancing robots, motion tracking"
+    },
+    supplier: "InvenSense MPU-6050 module",
+    bestFor: "Quadcopter stabilization, self-balancing robots, motion tracking"
+  },
+
+  {
+    id: "module-ds3231",
+    name: "DS3231 Precision RTC Module",
+    description: "High-precision real-time clock with crystal oscillator and temperature compensation.",
+    price: 7500,
+    studentPrice: 6375,
+    image: "/images/components/ds3231.jpg",
+    inStock: true,
+    stockLevel: 65,
+    rating: 4.9,
+    reviews: 145,
+    category: "Electronics & Components",
+    subcategory: "Modules",
+    specifications: {
+      "Accuracy": "±2ppm (±1 minute per year)",
+      "Interface": "I2C",
+      "Battery": "CR2032 (included)",
+      "Temperature Sensor": "Built-in ±3°C accuracy",
+      "Alarms": "2 programmable alarms"
+    },
+    compatibility: ["Arduino", "Raspberry Pi", "All I2C systems"],
+    projects: ["Precision clocks", "Data loggers", "Scheduling systems", "Alarm systems"],
+    leadTime: "In Stock",
+    tags: ["ds3231", "rtc", "precision", "temperature-compensated", "crystal"],
+    overview: {
+      type: "Precision Real-Time Clock",
+      keySpecs: "±2ppm accuracy, temperature compensated, I2C interface, 2 alarms",
+      applications: "High-precision timekeeping, precision data logging, scheduling systems",
+      keyFeatures: ["Temperature compensation", "Crystal oscillator", "Battery backup", "Programmable alarms"],
+      bestFor: "High-precision timekeeping, precision data logging, scheduling systems"
+    },
+    supplier: "Maxim DS3231 precision RTC",
+    bestFor: "High-precision timekeeping, precision data logging, scheduling systems"
   }
 ]
 

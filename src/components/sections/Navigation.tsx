@@ -19,6 +19,7 @@ export function Navigation() {
         <div className="hidden md:flex items-center space-x-10">
           <a href="#products" className="text-black/60 hover:text-black transition-colors">Products</a>
           <Link href="/supply" className="text-black/60 hover:text-black transition-colors">Supply</Link>
+          <Link href="/services" className="text-black/60 hover:text-black transition-colors">Services</Link>
           <Link href="/education" className="text-black/60 hover:text-black transition-colors">Education</Link>
           <a href="#roadmap" className="text-black/60 hover:text-black transition-colors">CarthageOS</a>
           <a href="#innovation" className="text-black/60 hover:text-black transition-colors">Innovation</a>

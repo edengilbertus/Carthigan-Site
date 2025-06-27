@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 const featuredLanguages = [
   "English ↔ Luganda",
   "English ↔ Hebrew",
+  "English ↔ Persian/Farsi",
   "English ↔ French",
   "English ↔ German"
 ]

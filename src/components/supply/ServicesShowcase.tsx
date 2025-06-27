@@ -28,6 +28,7 @@ const serviceCategories = [
     services: [
       "English ↔ Luganda",
       "English ↔ Hebrew", 
+      "English ↔ Persian/Farsi",
       "English ↔ French",
       "English ↔ German",
       "Transcription & Subtitling",
@@ -240,8 +241,8 @@ export function ServicesShowcase() {
                 className={`w-full ${service.textColor} hover:bg-surface/20 rounded-2xl`}
                 asChild
               >
-                <Link href={`/supply/services/${service.id}`}>
-                  Request Quote
+                <Link href={service.id === 'translation' ? '/services' : `/supply/services/${service.id}`}>
+                  {service.id === 'translation' ? 'Learn More' : 'Request Quote'}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

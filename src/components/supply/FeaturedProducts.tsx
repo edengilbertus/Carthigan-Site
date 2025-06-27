@@ -3,8 +3,10 @@
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Star, ShoppingCart, Heart, Eye } from "lucide-react"
 import { useCartStore } from "@/lib/store/cart"
+import { useState } from "react"
 
 const featuredProducts = [
   {
@@ -17,7 +19,16 @@ const featuredProducts = [
     reviews: 124,
     image: "🔧",
     badge: "BESTSELLER",
-    description: "Most powerful Orange Pi with 16GB RAM for AI and edge computing"
+    description: "Most powerful Orange Pi with 16GB RAM for AI and edge computing",
+    detailedDescription: "The Orange Pi 5 Plus 16GB is a high-performance single-board computer featuring RK3588 8-core 64-bit processor, 16GB LPDDR4X RAM, and Mali-G610 MP4 GPU. Perfect for AI development, edge computing, and professional applications in Uganda.",
+    specifications: [
+      "RK3588 Octa-core ARM Cortex-A76/A55 CPU",
+      "16GB LPDDR4X RAM",
+      "Mali-G610 MP4 GPU",
+      "eMMC/microSD support",
+      "WiFi 6 & Bluetooth 5.0",
+      "Multiple USB 3.0 & 2.0 ports"
+    ]
   },
   {
     id: "2",
@@ -29,7 +40,16 @@ const featuredProducts = [
     reviews: 89,
     image: "📡",
     badge: "NEW",
-    description: "Advanced ESP32 with WiFi, Bluetooth, and AI acceleration"
+    description: "Advanced ESP32 with WiFi, Bluetooth, and AI acceleration",
+    detailedDescription: "The ESP32-S3 development kit combines powerful dual-core processing with advanced connectivity options and AI acceleration capabilities, making it ideal for IoT projects and smart device development.",
+    specifications: [
+      "Xtensa dual-core 32-bit LX7 microprocessor",
+      "512KB SRAM, 384KB ROM",
+      "WiFi 802.11 b/g/n & Bluetooth 5 LE",
+      "Vector instructions for AI acceleration",
+      "Rich peripheral interfaces",
+      "Low power consumption modes"
+    ]
   },
   {
     id: "3",
@@ -41,7 +61,16 @@ const featuredProducts = [
     reviews: 67,
     image: "🔥",
     badge: "FEATURED",
-    description: "Temperature-controlled station with digital display"
+    description: "Temperature-controlled station with digital display",
+    detailedDescription: "Professional-grade soldering station with precise temperature control, digital display, and ergonomic design. Essential for electronics manufacturing and repair work in Uganda.",
+    specifications: [
+      "Temperature range: 200°C - 480°C",
+      "Digital temperature display",
+      "Anti-static design",
+      "Quick heating (30 seconds)",
+      "Replaceable soldering tips",
+      "Auto sleep mode"
+    ]
   },
   {
     id: "4",
@@ -53,7 +82,16 @@ const featuredProducts = [
     reviews: 156,
     image: "🎓",
     badge: "STUDENT PICK",
-    description: "Complete starter kit with sensors, actuators, and tutorials"
+    description: "Complete starter kit with sensors, actuators, and tutorials",
+    detailedDescription: "Comprehensive Arduino learning kit designed for students and beginners. Includes Arduino Uno, breadboard, sensors, actuators, and step-by-step tutorials in both English and Luganda.",
+    specifications: [
+      "Arduino Uno R3 microcontroller",
+      "Breadboard and jumper wires",
+      "LED lights, resistors, sensors",
+      "Servo motor and buzzer",
+      "Comprehensive tutorial book",
+      "Online video tutorials"
+    ]
   },
   {
     id: "5",
@@ -65,7 +103,16 @@ const featuredProducts = [
     reviews: 43,
     image: "🖨️",
     badge: "BUNDLE",
-    description: "5 colors of premium PLA filament for your projects"
+    description: "5 colors of premium PLA filament for your projects",
+    detailedDescription: "High-quality PLA filament bundle featuring 5 vibrant colors. Perfect for 3D printing projects, prototyping, and creative applications. Compatible with most FDM 3D printers.",
+    specifications: [
+      "Premium PLA material",
+      "5 colors: Red, Blue, Green, Yellow, Black",
+      "1.75mm diameter",
+      "1kg per spool (5kg total)",
+      "Low warping and easy printing",
+      "Eco-friendly and biodegradable"
+    ]
   },
   {
     id: "6",
@@ -77,7 +124,16 @@ const featuredProducts = [
     reviews: 29,
     image: "📊",
     badge: "PRO",
-    description: "Professional oscilloscope for circuit analysis and debugging"
+    description: "Professional oscilloscope for circuit analysis and debugging",
+    detailedDescription: "Professional 100MHz digital oscilloscope with 2-channel input, high-resolution display, and advanced triggering capabilities. Essential for electronics design and debugging.",
+    specifications: [
+      "100MHz bandwidth, 2 channels",
+      "1 GSa/s real-time sampling rate",
+      "7-inch color TFT display",
+      "Advanced triggering modes",
+      "USB connectivity and data storage",
+      "Built-in signal generator"
+    ]
   }
 ]
 
@@ -97,7 +153,7 @@ const itemVariants = {
     y: 0,
     opacity: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 100,
     },
   },
@@ -105,6 +161,7 @@ const itemVariants = {
 
 export function FeaturedProducts() {
   const { addItem } = useCartStore()
+  const [quickViewProduct, setQuickViewProduct] = useState<typeof featuredProducts[0] | null>(null)
 
   const handleAddToCart = (product: typeof featuredProducts[0]) => {
     addItem({
@@ -114,6 +171,10 @@ export function FeaturedProducts() {
       image: product.image,
       sku: product.id
     })
+  }
+
+  const handleQuickView = (product: typeof featuredProducts[0]) => {
+    setQuickViewProduct(product)
   }
 
   return (
@@ -230,6 +291,7 @@ export function FeaturedProducts() {
                     variant="outline"
                     size="sm"
                     className="flex-1 border-outline-variant text-on-surface hover:bg-surface-variant/50 rounded-xl"
+                    onClick={() => handleQuickView(product)}
                   >
                     <Eye className="mr-2 h-4 w-4" />
                     Quick View
@@ -264,6 +326,106 @@ export function FeaturedProducts() {
           </Button>
         </motion.div>
       </div>
+
+      {/* Quick View Modal */}
+      {quickViewProduct && (
+        <Dialog open={!!quickViewProduct} onOpenChange={() => setQuickViewProduct(null)}>
+          <DialogContent className="sm:max-w-[700px]">
+            <DialogHeader>
+              <div className="flex items-start justify-between">
+                <div>
+                  <DialogTitle className="text-2xl font-bold">{quickViewProduct.name}</DialogTitle>
+                  <p className="text-on-surface/60 mt-1">{quickViewProduct.category}</p>
+                </div>
+                <Badge className={`
+                  rounded-full text-xs
+                  ${quickViewProduct.badge === 'NEW' ? 'bg-tertiary text-on-tertiary' :
+                    quickViewProduct.badge === 'BESTSELLER' ? 'bg-primary text-on-primary' :
+                    quickViewProduct.badge === 'FEATURED' ? 'bg-secondary text-on-secondary' :
+                    quickViewProduct.badge === 'STUDENT PICK' ? 'bg-success text-on-success' :
+                    quickViewProduct.badge === 'BUNDLE' ? 'bg-warning text-on-warning' :
+                    'bg-error text-on-error'
+                  }
+                `}>
+                  {quickViewProduct.badge}
+                </Badge>
+              </div>
+            </DialogHeader>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Product Image */}
+              <div className="aspect-square bg-surface-variant rounded-2xl flex items-center justify-center">
+                <div className="text-8xl">{quickViewProduct.image}</div>
+              </div>
+              
+              {/* Product Details */}
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Description</h3>
+                  <p className="text-on-surface/70 text-sm leading-relaxed">
+                    {quickViewProduct.detailedDescription}
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Specifications</h3>
+                  <ul className="text-sm text-on-surface/70 space-y-1">
+                    {quickViewProduct.specifications.map((spec, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span>{spec}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                {/* Rating */}
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`h-4 w-4 ${
+                          i < Math.floor(quickViewProduct.rating) 
+                            ? 'fill-warning text-warning' 
+                            : 'text-outline'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm text-on-surface/60">
+                    {quickViewProduct.rating} ({quickViewProduct.reviews} reviews)
+                  </span>
+                </div>
+                
+                {/* Price */}
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl font-bold text-primary">
+                    UGX {quickViewProduct.price.toLocaleString()}
+                  </span>
+                  {quickViewProduct.originalPrice > quickViewProduct.price && (
+                    <span className="text-sm text-on-surface/50 line-through">
+                      UGX {quickViewProduct.originalPrice.toLocaleString()}
+                    </span>
+                  )}
+                </div>
+                
+                {/* Add to Cart Button */}
+                <Button
+                  onClick={() => {
+                    handleAddToCart(quickViewProduct)
+                    setQuickViewProduct(null)
+                  }}
+                  className="w-full bg-primary hover:bg-primary/90 text-on-primary rounded-2xl py-3"
+                >
+                  <ShoppingCart className="mr-2 h-4 w-4" />
+                  Add to Cart
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </section>
   )
 } 

@@ -1,0 +1,140 @@
+import { ElectronicComponent, allElectronicsData } from './electronics'
+import { DevelopmentBoard, allDevelopmentBoards } from './dev-boards'
+import { MCUChip, allMCUChips } from './mcu-chips'
+import { ToolProduct, allTools } from './tools'
+
+// Unified product interface
+export interface UnifiedProduct {
+  id: string
+  name: string
+  description: string
+  category: string
+  subcategory: string
+  price: number
+  studentPrice: number
+  image: string
+  inStock: boolean
+  stockLevel: number
+  rating: number
+  reviews: number
+  specifications: Record<string, string>
+  compatibility: string[]
+  projects: string[]
+  leadTime: string
+  tags: string[]
+  type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool'
+  // Additional fields that may exist in some products
+  supplier?: string
+  keyFeatures?: string[]
+  overview?: {
+    type: string
+    keySpecs: string
+    applications: string
+    keyFeatures: string
+    bestFor: string
+  }
+  // Tool-specific fields
+  keySpecs?: Record<string, string>
+  bestFor?: string
+  proTip?: string
+  features?: string[]
+}
+
+// Convert electronics to unified format
+const electronicsAsUnified: UnifiedProduct[] = allElectronicsData.map(item => ({
+  ...item,
+  type: 'electronics' as const
+}))
+
+// Convert dev boards to unified format
+const devBoardsAsUnified: UnifiedProduct[] = allDevelopmentBoards.map(board => ({
+  ...board,
+  type: 'development-board' as const,
+  supplier: `Lead time: ${board.leadTime}`,
+  overview: board.overview ? {
+    type: `${board.category} Development Board`,
+    keySpecs: `${board.overview.processor}, ${board.overview.memory}`,
+    applications: board.projects.join(', '),
+    keyFeatures: board.overview.keyFeatures,
+    bestFor: board.overview.bestFor
+  } : undefined
+}))
+
+// Convert MCU chips to unified format
+const mcuChipsAsUnified: UnifiedProduct[] = allMCUChips.map(chip => ({
+  ...chip,
+  type: 'mcu-chip' as const
+}))
+
+// Convert tools to unified format
+const toolsAsUnified: UnifiedProduct[] = allTools.map(tool => ({
+  ...tool,
+  type: 'tool' as const,
+  compatibility: [],
+  projects: [],
+  leadTime: 'In Stock',
+  overview: tool.overview ? {
+    type: `Electronics Tool`,
+    keySpecs: Object.entries(tool.keySpecs || {}).map(([key, value]) => `${key}: ${value}`).join(', '),
+    applications: tool.bestFor || 'General electronics work',
+    keyFeatures: tool.features?.join(', ') || '',
+    bestFor: tool.bestFor || 'Electronics enthusiasts and professionals'
+  } : undefined
+}))
+
+// All products combined
+export const allProducts: UnifiedProduct[] = [
+  ...electronicsAsUnified,
+  ...devBoardsAsUnified,
+  ...mcuChipsAsUnified,
+  ...toolsAsUnified
+]
+
+// Helper functions
+export function getProductById(id: string): UnifiedProduct | undefined {
+  return allProducts.find(product => product.id === id)
+}
+
+export function getProductsByCategory(category: string): UnifiedProduct[] {
+  return allProducts.filter(product => product.category === category)
+}
+
+export function getProductsByType(type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool'): UnifiedProduct[] {
+  return allProducts.filter(product => product.type === type)
+}
+
+export function getRelatedProducts(productId: string, limit: number = 8): UnifiedProduct[] {
+  const product = getProductById(productId)
+  if (!product) return []
+  
+  return allProducts
+    .filter(p => 
+      p.id !== productId && 
+      (p.category === product.category || p.subcategory === product.subcategory)
+    )
+    .slice(0, limit)
+}
+
+// Export categories info
+export const productCategories = {
+  electronics: {
+    name: 'Electronics & Components',
+    count: electronicsAsUnified.length,
+    href: '/supply/category/electronics'
+  },
+  'development-boards': {
+    name: 'Development Boards', 
+    count: devBoardsAsUnified.length,
+    href: '/supply/category/dev-boards'
+  },
+  'mcu-chips': {
+    name: 'MCU Chips & SoCs',
+    count: mcuChipsAsUnified.length,
+    href: '/supply/category/mcu-chips'
+  },
+  tools: {
+    name: 'Tools & Equipment',
+    count: toolsAsUnified.length,
+    href: '/supply/category/tools'
+  }
+}

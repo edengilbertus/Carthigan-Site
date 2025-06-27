@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,7 @@ import { ShoppingCart, Search, Menu, User } from "lucide-react"
 
 const categories = [
   { name: "Electronics & Components", href: "/supply/category/electronics" },
+  { name: "Microcontrollers", href: "/supply/category/microcontrollers" },
   { name: "Development Boards", href: "/supply/category/dev-boards" },
   { name: "Tools & Equipment", href: "/supply/category/tools" },
   { name: "Educational Kits", href: "/supply/category/education" },
@@ -19,8 +20,15 @@ const categories = [
 
 export function SupplyNavigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isHydrated, setIsHydrated] = useState(false)
   const { getTotalItems, toggleCart } = useCartStore()
-  const cartItemCount = getTotalItems()
+  
+  // Only show cart count after hydration to prevent mismatch
+  const cartItemCount = isHydrated ? getTotalItems() : 0
+
+  useEffect(() => {
+    setIsHydrated(true)
+  }, [])
 
   return (
     <>

@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { SupplyNavigation } from '@/components/supply/SupplyNavigation'
 import { ProductDetail } from '@/components/supply/product/ProductDetail'
 import { SupplyFooter } from '@/components/supply/SupplyFooter'
-import { electronicsData } from '@/lib/data/electronics'
+import { getProductById, getRelatedProducts, allProducts } from '@/lib/data/unified-products'
 
 interface ProductPageProps {
   params: {
@@ -13,7 +13,8 @@ interface ProductPageProps {
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const product = electronicsData.products.find(p => p.id === params.id)
+  const { id } = await params
+  const product = getProductById(id)
   
   if (!product) {
     return {
@@ -23,14 +24,13 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   }
 
   return {
-    title: `${product.name} - ${product.sku} | Carthigan Supply`,
-    description: `${product.description} - UGX ${product.price.toLocaleString()}. ${product.stock > 0 ? 'In stock' : 'Out of stock'} at Carthigan Supply Uganda.`,
+    title: `${product.name} | Carthigan Supply`,
+    description: `${product.description} - UGX ${product.price.toLocaleString()}. ${product.inStock ? 'In stock' : 'Out of stock'} at Carthigan Supply Uganda.`,
     keywords: [
       product.name,
-      product.sku,
       product.category,
       product.subcategory,
-      'electronics',
+      product.type === 'electronics' ? 'electronics' : 'development boards',
       'components',
       'Uganda',
       'Carthigan'
@@ -40,25 +40,21 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 // Generate static paths for all products
 export async function generateStaticParams() {
-  return electronicsData.products.map((product) => ({
+  return allProducts.map((product) => ({
     id: product.id,
   }))
 }
 
-export default function ProductPage({ params }: ProductPageProps) {
-  const product = electronicsData.products.find(p => p.id === params.id)
+export default async function ProductPage({ params }: ProductPageProps) {
+  const { id } = await params
+  const product = getProductById(id)
 
   if (!product) {
     notFound()
   }
 
   // Find related products (same category/subcategory)
-  const relatedProducts = electronicsData.products
-    .filter(p => 
-      p.id !== product.id && 
-      (p.category === product.category || p.subcategory === product.subcategory)
-    )
-    .slice(0, 8)
+  const relatedProducts = getRelatedProducts(product.id, 8)
 
   return (
     <main className="min-h-screen bg-surface">

@@ -1,0 +1,18 @@
+
+> my-app@0.1.0 dev
+> PORT=8000 next dev --turbopack
+
+   ▲ Next.js 15.3.2 (Turbopack)
+   - Local:        http://localhost:8000
+   - Network:      http://192.168.0.197:8000
+
+ ✓ Starting...
+ ✓ Ready in 2.3s
+ ⚠ Your project has `@next/font` installed as a dependency, please use the built-in `next/font` instead. The `@next/font` package will be removed in Next.js 14. You can migrate by running `npx @next/codemod@latest built-in-next-font .`. Read more: https://nextjs.org/docs/messages/built-in-next-font
+ ○ Compiling /supply/category/mcu-chips ...
+ ✓ Compiled /supply/category/mcu-chips in 12.6s
+ GET /supply/category/mcu-chips 200 in 14116ms
+ ○ Compiling /supply/category/microcontrollers ...
+ ✓ Compiled /supply/category/microcontrollers in 3.8s
+ GET /supply/category/microcontrollers 200 in 4690ms
+[?25h

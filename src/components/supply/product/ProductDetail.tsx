@@ -24,15 +24,17 @@ import {
   Cpu,
   Zap,
   Gauge,
-  ArrowLeft
+  ArrowLeft,
+  Info
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useCartStore } from "@/lib/store/cart"
+import { UnifiedProduct } from "@/lib/data/unified-products"
 
 interface ProductDetailProps {
-  product: any
-  relatedProducts: any[]
+  product: UnifiedProduct
+  relatedProducts: UnifiedProduct[]
 }
 
 export function ProductDetail({ product, relatedProducts }: ProductDetailProps) {
@@ -44,40 +46,40 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
   const { addItem, toggleCart } = useCartStore()
 
   const getStockStatus = () => {
-    if (product.stock === 0) return { 
+    if (!product.inStock || product.stockLevel === 0) return { 
       text: "Out of Stock", 
       color: "bg-error text-on-error",
       icon: AlertCircle,
       description: "This item is currently unavailable"
     }
-    if (product.stock <= 10) return { 
+    if (product.stockLevel <= 10) return { 
       text: "Low Stock", 
       color: "bg-warning text-on-warning",
       icon: AlertCircle,
-      description: `Only ${product.stock} units remaining`
+      description: `Only ${product.stockLevel} units remaining`
     }
     return { 
       text: "In Stock", 
       color: "bg-success text-on-success",
       icon: CheckCircle,
-      description: `${product.stock} units available`
+      description: `${product.stockLevel} units available`
     }
   }
 
   const stockStatus = getStockStatus()
-  const hasDiscount = product.originalPrice && product.originalPrice > product.price
-  const discountPercent = hasDiscount ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0
+  const hasDiscount = false // Unified products don't have originalPrice yet
+  const discountPercent = 0
   const StockIcon = stockStatus.icon
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
-      addItem({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image || "/images/placeholder.jpg",
-        sku: product.sku
-      })
+              addItem({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image || "/images/placeholder.jpg",
+          sku: product.id // Use product ID as SKU for unified products
+        })
     }
     toggleCart()
   }
@@ -177,7 +179,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                 <Badge className="bg-secondary/10 text-secondary">
                   {product.subcategory.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
                 </Badge>
-                <span className="text-sm text-on-surface/60">SKU: {product.sku}</span>
+                <span className="text-sm text-on-surface/60">SKU: {product.id}</span>
               </div>
               
               <h1 className="text-3xl lg:text-4xl font-bold text-on-surface mb-4">
@@ -199,7 +201,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                     ))}
                   </div>
                   <span className="text-sm text-on-surface/70">
-                    {product.rating} ({product.reviewCount} reviews)
+                    {product.rating} ({product.reviews} reviews)
                   </span>
                 </div>
               </div>
@@ -267,33 +269,33 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                   <input
                     type="number"
                     min="1"
-                    max={product.stock}
+                    max={product.stockLevel || 100}
                     value={quantity}
-                    onChange={(e) => setQuantity(Math.max(1, Math.min(product.stock, parseInt(e.target.value) || 1)))}
+                    onChange={(e) => setQuantity(Math.max(1, Math.min(product.stockLevel || 100, parseInt(e.target.value) || 1)))}
                     className="w-16 text-center border-t border-b border-outline-variant focus:outline-none"
                   />
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                    onClick={() => setQuantity(Math.min(product.stockLevel || 100, quantity + 1))}
                     className="rounded-r-xl rounded-l-none"
                   >
                     +
                   </Button>
                 </div>
                 <span className="text-sm text-on-surface/60">
-                  (Min: {product.minOrderQty})
+                  (Available: {product.stockLevel || 0})
                 </span>
               </div>
 
               <div className="flex gap-3">
                 <Button
                   onClick={handleAddToCart}
-                  disabled={product.stock === 0}
+                  disabled={!product.inStock || product.stockLevel === 0}
                   className="flex-1 bg-primary hover:bg-primary/90 text-on-primary rounded-2xl py-3 text-lg"
                 >
                   <ShoppingCart className="mr-2 h-5 w-5" />
-                  {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                  {(!product.inStock || product.stockLevel === 0) ? 'Out of Stock' : 'Add to Cart'}
                 </Button>
                 
                 <Button
@@ -337,14 +339,67 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
         </div>
 
         {/* Detailed Information Tabs */}
-        <Tabs defaultValue="specifications" className="mb-16">
-          <TabsList className="grid w-full grid-cols-5 bg-surface-variant/30 rounded-2xl p-1">
+        <Tabs defaultValue={product.overview ? "overview" : "specifications"} className="mb-16">
+          <TabsList className={`grid w-full ${product.overview ? 'grid-cols-6' : 'grid-cols-5'} bg-surface-variant/30 rounded-2xl p-1`}>
+            {product.overview && <TabsTrigger value="overview" className="rounded-xl">Overview</TabsTrigger>}
             <TabsTrigger value="specifications" className="rounded-xl">Specifications</TabsTrigger>
             <TabsTrigger value="compatibility" className="rounded-xl">Compatibility</TabsTrigger>
             <TabsTrigger value="projects" className="rounded-xl">Projects</TabsTrigger>
             <TabsTrigger value="datasheet" className="rounded-xl">Documents</TabsTrigger>
             <TabsTrigger value="reviews" className="rounded-xl">Reviews</TabsTrigger>
           </TabsList>
+
+          {product.overview && (
+            <TabsContent value="overview" className="mt-8">
+              <Card className="rounded-3xl border-outline-variant/20">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Info className="h-5 w-5 text-primary" />
+                    Product Overview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="p-4 bg-primary/5 rounded-2xl">
+                        <h4 className="font-semibold text-primary mb-2">🧠 Processor</h4>
+                        <p className="text-on-surface">{product.overview.processor}</p>
+                      </div>
+                      
+                      {product.overview.coProcessor && (
+                        <div className="p-4 bg-secondary/5 rounded-2xl">
+                          <h4 className="font-semibold text-secondary mb-2">⚡ Co-Processor</h4>
+                          <p className="text-on-surface">{product.overview.coProcessor}</p>
+                        </div>
+                      )}
+                      
+                      <div className="p-4 bg-tertiary/5 rounded-2xl">
+                        <h4 className="font-semibold text-tertiary mb-2">💾 Memory</h4>
+                        <p className="text-on-surface">{product.overview.memory}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="p-4 bg-success/5 rounded-2xl">
+                        <h4 className="font-semibold text-success mb-2">🌐 Connectivity</h4>
+                        <p className="text-on-surface">{product.overview.connectivity}</p>
+                      </div>
+                      
+                      <div className="p-4 bg-warning/5 rounded-2xl">
+                        <h4 className="font-semibold text-warning mb-2">⭐ Key Features</h4>
+                        <p className="text-on-surface">{product.overview.keyFeatures}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-6 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-3xl">
+                    <h4 className="font-semibold text-primary mb-3 text-lg">🎯 Best For</h4>
+                    <p className="text-on-surface text-lg leading-relaxed">{product.overview.bestFor}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          )}
 
           <TabsContent value="specifications" className="mt-8">
             <Card className="rounded-3xl border-outline-variant/20">
@@ -494,7 +549,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Star className="h-5 w-5 text-primary" />
-                  Customer Reviews ({product.reviewCount})
+                  Customer Reviews ({product.reviews})
                 </CardTitle>
               </CardHeader>
               <CardContent>

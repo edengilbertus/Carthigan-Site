@@ -20,7 +20,16 @@ const nextConfig = {
   },
   typescript: {
     ignoreBuildErrors: true,
-  }
+  },
+  async redirects() {
+    return [
+      {
+        source: '/supply/category/components',
+        destination: '/supply/category/electronics',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default nextConfig

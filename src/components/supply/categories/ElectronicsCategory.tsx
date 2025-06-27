@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { motion } from "framer-motion"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -272,12 +273,13 @@ export function ElectronicsCategory() {
                 : "space-y-4"
               }>
                 {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                    viewMode={viewMode}
-                  />
+                  <Link key={product.id} href={`/supply/product/${product.id}`}>
+                    <ProductCard
+                      product={product}
+                      onAddToCart={handleAddToCart}
+                      viewMode={viewMode}
+                    />
+                  </Link>
                 ))}
               </div>
             )}
@@ -326,7 +328,10 @@ function ProductCard({ product, onAddToCart, viewMode }: {
               UGX {product.price.toLocaleString()}
             </div>
             <Button
-              onClick={() => onAddToCart(product)}
+              onClick={(e) => {
+                e.preventDefault()
+                onAddToCart(product)
+              }}
               disabled={!product.inStock || product.stockLevel === 0}
               className="bg-primary hover:bg-primary/90 text-on-primary rounded-2xl"
             >
@@ -392,7 +397,10 @@ function ProductCard({ product, onAddToCart, viewMode }: {
         </div>
 
         <Button
-          onClick={() => onAddToCart(product)}
+          onClick={(e) => {
+            e.preventDefault()
+            onAddToCart(product)
+          }}
           disabled={!product.inStock || product.stockLevel === 0}
           className="w-full bg-primary hover:bg-primary/90 text-on-primary rounded-2xl"
         >

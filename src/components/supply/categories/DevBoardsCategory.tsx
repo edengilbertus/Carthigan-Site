@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 import { Search, Grid, List, Filter, SortAsc } from "lucide-react"
 import { CategoryHeader } from "./CategoryHeader"
-import { allDevelopmentBoards, categories } from "@/lib/data/dev-boards"
+import { getProductsByType } from "@/lib/data/unified-products"
 import { useCartStore } from "@/lib/store/cart"
 
 type ViewMode = 'grid' | 'list'
@@ -19,6 +19,15 @@ export function DevBoardsCategory() {
   
   const { addItem } = useCartStore()
 
+  // Get all development board products from unified system
+  const allDevelopmentBoards = getProductsByType('development-board')
+
+  // Get unique categories from the unified data
+  const categories = useMemo(() => {
+    const cats = allDevelopmentBoards.map(p => ({ id: p.subcategory, name: p.subcategory.replace('-', ' ') }))
+    return [...new Map(cats.map(cat => [cat.id, cat])).values()].sort((a, b) => a.name.localeCompare(b.name))
+  }, [allDevelopmentBoards])
+
   // Filter and sort boards
   const filteredBoards = useMemo(() => {
     let filtered = allDevelopmentBoards
@@ -27,13 +36,14 @@ export function DevBoardsCategory() {
     if (searchTerm) {
       filtered = filtered.filter(board =>
         board.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        board.description.toLowerCase().includes(searchTerm.toLowerCase())
+        board.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (board.tags || []).some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
       )
     }
 
     // Category filter
     if (selectedCategory !== "all") {
-      filtered = filtered.filter(board => board.category === selectedCategory)
+      filtered = filtered.filter(board => board.subcategory === selectedCategory)
     }
 
     // Sort
@@ -45,13 +55,15 @@ export function DevBoardsCategory() {
           return a.price - b.price
         case 'rating':
           return b.rating - a.rating
+        case 'availability':
+          return b.stockLevel - a.stockLevel
         default:
           return 0
       }
     })
 
     return filtered
-  }, [searchTerm, selectedCategory, sortBy])
+  }, [searchTerm, selectedCategory, sortBy, allDevelopmentBoards])
 
   const handleAddToCart = (board: any) => {
     addItem({
@@ -115,6 +127,7 @@ export function DevBoardsCategory() {
               <option value="name">Name</option>
               <option value="price">Price</option>
               <option value="rating">Rating</option>
+              <option value="availability">Availability</option>
             </select>
           </div>
 
@@ -205,16 +218,18 @@ function DevBoardCard({ board, onAddToCart, viewMode }: {
               <div>
                 <h3 className="font-semibold text-lg text-on-surface mb-1">{board.name}</h3>
                 <span className="inline-block px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-sm font-medium">
-                  {board.subcategory}
+                  {board.subcategory.replace('-', ' ')}
                 </span>
               </div>
               <div className="text-right">
                 <p className="text-2xl font-bold text-primary">
                   UGX {board.price.toLocaleString()}
                 </p>
-                <p className="text-sm text-on-surface-variant line-through">
-                  Student: UGX {board.studentPrice.toLocaleString()}
-                </p>
+                {board.studentPrice && (
+                  <p className="text-sm text-success">
+                    Student: UGX {board.studentPrice.toLocaleString()}
+                  </p>
+                )}
               </div>
             </div>
             
@@ -268,7 +283,7 @@ function DevBoardCard({ board, onAddToCart, viewMode }: {
       <div className="p-4">
         <div className="mb-2">
           <span className="inline-block px-2 py-1 bg-secondary-container text-on-secondary-container rounded-full text-xs font-medium mb-2">
-            {board.subcategory}
+            {board.subcategory.replace('-', ' ')}
           </span>
           <Link href={`/supply/product/${board.id}`} className="font-semibold text-on-surface hover:text-primary transition-colors">
             {board.name}
@@ -296,9 +311,11 @@ function DevBoardCard({ board, onAddToCart, viewMode }: {
             <p className="text-lg font-bold text-primary">
               UGX {board.price.toLocaleString()}
             </p>
-            <p className="text-xs text-on-surface-variant line-through">
-              Student: UGX {board.studentPrice.toLocaleString()}
-            </p>
+            {board.studentPrice && (
+              <p className="text-xs text-success">
+                Student: UGX {board.studentPrice.toLocaleString()}
+              </p>
+            )}
           </div>
         </div>
         

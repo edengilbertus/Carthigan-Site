@@ -3,6 +3,7 @@ import { DevelopmentBoard, allDevelopmentBoards } from './dev-boards'
 import { MCUChip, allMCUChips } from './mcu-chips'
 import { ToolProduct, allTools } from './tools'
 import { EducationalKit, allEducationalKits } from './educational-kits'
+import { SensorModule, allSensorsModules } from './sensors-modules'
 
 // Unified product interface
 export interface UnifiedProduct {
@@ -23,7 +24,7 @@ export interface UnifiedProduct {
   projects: string[]
   leadTime: string
   tags: string[]
-  type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool' | 'educational-kit'
+  type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool' | 'educational-kit' | 'sensor-module'
   // Additional fields that may exist in some products
   supplier?: string
   keyFeatures?: string[]
@@ -64,7 +65,7 @@ const devBoardsAsUnified: UnifiedProduct[] = [...allDevelopmentBoards, ...devBoa
   overview: board.overview ? {
     type: `${board.category} Development Board`,
     keySpecs: 'processor' in board.overview ? `${board.overview.processor}, ${board.overview.memory}` : board.overview.keySpecs,
-    applications: board.projects.join(', '),
+    applications: (board.projects || []).join(', '),
     keyFeatures: typeof board.overview.keyFeatures === 'string' ? board.overview.keyFeatures : board.overview.keyFeatures?.join(', ') || '',
     bestFor: board.overview.bestFor
   } : undefined
@@ -106,9 +107,16 @@ const educationalKitsAsUnified: UnifiedProduct[] = allEducationalKits.map(kit =>
     type: `Educational Kit - ${kit.difficultyLevel}`,
     keySpecs: `${kit.estimatedProjectTime}, ${kit.ageRange}`,
     applications: kit.targetAudience || 'Educational use',
-    keyFeatures: kit.features?.join(', ') || '',
+    keyFeatures: (kit.features || []).join(', '),
     bestFor: kit.targetAudience || 'Students and educators'
   }
+}))
+
+// Convert sensors and modules to unified format
+const sensorsModulesAsUnified: UnifiedProduct[] = allSensorsModules.map(sensor => ({
+  ...sensor,
+  type: 'sensor-module' as const,
+  specifications: sensor.specifications || {}
 }))
 
 // All products combined
@@ -117,7 +125,8 @@ export const allProducts: UnifiedProduct[] = [
   ...devBoardsAsUnified,
   ...mcuChipsAsUnified,
   ...toolsAsUnified,
-  ...educationalKitsAsUnified
+  ...educationalKitsAsUnified,
+  ...sensorsModulesAsUnified
 ]
 
 // Helper functions
@@ -129,7 +138,7 @@ export function getProductsByCategory(category: string): UnifiedProduct[] {
   return allProducts.filter(product => product.category === category)
 }
 
-export function getProductsByType(type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool' | 'educational-kit'): UnifiedProduct[] {
+export function getProductsByType(type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool' | 'educational-kit' | 'sensor-module'): UnifiedProduct[] {
   return allProducts.filter(product => product.type === type)
 }
 
@@ -171,5 +180,10 @@ export const productCategories = {
     name: 'Educational Kits',
     count: educationalKitsAsUnified.length,
     href: '/supply/category/education'
+  },
+  'sensors-modules': {
+    name: 'Sensors & Modules',
+    count: sensorsModulesAsUnified.length,
+    href: '/supply/category/sensors'
   }
 }

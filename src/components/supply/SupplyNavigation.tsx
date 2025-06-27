@@ -10,12 +10,11 @@ import { ShoppingCart, Search, Menu, User } from "lucide-react"
 
 const categories = [
   { name: "Electronics & Components", href: "/supply/category/electronics" },
+  { name: "Sensors & Modules", href: "/supply/category/sensors" },
   { name: "Microcontrollers", href: "/supply/category/microcontrollers" },
   { name: "Development Boards", href: "/supply/category/dev-boards" },
   { name: "Tools & Equipment", href: "/supply/category/tools" },
   { name: "Educational Kits", href: "/supply/category/education" },
-  { name: "Audio & Video", href: "/supply/category/audio-video" },
-  { name: "3D Printing", href: "/supply/category/3d-printing" },
 ]
 
 export function SupplyNavigation() {

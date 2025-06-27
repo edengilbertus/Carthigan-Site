@@ -502,6 +502,1107 @@ export const allEducationalKits: EducationalKit[] = [
       "Storage": "Professional carrying case with foam inserts"
     },
     proTip: "Always start diagnostics with visual inspection, then power measurements, then signal tracing. Keep detailed repair logs - they become invaluable reference material. Practice on old, broken devices before working on valuable equipment!"
+  },
+
+  // Additional 22 Educational Kits to reach 29 total
+  {
+    id: "edu-pcb-design-kit",
+    name: "PCB Design & Fabrication Kit",
+    description: "Learn professional PCB design from schematic to finished board",
+    price: 185000,
+    studentPrice: 157250,
+    image: "/images/education/pcb-design-kit.jpg",
+    inStock: true,
+    stockLevel: 14,
+    rating: 4.8,
+    reviews: 56,
+    category: "Educational Kits",
+    subcategory: "Advanced Electronics",
+    targetAudience: "Engineering students and professionals wanting to learn PCB design",
+    whatYouLearn: [
+      "Schematic capture and component libraries",
+      "PCB layout rules and design constraints",
+      "Signal integrity and EMI considerations",
+      "Manufacturing processes and requirements",
+      "Surface mount and through-hole design",
+      "Testing and validation procedures"
+    ],
+    kitContents: [
+      "Professional PCB design software license",
+      "Sample PCBs for analysis",
+      "SMD and THT component samples",
+      "PCB fabrication guidelines",
+      "Design rule manual",
+      "Project templates and examples"
+    ],
+    estimatedProjectTime: "8-10 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "18+ years",
+    features: [
+      "Professional software included",
+      "Real fabrication examples",
+      "Industry-standard practices",
+      "Manufacturing guidelines",
+      "Signal integrity analysis",
+      "Cost optimization techniques"
+    ],
+    tags: ["pcb", "design", "fabrication", "professional", "manufacturing", "smd"],
+    overview: {
+      description: "Complete PCB design course from concept to manufactured board.",
+      learningObjectives: "Master professional PCB design tools and manufacturing processes.",
+      skillsAcquired: "Schematic capture, PCB layout, manufacturing knowledge, signal integrity analysis.",
+      recommendedPrerequisites: "Solid electronics background and circuit design experience."
+    }
+  },
+
+  {
+    id: "edu-power-electronics-kit",
+    name: "Power Electronics Learning Kit",
+    description: "Understand switching power supplies, motor drives, and power conversion",
+    price: 295000,
+    studentPrice: 250750,
+    image: "/images/education/power-electronics.jpg",
+    inStock: true,
+    stockLevel: 12,
+    rating: 4.7,
+    reviews: 43,
+    category: "Educational Kits",
+    subcategory: "Power Systems",
+    targetAudience: "Engineering students focusing on power systems and motor control",
+    whatYouLearn: [
+      "Switching power supply design",
+      "DC-DC converter topologies",
+      "Motor drive principles",
+      "PWM control techniques",
+      "Feedback and control systems",
+      "Thermal management"
+    ],
+    kitContents: [
+      "Buck converter module",
+      "Boost converter module",
+      "H-bridge motor driver",
+      "MOSFET switches and drivers",
+      "Control ICs and references",
+      "Test loads and measurement tools"
+    ],
+    estimatedProjectTime: "6-8 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "18+ years",
+    features: [
+      "Real power conversion circuits",
+      "Safety-designed modules",
+      "Measurement and analysis tools",
+      "Thermal imaging exercises",
+      "Efficiency calculations",
+      "Professional components"
+    ],
+    tags: ["power", "switching", "motor-control", "converters", "efficiency", "advanced"],
+    overview: {
+      description: "Hands-on learning of power electronics principles and applications.",
+      learningObjectives: "Understand power conversion, motor control, and efficiency optimization.",
+      skillsAcquired: "Power supply design, motor control, thermal management, efficiency analysis.",
+      recommendedPrerequisites: "Advanced electronics knowledge and AC/DC circuit analysis."
+    }
+  },
+
+  {
+    id: "edu-radio-frequency-kit",
+    name: "RF & Microwave Fundamentals Kit",
+    description: "Explore high-frequency electronics, antennas, and wireless communication",
+    price: 425000,
+    studentPrice: 361250,
+    image: "/images/education/rf-kit.jpg",
+    inStock: true,
+    stockLevel: 8,
+    rating: 4.6,
+    reviews: 31,
+    category: "Educational Kits",
+    subcategory: "RF & Wireless",
+    targetAudience: "Electrical engineering students and RF professionals",
+    whatYouLearn: [
+      "RF circuit analysis and design",
+      "Antenna theory and measurements",
+      "Transmission line principles",
+      "S-parameter measurements",
+      "Filter design and implementation",
+      "Wireless communication protocols"
+    ],
+    kitContents: [
+      "VNA (Vector Network Analyzer) module",
+      "RF signal generator",
+      "Antenna measurement kit",
+      "Transmission line samples",
+      "RF components and connectors",
+      "Smith chart and calculation tools"
+    ],
+    estimatedProjectTime: "10-12 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "20+ years",
+    features: [
+      "Professional RF instruments",
+      "Real antenna measurements",
+      "S-parameter analysis",
+      "Filter design software",
+      "Smith chart tutorials",
+      "Wireless protocol analysis"
+    ],
+    tags: ["rf", "microwave", "antenna", "wireless", "s-parameters", "transmission-lines"],
+    overview: {
+      description: "Comprehensive RF and microwave engineering fundamentals course.",
+      learningObjectives: "Master RF circuit design, antenna theory, and measurement techniques.",
+      skillsAcquired: "RF design, antenna analysis, network analysis, wireless systems design.",
+      recommendedPrerequisites: "Strong background in AC circuits and electromagnetic theory."
+    }
+  },
+
+  {
+    id: "edu-digital-signal-processing",
+    name: "Digital Signal Processing Kit",
+    description: "Learn DSP algorithms, filters, and real-time audio processing",
+    price: 385000,
+    studentPrice: 327250,
+    image: "/images/education/dsp-kit.jpg",
+    inStock: true,
+    stockLevel: 10,
+    rating: 4.8,
+    reviews: 47,
+    category: "Educational Kits",
+    subcategory: "Signal Processing",
+    targetAudience: "Computer engineering and signal processing students",
+    whatYouLearn: [
+      "Digital filter design and implementation",
+      "FFT and frequency domain analysis",
+      "Real-time audio processing",
+      "Adaptive filtering algorithms",
+      "MATLAB/Python DSP programming",
+      "Hardware acceleration techniques"
+    ],
+    kitContents: [
+      "DSP development board",
+      "Audio codec and I/O",
+      "MATLAB/Simulink interface",
+      "Filter design software",
+      "Algorithm libraries",
+      "Real-time debugging tools"
+    ],
+    estimatedProjectTime: "8-10 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "19+ years",
+    features: [
+      "Real-time DSP processor",
+      "Audio input/output",
+      "MATLAB integration",
+      "Algorithm libraries",
+      "Performance profiling",
+      "Hardware optimization"
+    ],
+    tags: ["dsp", "filters", "audio", "fft", "matlab", "real-time"],
+    overview: {
+      description: "Hands-on digital signal processing with real-time implementation.",
+      learningObjectives: "Master DSP algorithms and real-time implementation techniques.",
+      skillsAcquired: "Filter design, FFT analysis, real-time programming, audio processing.",
+      recommendedPrerequisites: "Strong programming skills and understanding of signal theory."
+    }
+  },
+
+  {
+    id: "edu-machine-learning-edge",
+    name: "Edge AI & Machine Learning Kit",
+    description: "Deploy AI models on microcontrollers for real-world applications",
+    price: 465000,
+    studentPrice: 395250,
+    image: "/images/education/edge-ai-kit.jpg",
+    inStock: true,
+    stockLevel: 7,
+    rating: 4.9,
+    reviews: 38,
+    category: "Educational Kits",
+    subcategory: "AI & Machine Learning",
+    targetAudience: "Computer science students and AI developers",
+    whatYouLearn: [
+      "TensorFlow Lite model optimization",
+      "Edge inference and quantization",
+      "Computer vision on microcontrollers",
+      "Voice recognition and NLP",
+      "Model deployment strategies",
+      "Performance optimization techniques"
+    ],
+    kitContents: [
+      "ESP32-S3 with AI acceleration",
+      "Camera module for vision tasks",
+      "Microphone array for audio",
+      "TensorFlow Lite libraries",
+      "Pre-trained model examples",
+      "Development environment setup"
+    ],
+    estimatedProjectTime: "6-8 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "19+ years",
+    features: [
+      "AI-optimized hardware",
+      "Pre-trained models included",
+      "Computer vision examples",
+      "Voice processing demos",
+      "Model optimization tools",
+      "Performance benchmarking"
+    ],
+    tags: ["ai", "machine-learning", "tensorflow", "edge-computing", "vision", "voice"],
+    overview: {
+      description: "Learn to deploy AI models on resource-constrained edge devices.",
+      learningObjectives: "Master edge AI deployment and optimization techniques.",
+      skillsAcquired: "Model optimization, edge deployment, computer vision, voice processing.",
+      recommendedPrerequisites: "Programming experience and basic machine learning knowledge."
+    }
+  },
+
+  {
+    id: "edu-automotive-electronics",
+    name: "Automotive Electronics Kit",
+    description: "Learn CAN bus, automotive sensors, and vehicle communication systems",
+    price: 385000,
+    studentPrice: 327250,
+    image: "/images/education/automotive-kit.jpg",
+    inStock: true,
+    stockLevel: 9,
+    rating: 4.7,
+    reviews: 42,
+    category: "Educational Kits",
+    subcategory: "Automotive Systems",
+    targetAudience: "Automotive engineering students and technicians",
+    whatYouLearn: [
+      "CAN bus protocol and implementation",
+      "Automotive sensor interfacing",
+      "OBD-II diagnostics",
+      "ECU simulation and testing",
+      "Vehicle network analysis",
+      "Safety and reliability standards"
+    ],
+    kitContents: [
+      "CAN bus interface modules",
+      "Automotive sensors (pressure, temperature, speed)",
+      "OBD-II connector and simulator",
+      "ECU simulation board",
+      "Network analysis software",
+      "Automotive-grade connectors"
+    ],
+    estimatedProjectTime: "6-8 weeks",
+    difficultyLevel: "Intermediate",
+    ageRange: "18+ years",
+    features: [
+      "Real automotive protocols",
+      "Industry-standard connectors",
+      "OBD-II compatibility",
+      "Network analysis tools",
+      "Safety compliance focus",
+      "Professional diagnostics"
+    ],
+    tags: ["automotive", "can-bus", "obd2", "sensors", "diagnostics", "vehicle"],
+    overview: {
+      description: "Comprehensive automotive electronics and communication systems course.",
+      learningObjectives: "Understand automotive networks, sensors, and diagnostic systems.",
+      skillsAcquired: "CAN bus programming, automotive diagnostics, sensor integration.",
+      recommendedPrerequisites: "Basic electronics knowledge and programming skills."
+    }
+  },
+
+  {
+    id: "edu-renewable-energy-kit",
+    name: "Solar & Wind Energy Systems Kit",
+    description: "Design and build renewable energy harvesting and storage systems",
+    price: 425000,
+    studentPrice: 361250,
+    image: "/images/education/renewable-energy.jpg",
+    inStock: true,
+    stockLevel: 11,
+    rating: 4.6,
+    reviews: 35,
+    category: "Educational Kits",
+    subcategory: "Energy Systems",
+    targetAudience: "Environmental engineering students and renewable energy enthusiasts",
+    whatYouLearn: [
+      "Solar panel characteristics and modeling",
+      "Maximum Power Point Tracking (MPPT)",
+      "Battery management systems",
+      "Wind turbine design principles",
+      "Grid-tie and off-grid systems",
+      "Energy storage optimization"
+    ],
+    kitContents: [
+      "Solar panels (various sizes)",
+      "MPPT charge controller",
+      "Battery management system",
+      "Small wind turbine kit",
+      "Load testing equipment",
+      "Monitoring and data logging system"
+    ],
+    estimatedProjectTime: "8-10 weeks",
+    difficultyLevel: "Intermediate",
+    ageRange: "16+ years",
+    features: [
+      "Real solar and wind components",
+      "MPPT algorithms included",
+      "Battery management focus",
+      "Performance monitoring",
+      "Efficiency calculations",
+      "Grid integration concepts"
+    ],
+    tags: ["solar", "wind", "renewable", "mppt", "battery", "energy-storage"],
+    overview: {
+      description: "Hands-on renewable energy system design and optimization.",
+      learningObjectives: "Understand renewable energy harvesting and storage systems.",
+      skillsAcquired: "Solar system design, MPPT control, battery management, energy optimization.",
+      recommendedPrerequisites: "Basic electronics and power systems knowledge."
+    }
+  },
+
+  {
+    id: "edu-industrial-automation",
+    name: "Industrial Automation & PLC Kit",
+    description: "Learn programmable logic controllers and industrial control systems",
+    price: 485000,
+    studentPrice: 412250,
+    image: "/images/education/industrial-automation.jpg",
+    inStock: true,
+    stockLevel: 6,
+    rating: 4.8,
+    reviews: 29,
+    category: "Educational Kits",
+    subcategory: "Industrial Systems",
+    targetAudience: "Industrial engineering students and automation technicians",
+    whatYouLearn: [
+      "PLC programming languages (Ladder Logic, ST)",
+      "Industrial communication protocols",
+      "Process control and monitoring",
+      "Safety systems and interlocks",
+      "HMI design and implementation",
+      "SCADA system basics"
+    ],
+    kitContents: [
+      "Compact PLC with I/O modules",
+      "Industrial sensors and actuators",
+      "HMI touch panel",
+      "Communication modules",
+      "Process simulation hardware",
+      "Programming software license"
+    ],
+    estimatedProjectTime: "8-10 weeks",
+    difficultyLevel: "Intermediate",
+    ageRange: "18+ years",
+    features: [
+      "Real industrial PLC",
+      "Multiple programming languages",
+      "Industrial communication",
+      "Safety system design",
+      "HMI development",
+      "Process simulation"
+    ],
+    tags: ["plc", "automation", "industrial", "ladder-logic", "hmi", "scada"],
+    overview: {
+      description: "Complete industrial automation programming and system design course.",
+      learningObjectives: "Master PLC programming and industrial automation concepts.",
+      skillsAcquired: "PLC programming, industrial networking, HMI design, process control.",
+      recommendedPrerequisites: "Basic programming knowledge and control system understanding."
+    }
+  },
+
+  {
+    id: "edu-medical-electronics",
+    name: "Biomedical Electronics Kit",
+    description: "Design medical devices and learn biomedical signal processing",
+    price: 395000,
+    studentPrice: 335750,
+    image: "/images/education/medical-electronics.jpg",
+    inStock: true,
+    stockLevel: 8,
+    rating: 4.7,
+    reviews: 33,
+    category: "Educational Kits",
+    subcategory: "Medical Devices",
+    targetAudience: "Biomedical engineering students and medical device developers",
+    whatYouLearn: [
+      "ECG and EMG signal acquisition",
+      "Biomedical signal filtering",
+      "Medical device safety standards",
+      "Pulse oximetry principles",
+      "Temperature monitoring systems",
+      "Regulatory compliance basics"
+    ],
+    kitContents: [
+      "Biomedical amplifier circuits",
+      "ECG electrodes and leads",
+      "Pulse oximetry sensor",
+      "Temperature sensors",
+      "Signal conditioning modules",
+      "Safety isolation circuits"
+    ],
+    estimatedProjectTime: "8-10 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "19+ years",
+    features: [
+      "Medical-grade components",
+      "Safety isolation design",
+      "Real biomedical signals",
+      "Regulatory guidelines",
+      "Signal processing focus",
+      "Device safety emphasis"
+    ],
+    tags: ["biomedical", "ecg", "medical-devices", "safety", "signal-processing", "healthcare"],
+    overview: {
+      description: "Learn biomedical electronics design with safety and regulatory focus.",
+      learningObjectives: "Understand medical device design principles and safety requirements.",
+      skillsAcquired: "Biomedical signal processing, medical device safety, regulatory compliance.",
+      recommendedPrerequisites: "Electronics background and basic physiology knowledge helpful."
+    }
+  },
+
+  {
+    id: "edu-drone-flight-controller",
+    name: "Drone Flight Controller Kit",
+    description: "Build and program autonomous drones with custom flight controllers",
+    price: 465000,
+    studentPrice: 395250,
+    image: "/images/education/drone-kit.jpg",
+    inStock: true,
+    stockLevel: 9,
+    rating: 4.8,
+    reviews: 51,
+    category: "Educational Kits",
+    subcategory: "Aerospace Systems",
+    targetAudience: "Aerospace engineering students and drone enthusiasts",
+    whatYouLearn: [
+      "Flight dynamics and control theory",
+      "IMU sensor fusion algorithms",
+      "PID control implementation",
+      "GPS navigation and waypoints",
+      "Autonomous flight programming",
+      "Safety and failsafe systems"
+    ],
+    kitContents: [
+      "Quadcopter frame and motors",
+      "Custom flight controller board",
+      "IMU with gyroscope and accelerometer",
+      "GPS module for navigation",
+      "Barometric pressure sensor",
+      "RC transmitter and receiver"
+    ],
+    estimatedProjectTime: "10-12 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "18+ years",
+    features: [
+      "Complete quadcopter platform",
+      "Custom flight controller",
+      "Autonomous navigation",
+      "Safety systems included",
+      "Real flight testing",
+      "Professional software tools"
+    ],
+    tags: ["drone", "flight-controller", "autonomous", "gps", "pid-control", "aerospace"],
+    overview: {
+      description: "Design and build autonomous drones with custom flight control systems.",
+      learningObjectives: "Master flight control theory and autonomous navigation systems.",
+      skillsAcquired: "Flight control programming, sensor fusion, PID tuning, autonomous navigation.",
+      recommendedPrerequisites: "Programming skills and basic control theory knowledge."
+    }
+  },
+
+  {
+    id: "edu-quantum-electronics",
+    name: "Quantum Electronics Fundamentals Kit",
+    description: "Explore quantum effects in electronics and photonic devices",
+    price: 685000,
+    studentPrice: 582250,
+    image: "/images/education/quantum-kit.jpg",
+    inStock: true,
+    stockLevel: 4,
+    rating: 4.9,
+    reviews: 18,
+    category: "Educational Kits",
+    subcategory: "Advanced Physics",
+    targetAudience: "Advanced physics and engineering students",
+    whatYouLearn: [
+      "Quantum tunneling effects",
+      "Photonic device principles",
+      "Quantum measurement techniques",
+      "Single photon detection",
+      "Quantum communication basics",
+      "Superconducting electronics"
+    ],
+    kitContents: [
+      "Quantum demonstration apparatus",
+      "Photonic components",
+      "Single photon detectors",
+      "Quantum measurement setup",
+      "Cryogenic temperature sensors",
+      "Specialized measurement software"
+    ],
+    estimatedProjectTime: "12-15 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "20+ years",
+    features: [
+      "Real quantum effects",
+      "Photonic demonstrations",
+      "Single photon detection",
+      "Precision measurements",
+      "Research-grade equipment",
+      "Cutting-edge technology"
+    ],
+    tags: ["quantum", "photonics", "advanced-physics", "research", "measurement", "cutting-edge"],
+    overview: {
+      description: "Explore quantum effects in electronic devices and photonic systems.",
+      learningObjectives: "Understand quantum electronics and photonic device principles.",
+      skillsAcquired: "Quantum measurement, photonic systems, precision instrumentation.",
+      recommendedPrerequisites: "Advanced physics and electronics background required."
+    }
+  },
+
+  {
+    id: "edu-satellite-communication",
+    name: "Satellite Communication Kit",
+    description: "Design satellite communication links and ground station equipment",
+    price: 585000,
+    studentPrice: 497250,
+    image: "/images/education/satellite-kit.jpg",
+    inStock: true,
+    stockLevel: 5,
+    rating: 4.7,
+    reviews: 24,
+    category: "Educational Kits",
+    subcategory: "Space Systems",
+    targetAudience: "Aerospace and telecommunications engineering students",
+    whatYouLearn: [
+      "Satellite communication principles",
+      "Link budget calculations",
+      "Antenna tracking systems",
+      "Digital modulation techniques",
+      "Ground station design",
+      "Space environment effects"
+    ],
+    kitContents: [
+      "Software Defined Radio (SDR)",
+      "Directional antenna system",
+      "Antenna rotator controller",
+      "RF amplifiers and filters",
+      "Satellite tracking software",
+      "Communication protocol modules"
+    ],
+    estimatedProjectTime: "10-12 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "19+ years",
+    features: [
+      "Real satellite communication",
+      "Antenna tracking system",
+      "Software defined radio",
+      "Professional protocols",
+      "Link budget analysis",
+      "Space-qualified components"
+    ],
+    tags: ["satellite", "communication", "sdr", "antenna", "space", "telecommunications"],
+    overview: {
+      description: "Learn satellite communication system design and implementation.",
+      learningObjectives: "Master satellite communication principles and ground station design.",
+      skillsAcquired: "Satellite communication, antenna systems, SDR programming, link analysis.",
+      recommendedPrerequisites: "RF engineering knowledge and communication system understanding."
+    }
+  },
+
+  {
+    id: "edu-neural-networks-hardware",
+    name: "Neural Network Hardware Kit",
+    description: "Build dedicated neural network processors and accelerators",
+    price: 525000,
+    studentPrice: 446250,
+    image: "/images/education/neural-hardware.jpg",
+    inStock: true,
+    stockLevel: 6,
+    rating: 4.8,
+    reviews: 27,
+    category: "Educational Kits",
+    subcategory: "AI Hardware",
+    targetAudience: "Computer engineering students and AI hardware developers",
+    whatYouLearn: [
+      "Neural network architectures",
+      "Hardware acceleration techniques",
+      "FPGA-based AI processors",
+      "Parallel processing concepts",
+      "Memory optimization strategies",
+      "AI chip design principles"
+    ],
+    kitContents: [
+      "FPGA development board",
+      "Neural network IP cores",
+      "High-speed memory modules",
+      "AI acceleration libraries",
+      "Hardware design tools",
+      "Performance profiling software"
+    ],
+    estimatedProjectTime: "10-12 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "20+ years",
+    features: [
+      "FPGA-based AI acceleration",
+      "Neural network IP cores",
+      "High-performance computing",
+      "Memory optimization focus",
+      "Professional design tools",
+      "Performance benchmarking"
+    ],
+    tags: ["neural-networks", "fpga", "ai-hardware", "acceleration", "parallel-processing", "performance"],
+    overview: {
+      description: "Design and implement hardware-accelerated neural network processors.",
+      learningObjectives: "Understand AI hardware acceleration and parallel processing techniques.",
+      skillsAcquired: "FPGA design, neural network implementation, hardware optimization.",
+      recommendedPrerequisites: "Digital design knowledge and neural network understanding."
+    }
+  },
+
+  {
+    id: "edu-cybersecurity-hardware",
+    name: "Hardware Security & Cryptography Kit",
+    description: "Learn hardware-based security and cryptographic implementations",
+    price: 445000,
+    studentPrice: 378250,
+    image: "/images/education/security-kit.jpg",
+    inStock: true,
+    stockLevel: 7,
+    rating: 4.6,
+    reviews: 32,
+    category: "Educational Kits",
+    subcategory: "Security Systems",
+    targetAudience: "Cybersecurity and computer engineering students",
+    whatYouLearn: [
+      "Hardware security modules (HSM)",
+      "Cryptographic algorithm implementation",
+      "Side-channel attack mitigation",
+      "Secure boot and attestation",
+      "Random number generation",
+      "Hardware trojans and detection"
+    ],
+    kitContents: [
+      "Secure microcontroller",
+      "Cryptographic coprocessor",
+      "Hardware security modules",
+      "Side-channel analysis tools",
+      "Secure communication modules",
+      "Cryptographic libraries"
+    ],
+    estimatedProjectTime: "8-10 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "19+ years",
+    features: [
+      "Hardware security focus",
+      "Cryptographic implementations",
+      "Side-channel analysis",
+      "Secure boot mechanisms",
+      "Professional security tools",
+      "Threat modeling exercises"
+    ],
+    tags: ["security", "cryptography", "hardware-security", "side-channel", "secure-boot", "hsm"],
+    overview: {
+      description: "Learn hardware-based security implementations and cryptographic systems.",
+      learningObjectives: "Understand hardware security principles and cryptographic implementations.",
+      skillsAcquired: "Hardware security design, cryptographic programming, threat analysis.",
+      recommendedPrerequisites: "Computer architecture knowledge and basic cryptography understanding."
+    }
+  },
+
+  {
+    id: "edu-optical-communication",
+    name: "Fiber Optic Communication Kit",
+    description: "Design optical communication systems and fiber optic networks",
+    price: 485000,
+    studentPrice: 412250,
+    image: "/images/education/fiber-optic.jpg",
+    inStock: true,
+    stockLevel: 8,
+    rating: 4.7,
+    reviews: 28,
+    category: "Educational Kits",
+    subcategory: "Optical Systems",
+    targetAudience: "Telecommunications and optical engineering students",
+    whatYouLearn: [
+      "Fiber optic transmission principles",
+      "Optical transmitters and receivers",
+      "Wavelength division multiplexing",
+      "Optical amplification techniques",
+      "Network topology design",
+      "Loss and dispersion analysis"
+    ],
+    kitContents: [
+      "Fiber optic cables and connectors",
+      "Optical transmitters and receivers",
+      "Optical power meter",
+      "OTDR (Optical Time Domain Reflectometer)",
+      "Splicing and termination tools",
+      "Network analysis software"
+    ],
+    estimatedProjectTime: "8-10 weeks",
+    difficultyLevel: "Intermediate",
+    ageRange: "18+ years",
+    features: [
+      "Real fiber optic components",
+      "Professional test equipment",
+      "Network design software",
+      "Splicing practice tools",
+      "Loss measurement focus",
+      "Industry-standard procedures"
+    ],
+    tags: ["fiber-optic", "optical", "telecommunications", "networking", "otdr", "wavelength"],
+    overview: {
+      description: "Learn fiber optic communication system design and testing.",
+      learningObjectives: "Understand optical communication principles and network design.",
+      skillsAcquired: "Fiber optic installation, optical measurements, network design.",
+      recommendedPrerequisites: "Basic telecommunications and wave physics knowledge."
+    }
+  },
+
+  {
+    id: "edu-green-electronics",
+    name: "Sustainable Electronics Design Kit",
+    description: "Learn eco-friendly design practices and lifecycle assessment",
+    price: 285000,
+    studentPrice: 242250,
+    image: "/images/education/green-electronics.jpg",
+    inStock: true,
+    stockLevel: 12,
+    rating: 4.5,
+    reviews: 36,
+    category: "Educational Kits",
+    subcategory: "Environmental Design",
+    targetAudience: "Environmental engineering and sustainable design students",
+    whatYouLearn: [
+      "Lifecycle assessment (LCA) principles",
+      "Material selection for sustainability",
+      "Energy-efficient design techniques",
+      "Recycling and end-of-life planning",
+      "Carbon footprint analysis",
+      "Green manufacturing processes"
+    ],
+    kitContents: [
+      "Sustainable material samples",
+      "Energy measurement tools",
+      "LCA software tools",
+      "Recycling process demos",
+      "Efficiency testing equipment",
+      "Environmental impact calculator"
+    ],
+    estimatedProjectTime: "6-8 weeks",
+    difficultyLevel: "Intermediate",
+    ageRange: "16+ years",
+    features: [
+      "Sustainability focus",
+      "LCA analysis tools",
+      "Material comparison",
+      "Energy efficiency emphasis",
+      "Recycling process education",
+      "Environmental impact assessment"
+    ],
+    tags: ["sustainability", "green-design", "lca", "recycling", "efficiency", "environmental"],
+    overview: {
+      description: "Learn sustainable electronics design and environmental impact assessment.",
+      learningObjectives: "Understand sustainable design principles and environmental assessment.",
+      skillsAcquired: "LCA analysis, sustainable material selection, efficiency design.",
+      recommendedPrerequisites: "Basic electronics knowledge and environmental awareness."
+    }
+  },
+
+  {
+    id: "edu-wearable-electronics",
+    name: "Wearable Technology Design Kit",
+    description: "Create smart textiles and body-worn electronic devices",
+    price: 325000,
+    studentPrice: 276250,
+    image: "/images/education/wearable-kit.jpg",
+    inStock: true,
+    stockLevel: 10,
+    rating: 4.7,
+    reviews: 44,
+    category: "Educational Kits",
+    subcategory: "Wearable Technology",
+    targetAudience: "Fashion technology and biomedical engineering students",
+    whatYouLearn: [
+      "Conductive textile integration",
+      "Flexible circuit design",
+      "Body area network protocols",
+      "Power management for wearables",
+      "User interface design",
+      "Comfort and ergonomics"
+    ],
+    kitContents: [
+      "Conductive threads and fabrics",
+      "Flexible PCB materials",
+      "Wearable microcontrollers",
+      "Physiological sensors",
+      "Wireless charging modules",
+      "Textile integration tools"
+    ],
+    estimatedProjectTime: "6-8 weeks",
+    difficultyLevel: "Intermediate",
+    ageRange: "16+ years",
+    features: [
+      "Textile integration focus",
+      "Flexible electronics",
+      "Physiological monitoring",
+      "Wireless power transfer",
+      "Ergonomic design emphasis",
+      "Fashion technology fusion"
+    ],
+    tags: ["wearable", "textiles", "flexible", "physiological", "wireless-charging", "ergonomics"],
+    overview: {
+      description: "Design wearable electronics with textile integration and comfort focus.",
+      learningObjectives: "Understand wearable technology design and textile integration.",
+      skillsAcquired: "Flexible circuit design, textile electronics, physiological monitoring.",
+      recommendedPrerequisites: "Basic electronics and interest in fashion technology."
+    }
+  },
+
+  {
+    id: "edu-space-electronics",
+    name: "Space-Grade Electronics Kit",
+    description: "Design electronics for extreme space environments",
+    price: 685000,
+    studentPrice: 582250,
+    image: "/images/education/space-electronics.jpg",
+    inStock: true,
+    stockLevel: 4,
+    rating: 4.9,
+    reviews: 16,
+    category: "Educational Kits",
+    subcategory: "Space Systems",
+    targetAudience: "Aerospace engineering students and space technology developers",
+    whatYouLearn: [
+      "Radiation hardening techniques",
+      "Thermal management in space",
+      "Space-qualified components",
+      "Reliability and redundancy",
+      "Vacuum and outgassing effects",
+      "Spacecraft power systems"
+    ],
+    kitContents: [
+      "Radiation-hardened components",
+      "Thermal testing equipment",
+      "Space-grade connectors",
+      "Reliability testing tools",
+      "Environmental simulation chamber",
+      "Qualification test procedures"
+    ],
+    estimatedProjectTime: "12-15 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "20+ years",
+    features: [
+      "Space-qualified components",
+      "Radiation testing equipment",
+      "Thermal management focus",
+      "Reliability engineering",
+      "Environmental simulation",
+      "Professional standards"
+    ],
+    tags: ["space", "radiation-hardened", "thermal", "reliability", "vacuum", "spacecraft"],
+    overview: {
+      description: "Learn space-grade electronics design for extreme environments.",
+      learningObjectives: "Understand space electronics requirements and qualification processes.",
+      skillsAcquired: "Radiation hardening, thermal design, reliability engineering.",
+      recommendedPrerequisites: "Advanced electronics knowledge and space systems understanding."
+    }
+  },
+
+  {
+    id: "edu-brain-computer-interface",
+    name: "Brain-Computer Interface Kit",
+    description: "Explore neural signal processing and brain-controlled devices",
+    price: 565000,
+    studentPrice: 480250,
+    image: "/images/education/bci-kit.jpg",
+    inStock: true,
+    stockLevel: 5,
+    rating: 4.8,
+    reviews: 21,
+    category: "Educational Kits",
+    subcategory: "Neurotechnology",
+    targetAudience: "Neuroscience and biomedical engineering students",
+    whatYouLearn: [
+      "EEG signal acquisition and processing",
+      "Neural signal filtering techniques",
+      "Machine learning for BCI",
+      "Real-time signal processing",
+      "Neurofeedback systems",
+      "Brain-controlled interfaces"
+    ],
+    kitContents: [
+      "EEG headset with electrodes",
+      "Neural signal amplifiers",
+      "Real-time processing unit",
+      "Machine learning software",
+      "BCI control examples",
+      "Signal analysis tools"
+    ],
+    estimatedProjectTime: "10-12 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "19+ years",
+    features: [
+      "Real EEG signal acquisition",
+      "Neural signal processing",
+      "Machine learning integration",
+      "Real-time control systems",
+      "Neurofeedback applications",
+      "Research-grade equipment"
+    ],
+    tags: ["bci", "eeg", "neural-signals", "machine-learning", "neurofeedback", "brain-control"],
+    overview: {
+      description: "Learn brain-computer interface design and neural signal processing.",
+      learningObjectives: "Understand BCI principles and neural signal processing techniques.",
+      skillsAcquired: "EEG processing, machine learning for BCI, real-time signal analysis.",
+      recommendedPrerequisites: "Signal processing knowledge and basic neuroscience understanding."
+    }
+  },
+
+  {
+    id: "edu-haptic-feedback",
+    name: "Haptic Feedback Systems Kit",
+    description: "Design tactile feedback devices and force-sensing systems",
+    price: 385000,
+    studentPrice: 327250,
+    image: "/images/education/haptic-kit.jpg",
+    inStock: true,
+    stockLevel: 8,
+    rating: 4.6,
+    reviews: 31,
+    category: "Educational Kits",
+    subcategory: "Human Interface",
+    targetAudience: "Mechanical and electrical engineering students",
+    whatYouLearn: [
+      "Haptic feedback principles",
+      "Force and tactile sensors",
+      "Actuator control systems",
+      "Psychophysics of touch",
+      "Virtual reality integration",
+      "Medical rehabilitation applications"
+    ],
+    kitContents: [
+      "Force feedback motors",
+      "Tactile actuator arrays",
+      "Force and pressure sensors",
+      "Haptic controller board",
+      "VR integration software",
+      "Psychophysics testing tools"
+    ],
+    estimatedProjectTime: "8-10 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "18+ years",
+    features: [
+      "Multi-modal haptic feedback",
+      "Force and tactile sensing",
+      "VR/AR integration",
+      "Psychophysics experiments",
+      "Medical applications focus",
+      "Professional actuators"
+    ],
+    tags: ["haptic", "force-feedback", "tactile", "vr", "sensors", "rehabilitation"],
+    overview: {
+      description: "Learn haptic feedback system design and human-computer interaction.",
+      learningObjectives: "Understand haptic principles and tactile interface design.",
+      skillsAcquired: "Haptic system design, force control, tactile sensing, VR integration.",
+      recommendedPrerequisites: "Control systems knowledge and understanding of human factors."
+    }
+  },
+
+  {
+    id: "edu-high-voltage-safety",
+    name: "High Voltage Safety & Testing Kit",
+    description: "Learn high-voltage safety protocols and testing procedures",
+    price: 485000,
+    studentPrice: 412250,
+    image: "/images/education/high-voltage-safety.jpg",
+    inStock: true,
+    stockLevel: 6,
+    rating: 4.8,
+    reviews: 25,
+    category: "Educational Kits",
+    subcategory: "Safety & Testing",
+    targetAudience: "Electrical engineering students and high-voltage technicians",
+    whatYouLearn: [
+      "High-voltage safety protocols",
+      "Arc flash protection requirements",
+      "Insulation testing procedures",
+      "Personal protective equipment",
+      "Lockout/tagout procedures",
+      "Emergency response protocols"
+    ],
+    kitContents: [
+      "Safety training materials",
+      "Insulation testing equipment",
+      "High-voltage safety gear",
+      "Arc flash calculator",
+      "Testing procedures manual",
+      "Emergency response guide"
+    ],
+    estimatedProjectTime: "4-6 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "18+ years",
+    features: [
+      "Professional safety protocols",
+      "Real testing procedures",
+      "Safety certification prep",
+      "Emergency response training",
+      "Industry-standard practices",
+      "Comprehensive safety focus"
+    ],
+    tags: ["high-voltage", "safety", "testing", "arc-flash", "certification", "emergency"],
+    overview: {
+      description: "Learn critical high-voltage safety protocols and testing procedures.",
+      learningObjectives: "Understand high-voltage safety requirements and emergency procedures.",
+      skillsAcquired: "Safety protocols, testing procedures, emergency response, certification preparation.",
+      recommendedPrerequisites: "Electrical engineering background and safety awareness."
+    }
+  },
+
+  {
+    id: "edu-embedded-linux-kit",
+    name: "Embedded Linux Development Kit",
+    description: "Learn embedded Linux development on ARM processors",
+    price: 425000,
+    studentPrice: 361250,
+    image: "/images/education/embedded-linux.jpg",
+    inStock: true,
+    stockLevel: 9,
+    rating: 4.7,
+    reviews: 39,
+    category: "Educational Kits",
+    subcategory: "Embedded Systems",
+    targetAudience: "Software and computer engineering students",
+    whatYouLearn: [
+      "Linux kernel configuration",
+      "Device driver development",
+      "Cross-compilation toolchains",
+      "Bootloader customization",
+      "Real-time system programming",
+      "Hardware abstraction layers"
+    ],
+    kitContents: [
+      "ARM-based single board computer",
+      "Development toolchain setup",
+      "Linux kernel source code",
+      "Driver development examples",
+      "Real-time extensions",
+      "Hardware interface modules"
+    ],
+    estimatedProjectTime: "8-10 weeks",
+    difficultyLevel: "Advanced",
+    ageRange: "19+ years",
+    features: [
+      "Real embedded Linux system",
+      "Kernel development environment",
+      "Driver development focus",
+      "Cross-compilation setup",
+      "Real-time capabilities",
+      "Professional development tools"
+    ],
+    tags: ["embedded-linux", "kernel", "drivers", "arm", "real-time", "cross-compilation"],
+    overview: {
+      description: "Learn embedded Linux development and kernel programming.",
+      learningObjectives: "Master embedded Linux development and driver programming.",
+      skillsAcquired: "Linux kernel development, device drivers, real-time programming.",
+      recommendedPrerequisites: "Strong programming skills and Linux system administration knowledge."
+    }
   }
 ]
 

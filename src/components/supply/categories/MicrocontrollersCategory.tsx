@@ -25,221 +25,7 @@ import {
 } from "lucide-react"
 import { useCartStore } from "@/lib/store/cart"
 import { CategoryHeader } from "./CategoryHeader"
-import { allMCUChips } from "@/lib/data/mcu-chips"
-
-// Existing microcontroller board products data
-const microcontrollerBoards = [
-  {
-    id: "mcu-arduino-uno-r4",
-    name: "Arduino UNO R4 WiFi",
-    description: "Latest Arduino UNO with built-in WiFi and enhanced performance",
-    price: 195000,
-    studentPrice: 165750,
-    image: "/images/microcontrollers/arduino-uno-r4.jpg",
-    inStock: true,
-    stockLevel: 45,
-    rating: 4.9,
-    reviewCount: 234,
-    category: "microcontrollers",
-    subcategory: "arduino-boards",
-    type: "board",
-    specs: {
-      processor: "Renesas RA4M1 ARM Cortex-M4",
-      frequency: "48 MHz",
-      memory: "256KB Flash, 32KB RAM",
-      connectivity: "WiFi, USB-C",
-      voltage: "5V/3.3V"
-    },
-    features: ["Built-in WiFi", "32-bit ARM processor", "USB-C connector", "Enhanced debugging"],
-    tags: ["arduino", "wifi", "beginner-friendly", "usb-c"]
-  },
-  {
-    id: "mcu-esp32-devkit",
-    name: "ESP32 DevKit C V4",
-    description: "Powerful WiFi + Bluetooth microcontroller for IoT projects",
-    price: 62500,
-    studentPrice: 53125,
-    image: "/images/microcontrollers/esp32-devkit.jpg",
-    inStock: true,
-    stockLevel: 120,
-    rating: 4.8,
-    reviewCount: 456,
-    category: "microcontrollers",
-    subcategory: "esp32-boards",
-    type: "board",
-    specs: {
-      processor: "Dual-core Xtensa LX6",
-      frequency: "240 MHz",
-      memory: "520KB SRAM, 4MB Flash",
-      connectivity: "WiFi, Bluetooth",
-      voltage: "3.3V"
-    },
-    features: ["Dual-core processor", "WiFi + Bluetooth", "Low power modes", "Rich peripherals"],
-    tags: ["esp32", "wifi", "bluetooth", "iot", "dual-core"]
-  },
-  {
-    id: "mcu-esp8266-nodemcu",
-    name: "ESP8266 NodeMCU V3",
-    description: "Cost-effective WiFi microcontroller board",
-    price: 35000,
-    studentPrice: 29750,
-    image: "/images/microcontrollers/esp8266-nodemcu.jpg",
-    inStock: true,
-    stockLevel: 95,
-    rating: 4.7,
-    reviewCount: 312,
-    category: "microcontrollers",
-    subcategory: "esp8266-boards",
-    type: "board",
-    specs: {
-      processor: "Tensilica L106 32-bit",
-      frequency: "80 MHz",
-      memory: "128KB RAM, 4MB Flash",
-      connectivity: "WiFi 802.11 b/g/n",
-      voltage: "3.3V"
-    },
-    features: ["Built-in WiFi", "Arduino IDE compatible", "USB programming", "Cost-effective"],
-    tags: ["esp8266", "wifi", "budget", "iot", "arduino-compatible"]
-  },
-  {
-    id: "mcu-stm32-nucleo-f446re",
-    name: "STM32 Nucleo-F446RE",
-    description: "High-performance ARM Cortex-M4 development board",
-    price: 95000,
-    studentPrice: 80750,
-    image: "/images/microcontrollers/stm32-nucleo-f446re.jpg",
-    inStock: true,
-    stockLevel: 35,
-    rating: 4.6,
-    reviewCount: 128,
-    category: "microcontrollers",
-    subcategory: "stm32-boards",
-    type: "board",
-    specs: {
-      processor: "ARM Cortex-M4F",
-      frequency: "180 MHz",
-      memory: "512KB Flash, 128KB RAM",
-      connectivity: "USB, SWD",
-      voltage: "3.3V"
-    },
-    features: ["FPU support", "Rich peripherals", "Arduino headers", "ST-LINK debugger"],
-    tags: ["stm32", "arm", "cortex-m4", "high-performance", "professional"]
-  },
-  {
-    id: "mcu-arduino-nano-esp32",
-    name: "Arduino Nano ESP32",
-    description: "Compact Arduino board with ESP32-S3 processor",
-    price: 125000,
-    studentPrice: 106250,
-    image: "/images/microcontrollers/arduino-nano-esp32.jpg",
-    inStock: true,
-    stockLevel: 55,
-    rating: 4.8,
-    reviewCount: 189,
-    category: "microcontrollers",
-    subcategory: "arduino-boards",
-    type: "board",
-    specs: {
-      processor: "ESP32-S3 dual-core",
-      frequency: "240 MHz",
-      memory: "512KB SRAM, 8MB Flash",
-      connectivity: "WiFi, Bluetooth, USB-C",
-      voltage: "3.3V"
-    },
-    features: ["Compact form factor", "WiFi + Bluetooth", "USB-C", "Arduino ecosystem"],
-    tags: ["arduino", "esp32", "compact", "wifi", "bluetooth"]
-  },
-  {
-    id: "mcu-rpi-pico",
-    name: "Raspberry Pi Pico",
-    description: "Low-cost microcontroller board with RP2040 chip",
-    price: 28000,
-    studentPrice: 23800,
-    image: "/images/microcontrollers/rpi-pico.jpg",
-    inStock: true,
-    stockLevel: 150,
-    rating: 4.7,
-    reviewCount: 267,
-    category: "microcontrollers",
-    subcategory: "raspberry-pi-boards",
-    type: "board",
-    specs: {
-      processor: "Dual-core ARM Cortex-M0+",
-      frequency: "133 MHz",
-      memory: "264KB SRAM, 2MB Flash",
-      connectivity: "USB, SWD",
-      voltage: "3.3V"
-    },
-    features: ["Dual-core M0+", "PIO state machines", "Low cost", "MicroPython support"],
-    tags: ["raspberry-pi", "rp2040", "budget", "micropython", "pio"]
-  },
-  {
-    id: "mcu-seeed-xiao-esp32c3",
-    name: "Seeed XIAO ESP32C3",
-    description: "Ultra-small ESP32-C3 development board",
-    price: 45000,
-    studentPrice: 38250,
-    image: "/images/microcontrollers/seeed-xiao-esp32c3.jpg",
-    inStock: true,
-    stockLevel: 75,
-    rating: 4.6,
-    reviewCount: 142,
-    category: "microcontrollers",
-    subcategory: "seeed-boards",
-    type: "board",
-    specs: {
-      processor: "RISC-V 32-bit",
-      frequency: "160 MHz",
-      memory: "400KB SRAM, 4MB Flash",
-      connectivity: "WiFi, Bluetooth 5.0, USB-C",
-      voltage: "3.3V"
-    },
-    features: ["Ultra-small size", "RISC-V processor", "WiFi + BLE 5.0", "USB-C"],
-    tags: ["seeed", "xiao", "risc-v", "ultra-small", "wifi", "ble"]
-  },
-  {
-    id: "mcu-teensy-41",
-    name: "Teensy 4.1",
-    description: "High-performance microcontroller with Ethernet",
-    price: 185000,
-    studentPrice: 157250,
-    image: "/images/microcontrollers/teensy-41.jpg",
-    inStock: true,
-    stockLevel: 25,
-    rating: 4.9,
-    reviewCount: 98,
-    category: "microcontrollers",
-    subcategory: "teensy-boards",
-    type: "board",
-    specs: {
-      processor: "ARM Cortex-M7",
-      frequency: "600 MHz",
-      memory: "8MB RAM, 7.75MB Flash",
-      connectivity: "Ethernet, USB, CAN",
-      voltage: "3.3V"
-    },
-    features: ["600 MHz Cortex-M7", "Built-in Ethernet", "High RAM", "Audio library"],
-    tags: ["teensy", "cortex-m7", "high-performance", "ethernet", "audio"]
-  }
-]
-
-// Convert MCU chips to compatible format and add type field
-const mcuChips = allMCUChips.map(chip => ({
-  ...chip,
-  reviewCount: chip.reviews,
-  type: "chip",
-  specs: {
-    processor: chip.specifications?.["Architecture"] || "N/A",
-    frequency: chip.specifications?.["Clock Speed"] || "N/A",
-    memory: `${chip.specifications?.["Flash Memory"] || "N/A"} Flash, ${chip.specifications?.["SRAM"] || chip.specifications?.["RAM"] || "N/A"} RAM`,
-    connectivity: chip.specifications?.["Connectivity"] || "N/A",
-    voltage: "3.3V"
-  },
-  features: Object.keys(chip.specifications || {}).slice(0, 4)
-}))
-
-// Combined products array
-const allMicrocontrollerProducts = [...microcontrollerBoards, ...mcuChips]
+import { getProductsByType } from "@/lib/data/unified-products"
 
 type ViewMode = "grid" | "list"
 type SortOption = "name" | "price" | "rating" | "popularity"
@@ -255,26 +41,29 @@ export function MicrocontrollersCategory() {
 
   const { addItem, toggleCart } = useCartStore()
 
+  // Get all microcontroller products from unified system
+  const allMicrocontrollerProducts = getProductsByType('mcu-chip')
+
   // Get unique subcategories and types
   const subcategories = useMemo(() => {
     const cats = allMicrocontrollerProducts.map(p => p.subcategory)
     return [...new Set(cats)]
-  }, [])
+  }, [allMicrocontrollerProducts])
 
   const productTypes = useMemo(() => {
-    const types = allMicrocontrollerProducts.map(p => p.type)
+    const types = allMicrocontrollerProducts.map(p => p.type || 'chip')
     return [...new Set(types)]
-  }, [])
+  }, [allMicrocontrollerProducts])
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
     let filtered = allMicrocontrollerProducts.filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          product.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+                          (product.tags || []).some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
       
       const matchesSubcategory = selectedSubcategory === "all" || product.subcategory === selectedSubcategory
-      const matchesType = selectedType === "all" || product.type === selectedType
+      const matchesType = selectedType === "all" || (product.type || 'chip') === selectedType
       const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1]
       
       const matchesAvailability = (() => {
@@ -293,15 +82,15 @@ export function MicrocontrollersCategory() {
         case "name": return a.name.localeCompare(b.name)
         case "price": return a.price - b.price
         case "rating": return b.rating - a.rating
-        case "popularity": return b.reviewCount - a.reviewCount
+        case "popularity": return b.reviews - a.reviews
         default: return 0
       }
     })
 
     return filtered
-  }, [searchTerm, selectedSubcategory, selectedType, priceRange, sortBy, availabilityFilter])
+  }, [searchTerm, selectedSubcategory, selectedType, priceRange, sortBy, availabilityFilter, allMicrocontrollerProducts])
 
-  const handleAddToCart = (product: typeof allMicrocontrollerProducts[0]) => {
+  const handleAddToCart = (product: any) => {
     addItem({
       id: product.id,
       name: product.name,
@@ -312,7 +101,7 @@ export function MicrocontrollersCategory() {
     toggleCart()
   }
 
-  const getStockStatus = (product: typeof allMicrocontrollerProducts[0]) => {
+  const getStockStatus = (product: any) => {
     if (!product.inStock || product.stockLevel === 0) return { text: "Out of Stock", color: "bg-error text-on-error" }
     if (product.stockLevel <= 30) return { text: "Low Stock", color: "bg-warning text-on-warning" }
     return { text: "In Stock", color: "bg-success text-on-success" }
@@ -443,9 +232,8 @@ export function MicrocontrollersCategory() {
                       <span className="text-sm">WiFi Capable</span>
                       <Badge className="bg-primary/10 text-primary text-xs">
                         {allMicrocontrollerProducts.filter(p => 
-                          p.features?.some(f => f.toLowerCase().includes('wifi')) ||
-                          p.specs?.connectivity?.toLowerCase().includes('wifi') ||
-                          p.tags?.some(t => t.toLowerCase().includes('wifi'))
+                          (p.specifications?.["Connectivity"] || "").toLowerCase().includes('wifi') ||
+                          (p.tags || []).some(t => t.toLowerCase().includes('wifi'))
                         ).length}
                       </Badge>
                     </div>
@@ -454,8 +242,7 @@ export function MicrocontrollersCategory() {
                       <span className="text-sm">Bluetooth</span>
                       <Badge className="bg-secondary/10 text-secondary text-xs">
                         {allMicrocontrollerProducts.filter(p => 
-                          p.features?.some(f => f.toLowerCase().includes('bluetooth')) ||
-                          p.specs?.connectivity?.toLowerCase().includes('bluetooth') ||
+                          (p.specifications?.["Connectivity"] || "").toLowerCase().includes('bluetooth') ||
                           p.subcategory?.includes('bluetooth')
                         ).length}
                       </Badge>
@@ -466,16 +253,9 @@ export function MicrocontrollersCategory() {
                       <Badge className="bg-purple-100 text-purple-600 text-xs">
                         {allMicrocontrollerProducts.filter(p => 
                           p.subcategory === 'risc-v' ||
-                          p.specs?.processor?.toLowerCase().includes('risc-v') ||
-                          p.tags?.some(t => t.toLowerCase().includes('risc-v'))
+                          (p.specifications?.["Architecture"] || "").toLowerCase().includes('risc-v') ||
+                          (p.tags || []).some(t => t.toLowerCase().includes('risc-v'))
                         ).length}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CircuitBoard className="h-4 w-4 text-green-600" />
-                      <span className="text-sm">Bare Chips</span>
-                      <Badge className="bg-green-100 text-green-600 text-xs">
-                        {allMicrocontrollerProducts.filter(p => p.type === 'chip').length}
                       </Badge>
                     </div>
                   </div>
@@ -498,22 +278,37 @@ export function MicrocontrollersCategory() {
                 </div>
               </div>
             </div>
+          
+            {/* Quick Stats */}
+            <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-3xl p-6 border border-outline-variant/20">
+              <h4 className="font-semibold text-on-surface mb-4">Quick Stats</h4>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-on-surface/70">Total Products</span>
+                  <Badge className="bg-primary/10 text-primary">{allMicrocontrollerProducts.length}</Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-on-surface/70">In Stock</span>
+                  <Badge className="bg-success/10 text-success">
+                    {allMicrocontrollerProducts.filter(p => p.inStock && p.stockLevel > 0).length}
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-on-surface/70">Categories</span>
+                  <Badge className="bg-secondary/10 text-secondary">{subcategories.length}</Badge>
+                </div>
+              </div>
+            </div>
           </motion.div>
 
-          {/* Products Grid */}
+          {/* Products Section */}
           <div className="flex-1">
-            {/* Toolbar */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8"
-            >
-              <div>
-                <h2 className="text-2xl font-bold text-on-surface">
-                  {filteredProducts.length} Microcontroller Products
-                </h2>
-                <p className="text-on-surface/60">Development boards and MCU chips for every project</p>
+            {/* Controls Bar */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-on-surface/60">
+                  Showing {filteredProducts.length} of {allMicrocontrollerProducts.length} products
+                </span>
               </div>
 
               <div className="flex items-center gap-4">
@@ -521,7 +316,7 @@ export function MicrocontrollersCategory() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="px-3 py-2 border border-outline-variant rounded-lg bg-surface"
+                  className="px-3 py-2 border border-outline-variant rounded-lg bg-surface text-sm"
                 >
                   <option value="popularity">Most Popular</option>
                   <option value="name">Name A-Z</option>
@@ -530,12 +325,12 @@ export function MicrocontrollersCategory() {
                 </select>
 
                 {/* View Mode */}
-                <div className="flex border border-outline-variant rounded-lg overflow-hidden">
+                <div className="flex bg-surface-variant rounded-lg p-1">
                   <Button
                     variant={viewMode === "grid" ? "default" : "ghost"}
                     size="sm"
                     onClick={() => setViewMode("grid")}
-                    className="rounded-none"
+                    className="rounded-md"
                   >
                     <Grid3X3 className="h-4 w-4" />
                   </Button>
@@ -543,122 +338,237 @@ export function MicrocontrollersCategory() {
                     variant={viewMode === "list" ? "default" : "ghost"}
                     size="sm"
                     onClick={() => setViewMode("list")}
-                    className="rounded-none"
+                    className="rounded-md"
                   >
                     <List className="h-4 w-4" />
                   </Button>
                 </div>
-              </div>
-            </motion.div>
-
-            {/* Products */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-            >
-              {filteredProducts.map((product, index) => {
-                const stockStatus = getStockStatus(product)
-                
-                return (
-                  <Link key={product.id} href={`/supply/product/${product.id}`}>
-                    <motion.div
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.3, delay: index * 0.05 }}
-                      className="bg-surface rounded-3xl border border-outline-variant/20 overflow-hidden hover:shadow-lg transition-all duration-300 group"
-                    >
-                      {/* Product Image */}
-                      <div className="aspect-square bg-surface-variant/30 p-6 flex items-center justify-center relative">
-                        <div className="w-full h-full flex items-center justify-center">
-                          {product.type === 'chip' ? (
-                            <CircuitBoard className="w-16 h-16 text-primary/40" />
-                          ) : (
-                            <Cpu className="w-16 h-16 text-primary/40" />
-                          )}
-                        </div>
-                        <div className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-medium ${stockStatus.color}`}>
-                          {stockStatus.text}
-                        </div>
-                        <div className="absolute top-3 left-3 flex gap-1">
-                          {getTypeIcon(product.type)}
                         </div>
                       </div>
 
-                      {/* Product Info */}
-                      <div className="p-4">
-                        <div className="flex items-start justify-between mb-2">
-                          <Badge className="bg-primary/10 text-primary mb-2 text-xs">
-                            {getCategoryDisplayName(product.subcategory)}
-                          </Badge>
-                          <div className="flex items-center gap-1">
-                            <Star className="h-4 w-4 fill-warning text-warning" />
-                            <span className="text-sm text-on-surface/70">{product.rating}</span>
-                          </div>
-                        </div>
-
-                        <h3 className="text-lg font-semibold text-on-surface mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                          {product.name}
-                        </h3>
-                        
-                        <p className="text-sm text-on-surface/60 mb-4 line-clamp-2">{product.description}</p>
-
-                        {/* Key Specs */}
-                        <div className="space-y-1 mb-4 text-xs">
-                          <div>
-                            <span className="font-medium">Processor:</span>
-                            <span className="text-on-surface/60 ml-1 line-clamp-1">{product.specs.processor}</span>
-                          </div>
-                          <div>
-                            <span className="font-medium">Frequency:</span>
-                            <span className="text-on-surface/60 ml-1">{product.specs.frequency}</span>
-                          </div>
-                        </div>
-
-                        {/* Price and Actions */}
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="text-lg font-bold text-primary">
-                              {product.studentPrice.toLocaleString()} UGX
-                            </div>
-                            <div className="text-xs text-on-surface/50 line-through">
-                              {product.price.toLocaleString()} UGX
-                            </div>
-                          </div>
+            {/* Products Grid */}
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="text-6xl mb-4">🔍</div>
+                <h3 className="text-2xl font-bold text-on-surface mb-2">No products found</h3>
+                <p className="text-on-surface/60 mb-6">
+                  Try adjusting your search criteria or filters
+                </p>
                           <Button
-                            size="sm"
-                            onClick={(e) => {
-                              e.preventDefault()
-                              handleAddToCart(product)
-                            }}
-                            disabled={!product.inStock}
-                            className="shrink-0"
-                          >
-                            <ShoppingCart className="h-4 w-4" />
+                  onClick={() => {
+                    setSearchTerm("")
+                    setSelectedSubcategory("all")
+                    setSelectedType("all")
+                    setAvailabilityFilter("all")
+                  }}
+                  className="bg-primary hover:bg-primary/90 text-on-primary rounded-2xl"
+                >
+                  Clear All Filters
                           </Button>
                         </div>
-                      </div>
-                    </motion.div>
-                  </Link>
-                )
-              })}
-            </motion.div>
-
-            {filteredProducts.length === 0 && (
+            ) : (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-center py-12"
+                className={viewMode === "grid" 
+                  ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                  : "space-y-4"
+                }
               >
-                <Package className="h-16 w-16 text-on-surface/30 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-on-surface mb-2">No products found</h3>
-                <p className="text-on-surface/70">Try adjusting your filters or search term</p>
+                {filteredProducts.map((product, index) => (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                  >
+                    <Link href={`/supply/product/${product.id}`}>
+                      <ProductCard
+                        product={product}
+                        onAddToCart={handleAddToCart}
+                        viewMode={viewMode}
+                        getStockStatus={getStockStatus}
+                        getTypeIcon={getTypeIcon}
+                      />
+                    </Link>
+                  </motion.div>
+                ))}
               </motion.div>
             )}
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+// Product Card Component
+function ProductCard({ product, onAddToCart, viewMode, getStockStatus, getTypeIcon }: { 
+  product: any
+  onAddToCart: (product: any) => void
+  viewMode: ViewMode
+  getStockStatus: (product: any) => { text: string; color: string }
+  getTypeIcon: (type: string) => JSX.Element
+}) {
+  const stockStatus = getStockStatus(product)
+  const type = product.type || 'chip'
+
+  if (viewMode === "list") {
+    return (
+      <div className="bg-surface rounded-3xl border border-outline-variant/20 p-6 hover:shadow-lg transition-all duration-300">
+        <div className="flex gap-6">
+          <div className="w-20 h-20 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl flex items-center justify-center">
+            {getTypeIcon(type)}
+          </div>
+          
+          <div className="flex-1">
+            <div className="flex items-start gap-2 mb-2">
+              <h3 className="text-lg font-bold text-on-surface">{product.name}</h3>
+              <Badge className="bg-primary/10 text-primary text-xs">
+                {type === 'chip' ? 'MCU Chip' : 'Dev Board'}
+              </Badge>
+            </div>
+            
+            <p className="text-sm text-on-surface/70 mb-3 line-clamp-2">{product.description}</p>
+            
+            <div className="flex items-center gap-3 mb-2">
+              <Badge className={`${stockStatus.color} text-xs`}>
+                {stockStatus.text}
+              </Badge>
+              <Badge className="bg-secondary/10 text-secondary text-xs">
+                {product.subcategory.replace('-', ' ')}
+              </Badge>
+            </div>
+
+            {/* Specifications */}
+            <div className="text-xs text-on-surface/60 mb-2">
+              <span>{product.specifications?.["Architecture"] || "N/A"}</span>
+              {product.specifications?.["Clock Speed"] && (
+                <span> • {product.specifications["Clock Speed"]}</span>
+              )}
+              {product.specifications?.["Flash Memory"] && (
+                <span> • {product.specifications["Flash Memory"]} Flash</span>
+              )}
+            </div>
+          </div>
+          
+          <div className="text-right">
+            <div className="flex items-center gap-1 mb-2">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  className={`h-3 w-3 ${
+                    i < Math.floor(product.rating) 
+                      ? 'fill-warning text-warning' 
+                      : 'text-outline'
+                  }`}
+                />
+              ))}
+              <span className="text-xs text-on-surface/60 ml-1">({product.reviews})</span>
+            </div>
+            
+            <div className="text-xl font-bold text-primary mb-1">
+              UGX {product.price.toLocaleString()}
+            </div>
+            {product.studentPrice && (
+              <div className="text-sm text-success mb-3">
+                Student: UGX {product.studentPrice.toLocaleString()}
+              </div>
+            )}
+            
+            <Button
+              onClick={(e) => {
+                e.preventDefault()
+                onAddToCart(product)
+              }}
+              disabled={!product.inStock || product.stockLevel === 0}
+              className="bg-primary hover:bg-primary/90 text-on-primary rounded-2xl"
+            >
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              Add to Cart
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-surface rounded-3xl border border-outline-variant/20 overflow-hidden hover:shadow-xl transition-all duration-300 group">
+      <div className="aspect-square bg-gradient-to-br from-primary/5 to-secondary/5 p-6 flex items-center justify-center relative">
+        <div className="text-4xl text-primary/30 group-hover:scale-110 transition-transform duration-300">
+          {getTypeIcon(type)}
+        </div>
+        <Badge className="absolute top-3 right-3 bg-primary/10 text-primary text-xs">
+          {type === 'chip' ? 'Chip' : 'Board'}
+        </Badge>
+      </div>
+      
+      <div className="p-4">
+        <Badge className="bg-secondary/10 text-secondary text-xs mb-2">
+          {product.subcategory.replace('-', ' ')}
+        </Badge>
+        
+        <h3 className="text-lg font-bold text-on-surface mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+          {product.name}
+        </h3>
+        
+        <p className="text-sm text-on-surface/70 mb-3 line-clamp-3">
+          {product.description}
+        </p>
+
+        {/* Key Specs */}
+        <div className="text-xs text-on-surface/60 mb-3 space-y-1">
+          <div>{product.specifications?.["Architecture"] || "N/A"}</div>
+          <div className="flex justify-between">
+            <span>{product.specifications?.["Clock Speed"] || "N/A"}</span>
+            <span>{product.specifications?.["Flash Memory"] || "N/A"}</span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-1">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`h-3 w-3 ${
+                  i < Math.floor(product.rating) 
+                    ? 'fill-warning text-warning' 
+                    : 'text-outline'
+                }`}
+              />
+            ))}
+          </div>
+          <span className="text-xs text-on-surface/60">({product.reviews})</span>
+        </div>
+
+        <Badge className={`${stockStatus.color} text-xs mb-4`}>
+          {stockStatus.text}
+        </Badge>
+
+        <div className="mb-4">
+          <div className="text-xl font-bold text-primary">
+            UGX {product.price.toLocaleString()}
+          </div>
+          {product.studentPrice && (
+            <div className="text-xs text-success">
+              Student: UGX {product.studentPrice.toLocaleString()}
+            </div>
+          )}
+        </div>
+
+        <Button
+          onClick={(e) => {
+            e.preventDefault()
+            onAddToCart(product)
+          }}
+          disabled={!product.inStock || product.stockLevel === 0}
+          className="w-full bg-primary hover:bg-primary/90 text-on-primary rounded-2xl group-hover:bg-secondary group-hover:text-on-secondary transition-colors"
+        >
+          <ShoppingCart className="mr-2 h-4 w-4" />
+          {(!product.inStock || product.stockLevel === 0) ? 'Out of Stock' : 'Add to Cart'}
+        </Button>
       </div>
     </div>
   )

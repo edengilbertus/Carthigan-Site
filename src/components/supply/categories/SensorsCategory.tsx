@@ -11,13 +11,15 @@ import {
   Filter, 
   Grid3X3, 
   List, 
-  SortAsc,
-  ChevronDown,
   Star,
   ShoppingCart,
-  Eye,
-  Heart,
-  Package
+  Package,
+  Thermometer,
+  Droplets,
+  Wind,
+  Zap,
+  Waves,
+  Gauge
 } from "lucide-react"
 import { CategoryHeader } from "./CategoryHeader"
 import { getProductsByType } from "@/lib/data/unified-products"
@@ -26,9 +28,8 @@ import { useCartStore } from "@/lib/store/cart"
 type ViewMode = 'grid' | 'list'
 type SortOption = 'name' | 'price-low' | 'price-high' | 'rating' | 'availability'
 
-export function ElectronicsCategory() {
+export function SensorsCategory() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState<string>("all")
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>("all")
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000])
   const [availabilityFilter, setAvailabilityFilter] = useState<string>("all")
@@ -38,18 +39,18 @@ export function ElectronicsCategory() {
 
   const { addItem } = useCartStore()
 
-  // Get all electronics products from unified system
-  const allElectronicsData = getProductsByType('electronics')
-  
-  // Get unique subcategories from the unified data
-  const electronicsSubcategories = useMemo(() => {
-    const cats = allElectronicsData.map(p => p.subcategory)
+  // Get all sensor products
+  const allSensorProducts = getProductsByType('sensor-module')
+
+  // Get unique subcategories
+  const subcategories = useMemo(() => {
+    const cats = allSensorProducts.map(p => p.subcategory)
     return [...new Set(cats)].sort()
-  }, [allElectronicsData])
+  }, [allSensorProducts])
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
-    let filtered = allElectronicsData
+    let filtered = allSensorProducts
 
     // Search filter
     if (searchQuery) {
@@ -57,13 +58,9 @@ export function ElectronicsCategory() {
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.subcategory.toLowerCase().includes(searchQuery.toLowerCase())
+        product.subcategory.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
       )
-    }
-
-    // Category filter
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter(product => product.category === selectedCategory)
     }
 
     // Subcategory filter
@@ -105,7 +102,7 @@ export function ElectronicsCategory() {
     })
 
     return filtered
-  }, [searchQuery, selectedCategory, selectedSubcategory, priceRange, availabilityFilter, sortBy])
+  }, [searchQuery, selectedSubcategory, priceRange, availabilityFilter, sortBy, allSensorProducts])
 
   const handleAddToCart = (product: any) => {
     addItem({
@@ -117,15 +114,30 @@ export function ElectronicsCategory() {
     })
   }
 
+  const getSubcategoryIcon = (subcategory: string) => {
+    if (subcategory.includes('environmental') || subcategory.includes('air')) return <Wind className="h-4 w-4" />
+    if (subcategory.includes('temperature') || subcategory.includes('thermal')) return <Thermometer className="h-4 w-4" />
+    if (subcategory.includes('humidity') || subcategory.includes('moisture')) return <Droplets className="h-4 w-4" />
+    if (subcategory.includes('pressure') || subcategory.includes('flow')) return <Gauge className="h-4 w-4" />
+    if (subcategory.includes('motion') || subcategory.includes('proximity')) return <Waves className="h-4 w-4" />
+    return <Zap className="h-4 w-4" />
+  }
+
+  const getSubcategoryDisplayName = (subcategory: string) => {
+    return subcategory.split('-').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ')
+  }
+
   return (
     <div className="min-h-screen pt-32 pb-20">
       <div className="container mx-auto px-6">
         {/* Category Header */}
         <CategoryHeader 
-          title="Electronic Components"
-          description="Comprehensive catalog of semiconductors, passive components, and electromechanical parts"
+          title="Sensors & Modules"
+          description="Professional-grade sensors for environmental monitoring, research, and industrial applications"
           productCount={filteredProducts.length}
-          totalProducts={allElectronicsData.length}
+          totalProducts={allSensorProducts.length}
         />
 
         {/* Search and Controls */}
@@ -135,7 +147,7 @@ export function ElectronicsCategory() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-on-surface/40" />
             <Input
               type="text"
-              placeholder="Search components, part numbers, descriptions..."
+              placeholder="Search sensors, modules, measurement devices..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-12 pr-4 py-3 text-lg border-outline-variant/30 rounded-2xl focus:border-primary focus:ring-primary"
@@ -152,7 +164,7 @@ export function ElectronicsCategory() {
             >
               <Filter className="mr-2 h-4 w-4" />
               Filters
-              {(selectedCategory !== "all" || selectedSubcategory !== "all" || availabilityFilter !== "all") && (
+              {(selectedSubcategory !== "all" || availabilityFilter !== "all") && (
                 <Badge className="ml-2 bg-primary text-on-primary rounded-full px-2 py-1 text-xs">
                   Active
                 </Badge>
@@ -195,7 +207,7 @@ export function ElectronicsCategory() {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Basic Filters Sidebar */}
+          {/* Filters Sidebar */}
           {showFilters && (
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -208,16 +220,16 @@ export function ElectronicsCategory() {
                 
                 {/* Subcategory Filter */}
                 <div className="mb-6">
-                  <h4 className="font-semibold text-on-surface mb-3">Subcategory</h4>
+                  <h4 className="font-semibold text-on-surface mb-3">Category</h4>
                   <select 
                     value={selectedSubcategory} 
                     onChange={(e) => setSelectedSubcategory(e.target.value)}
                     className="w-full px-3 py-2 border border-outline-variant rounded-xl bg-surface text-on-surface"
                   >
-                    <option value="all">All Subcategories</option>
-                    {electronicsSubcategories.map((subcategory) => (
+                    <option value="all">All Categories</option>
+                    {subcategories.map((subcategory) => (
                       <option key={subcategory} value={subcategory}>
-                        {subcategory}
+                        {getSubcategoryDisplayName(subcategory)}
                       </option>
                     ))}
                   </select>
@@ -238,10 +250,29 @@ export function ElectronicsCategory() {
                   </select>
                 </div>
 
+                {/* Quick Category Filters */}
+                <div className="mb-6">
+                  <h4 className="font-semibold text-on-surface mb-3">Quick Filters</h4>
+                  <div className="space-y-2">
+                    {subcategories.slice(0, 6).map((subcategory) => (
+                      <button
+                        key={subcategory}
+                        onClick={() => setSelectedSubcategory(subcategory)}
+                        className="w-full flex items-center gap-2 p-2 text-left rounded-lg hover:bg-surface-variant/50 transition-colors"
+                      >
+                        {getSubcategoryIcon(subcategory)}
+                        <span className="text-sm">{getSubcategoryDisplayName(subcategory)}</span>
+                        <Badge className="ml-auto bg-primary/10 text-primary text-xs">
+                          {allSensorProducts.filter(p => p.subcategory === subcategory).length}
+                        </Badge>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Clear Filters */}
                 <Button
                   onClick={() => {
-                    setSelectedCategory("all")
                     setSelectedSubcategory("all")
                     setAvailabilityFilter("all")
                     setSearchQuery("")
@@ -260,14 +291,13 @@ export function ElectronicsCategory() {
             {filteredProducts.length === 0 ? (
               <div className="text-center py-16">
                 <div className="text-6xl mb-4">🔍</div>
-                <h3 className="text-2xl font-bold text-on-surface mb-2">No products found</h3>
+                <h3 className="text-2xl font-bold text-on-surface mb-2">No sensors found</h3>
                 <p className="text-on-surface/60 mb-6">
                   Try adjusting your search criteria or filters
                 </p>
                 <Button
                   onClick={() => {
                     setSearchQuery("")
-                    setSelectedCategory("all")
                     setSelectedSubcategory("all")
                     setAvailabilityFilter("all")
                   }}
@@ -299,7 +329,7 @@ export function ElectronicsCategory() {
   )
 }
 
-// Simple Product Card Component
+// Product Card Component
 function ProductCard({ product, onAddToCart, viewMode }: { 
   product: any, 
   onAddToCart: (product: any) => void,
@@ -328,7 +358,9 @@ function ProductCard({ product, onAddToCart, viewMode }: {
               <Badge className={`${stockStatus.color} text-xs`}>
                 {stockStatus.text}
               </Badge>
-              <span className="text-xs text-on-surface/60">ID: {product.id}</span>
+              <Badge className="bg-secondary/10 text-secondary text-xs">
+                {product.subcategory.replace('-', ' ')}
+              </Badge>
             </div>
           </div>
           
@@ -336,6 +368,11 @@ function ProductCard({ product, onAddToCart, viewMode }: {
             <div className="text-xl font-bold text-primary mb-2">
               UGX {product.price.toLocaleString()}
             </div>
+            {product.studentPrice && (
+              <div className="text-sm text-success mb-2">
+                Student: UGX {product.studentPrice.toLocaleString()}
+              </div>
+            )}
             <Button
               onClick={(e) => {
                 e.preventDefault()
@@ -419,4 +456,4 @@ function ProductCard({ product, onAddToCart, viewMode }: {
       </div>
     </div>
   )
-} 
+}

@@ -919,3 +919,4 @@ export const powerPriceRanges = [
   { id: "10k-25k", name: "10,000 - 25,000 UGX", min: 10000, max: 25000 },
   { id: "over-25k", name: "Over 25,000 UGX", min: 25000, max: Infinity }
 ];
+ 

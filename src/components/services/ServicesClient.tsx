@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { ServicesNavigation } from '@/components/services/ServicesNavigation'
 import { CoreServices } from '@/components/services/CoreServices'
 import { CarthiganAdvantage } from '@/components/services/CarthiganAdvantage'
-import { SimpleProcess } from '@/components/services/SimpleProcess'
 import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -202,7 +201,6 @@ export default function ServicesClient() {
 
         <CoreServices onGetQuoteClick={() => setIsQuoteModalOpen(true)} />
         <CarthiganAdvantage />
-        <SimpleProcess />
         <LanguagesSection />
         <FinalCallToAction onGetQuoteClick={() => setIsQuoteModalOpen(true)} />
       </main>

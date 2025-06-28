@@ -90,7 +90,7 @@ function FinalCallToAction({ onGetQuoteClick }: { onGetQuoteClick: () => void })
           transition={{ duration: 0.8 }}
           className="text-5xl font-bold mb-6"
         >
-          Ready to Reach a New Audience?
+          Ready to Transform Your Business?
         </motion.h2>
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
@@ -99,7 +99,7 @@ function FinalCallToAction({ onGetQuoteClick }: { onGetQuoteClick: () => void })
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-xl max-w-2xl mx-auto mb-10"
         >
-          Let's break down the language barriers together. Contact us today for custom projects or specialized language needs.
+          From breaking language barriers to building cutting-edge software and empowering your team with new skills. Let's discuss how Carthigan can accelerate your growth and innovation.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -108,7 +108,7 @@ function FinalCallToAction({ onGetQuoteClick }: { onGetQuoteClick: () => void })
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <Button size="lg" onClick={onGetQuoteClick} className="bg-primary text-on-primary hover:bg-primary/90 rounded-full px-12 py-8 text-lg">
-            Contact Us for a Custom Project
+            Start Your Project Today
           </Button>
         </motion.div>
       </div>
@@ -152,6 +152,8 @@ function QuoteModal({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (isOpen
                   <SelectItem value="Document Translation">Document Translation</SelectItem>
                   <SelectItem value="Transcription & Subtitling">Transcription & Subtitling</SelectItem>
                   <SelectItem value="Software & App Localization">Software & App Localization</SelectItem>
+                  <SelectItem value="Software & App Development">Software & App Development</SelectItem>
+                  <SelectItem value="Education & Skills Development">Education & Skills Development</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -189,17 +191,16 @@ export default function ServicesClient() {
       <ServicesNavigation />
       <main>
         <div id="hero" className="text-center py-40 bg-primary-container text-on-primary-container">
-          <h1 className="text-6xl font-bold">Bridging Worlds, One Word at a Time.</h1>
+          <h1 className="text-6xl font-bold">Building Bridges, Breaking Barriers.</h1>
           <p className="text-xl mt-4 max-w-3xl mx-auto">
-            Carthigan Supply offers professional, culturally-aware language services to connect your business, research, or project with a global and local Ugandan audience. 
-            We ensure your message is not just translated, but truly understood.
+            Carthigan Supply offers comprehensive services to connect your business with global opportunities. From professional language services and software development to education and skills training, we empower you to reach new markets, build innovative solutions, and develop future-ready talent.
           </p>
           <Button size="lg" onClick={() => setIsQuoteModalOpen(true)} className="mt-8 bg-primary text-on-primary hover:bg-primary/90 rounded-full px-12 py-8 text-lg">
             Get a Free Quote
           </Button>
         </div>
 
-        <CoreServices />
+        <CoreServices onGetQuoteClick={() => setIsQuoteModalOpen(true)} />
         <CarthiganAdvantage />
         <SimpleProcess />
         <LanguagesSection />

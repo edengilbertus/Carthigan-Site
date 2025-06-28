@@ -1,7 +1,6 @@
 "use client"
 
 import { Fragment } from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { Dialog, Transition } from "@headlessui/react"
 import { Button } from "@/components/ui/button"
@@ -94,13 +93,10 @@ export function CartSidebar() {
                               className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg"
                             >
                               {/* Product Image */}
-                              <div className="w-16 h-16 relative rounded-lg overflow-hidden flex-shrink-0">
-                                <Image
-                                  src={item.image}
-                                  alt={item.name}
-                                  fill
-                                  className="object-cover"
-                                />
+                              <div className="w-16 h-16 relative rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                                <div className="text-2xl">
+                                  {item.image}
+                                </div>
                               </div>
 
                               {/* Product Info */}

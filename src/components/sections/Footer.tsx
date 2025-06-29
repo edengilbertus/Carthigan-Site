@@ -53,8 +53,11 @@ export function Footer() {
                 variant="ghost" 
                 size="icon" 
                 className="rounded-full hover:bg-black/5 transition-colors"
+                asChild
               >
-                <GitHubIcon />
+                <a href="https://github.com/carthiganelectronics" target="_blank" rel="noopener noreferrer">
+                  <GitHubIcon />
+                </a>
               </Button>
             </div>
           </div>

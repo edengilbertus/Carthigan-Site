@@ -49,14 +49,14 @@ export function StudentDashboard() {
     },
     {
       id: '2',
-      course_id: 'ee101',
-      progress: 20,
+      course_id: 'ee104',
+      progress: 65,
       enrolled_at: new Date().toISOString(),
       courses: {
-        title: 'Circuit Analysis Fundamentals',
-        duration: '12 weeks (36 hours)',
-        instructor: 'Dr. Sarah Mukasa',
-        image: '/images/courses/circuit-analysis.jpg',
+        title: 'Microcontroller Programming',
+        duration: '8 weeks (24 hours)',
+        instructor: 'Eng. David Mukiibi',
+        image: '/images/courses/microcontroller.jpg',
         category: 'electrical'
       }
     }
@@ -68,6 +68,44 @@ export function StudentDashboard() {
   const completedCourses = displayEnrollments.filter(e => e.progress === 100).length
   const inProgressCourses = displayEnrollments.filter(e => e.progress > 0 && e.progress < 100).length
   const avgProgress = displayEnrollments.reduce((acc, e) => acc + e.progress, 0) / totalCourses || 0
+
+  // Get course materials for enrolled courses
+  const getCourseMaterials = () => {
+    const allMaterials: Array<{ course: any; material: CourseMaterial }> = []
+    
+    displayEnrollments.forEach(enrollment => {
+      const course = COURSES.find(c => c.id === enrollment.course_id)
+      if (course?.materials) {
+        course.materials.forEach(material => {
+          allMaterials.push({ course, material })
+        })
+      }
+    })
+    
+    return allMaterials
+  }
+
+  const getFileIcon = (type: string) => {
+    switch (type) {
+      case 'pdf':
+      case 'document':
+        return <FileText className="w-5 h-5 text-black/60" />
+      case 'video':
+        return <Video className="w-5 h-5 text-black/60" />
+      case 'code':
+        return <Code className="w-5 h-5 text-black/60" />
+      case 'slides':
+        return <Presentation className="w-5 h-5 text-black/60" />
+      default:
+        return <FileText className="w-5 h-5 text-black/60" />
+    }
+  }
+
+  const handleDownload = (material: CourseMaterial) => {
+    // In a real application, this would handle the actual download
+    // For demo purposes, we'll just show an alert
+    alert(`Downloading: ${material.title}\nSize: ${material.size}\nType: ${material.type.toUpperCase()}`)
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -148,6 +186,7 @@ export function StudentDashboard() {
         <Tabs defaultValue="courses" className="space-y-6">
           <TabsList className="bg-gray-50 border border-black/10">
             <TabsTrigger value="courses" className="data-[state=active]:bg-black data-[state=active]:text-white">My Courses</TabsTrigger>
+            <TabsTrigger value="materials" className="data-[state=active]:bg-black data-[state=active]:text-white">Course Materials</TabsTrigger>
             <TabsTrigger value="progress" className="data-[state=active]:bg-black data-[state=active]:text-white">Progress</TabsTrigger>
             <TabsTrigger value="certificates" className="data-[state=active]:bg-black data-[state=active]:text-white">Certificates</TabsTrigger>
           </TabsList>
@@ -219,6 +258,73 @@ export function StudentDashboard() {
                 </Button>
               </div>
             )}
+          </TabsContent>
+
+          <TabsContent value="materials" className="space-y-6">
+            <div className="grid gap-6">
+              {displayEnrollments.map((enrollment) => {
+                const course = COURSES.find(c => c.id === enrollment.course_id)
+                if (!course?.materials || course.materials.length === 0) return null
+
+                return (
+                  <Card key={enrollment.id} className="border-black/10">
+                    <CardHeader>
+                      <CardTitle className="text-xl text-black flex items-center gap-2">
+                        <BookOpen className="w-5 h-5" />
+                        {course.title}
+                      </CardTitle>
+                      <p className="text-black/60">Course materials and downloadable resources</p>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-3">
+                        {course.materials.map((material, index) => (
+                          <motion.div
+                            key={material.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                            className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                          >
+                            <div className="flex items-center gap-3">
+                              {getFileIcon(material.type)}
+                              <div>
+                                <h4 className="font-medium text-black">{material.title}</h4>
+                                <div className="flex items-center gap-4 text-sm text-black/60">
+                                  <span>Type: {material.type.toUpperCase()}</span>
+                                  <span>Size: {material.size}</span>
+                                  {material.week && (
+                                    <span>Week: {material.week}</span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <Button
+                              onClick={() => handleDownload(material)}
+                              size="sm"
+                              className="bg-black hover:bg-black/80 text-white"
+                            >
+                              <Download className="w-4 h-4 mr-2" />
+                              Download
+                            </Button>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+
+              {displayEnrollments.every(e => {
+                const course = COURSES.find(c => c.id === e.course_id)
+                return !course?.materials || course.materials.length === 0
+              }) && (
+                <div className="text-center py-12">
+                  <FileText className="w-16 h-16 text-black/20 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-black mb-2">No materials available</h3>
+                  <p className="text-black/60">Course materials will appear here when available</p>
+                </div>
+              )}
+            </div>
           </TabsContent>
 
           <TabsContent value="progress">

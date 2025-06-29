@@ -1,12 +1,10 @@
 import { Metadata } from 'next'
-import { SupplyNavigation } from '@/components/supply/SupplyNavigation'
 import { SupplyHero } from '@/components/supply/SupplyHero'
 import { ProductCategories } from '@/components/supply/ProductCategories'
 import { FeaturedProducts } from '@/components/supply/FeaturedProducts'
 import { ServicesShowcase } from '@/components/supply/ServicesShowcase'
 import { TechStats } from '@/components/supply/TechStats'
 import { NewsletterSection } from '@/components/supply/NewsletterSection'
-import { SupplyFooter } from '@/components/supply/SupplyFooter'
 
 export const metadata: Metadata = {
   title: 'Carthigan Supply - Your Comprehensive Technology Platform | Uganda',
@@ -16,14 +14,12 @@ export const metadata: Metadata = {
 export default function SupplyHomePage() {
   return (
     <main className="min-h-screen bg-surface">
-      <SupplyNavigation />
       <SupplyHero />
       <ProductCategories />
       <FeaturedProducts />
       <TechStats />
       <ServicesShowcase />
       <NewsletterSection />
-      <SupplyFooter />
     </main>
   )
 } 

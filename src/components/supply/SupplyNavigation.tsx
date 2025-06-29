@@ -16,6 +16,8 @@ const categories = [
   { name: "Development Boards", href: "/supply/category/dev-boards" },
   { name: "Tools & Equipment", href: "/supply/category/tools" },
   { name: "Educational Kits", href: "/supply/category/education" },
+  { name: "3D Printing", href: "/supply/category/3d-printing" },
+  { name: "Audio & Video", href: "/supply/category/audio-video" },
 ]
 
 export function SupplyNavigation() {

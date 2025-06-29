@@ -19,12 +19,21 @@ import {
   Target,
   Music,
   PenTool,
-  Search
+  Search,
+  User,
+  LogIn,
+  ShoppingCart,
+  CreditCard,
+  X
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
+import { COURSES, CATEGORIES } from '@/lib/data/courses'
+import { useAuth } from '@/contexts/AuthContext'
 
 // Course categories
 const categories = [
@@ -39,140 +48,79 @@ const categories = [
   { id: 'languages', name: 'Languages', icon: LanguagesIcon, count: 12 }
 ]
 
-// Sample courses from your comprehensive catalog
-const allCourses = [
-  // Electrical Engineering Courses
-  {
-    id: 'ee101',
-    title: 'Circuit Analysis Fundamentals',
-    category: 'electrical',
-    duration: '12 weeks (36 hours)',
-    format: '3 hours/week',
-    price: 850000,
-    level: 'Beginner',
-    description: 'Master basic electrical concepts, Ohm\'s law, Kirchhoff\'s laws, AC circuits, and power calculations.',
-    topics: ['Basic electrical concepts', 'Network theorems', 'AC circuits analysis', 'Power calculations', 'Frequency response'],
-    instructor: 'Dr. Sarah Mukasa',
-    rating: 4.8,
-    students: 1247
-  },
-  {
-    id: 'ee102',
-    title: 'Digital Electronics & Logic Design',
-    category: 'electrical',
-    duration: '10 weeks (30 hours)',
-    format: '3 hours/week',
-    price: 750000,
-    level: 'Intermediate',
-    description: 'Learn digital logic design, Boolean algebra, sequential circuits, and microprocessor basics.',
-    topics: ['Boolean algebra', 'Logic gates', 'Sequential logic', 'Memory devices', 'Microprocessor basics'],
-    instructor: 'Eng. Michael Ssemakula',
-    rating: 4.7,
-    students: 892
-  },
-  {
-    id: 'ee103',
-    title: 'Power Systems Engineering',
-    category: 'electrical',
-    duration: '14 weeks (42 hours)',
-    format: '3 hours/week',
-    price: 950000,
-    level: 'Advanced',
-    description: 'Comprehensive power systems including generation, transmission, distribution, and renewable energy.',
-    topics: ['Power generation', 'Transmission lines', 'Motor control', 'Power electronics', 'Renewable energy'],
-    instructor: 'Dr. Grace Namukasa',
-    rating: 4.9,
-    students: 634
-  },
-  // Software Engineering Courses
-  {
-    id: 'se101',
-    title: 'Programming Fundamentals (Python)',
-    category: 'software',
-    duration: '8 weeks (24 hours)',
-    format: '3 hours/week',
-    price: 500000,
-    level: 'Beginner',
-    description: 'Python basics, control structures, functions, OOP, and best practices for beginners.',
-    topics: ['Python basics', 'Control structures', 'Functions', 'Object-oriented programming', 'Best practices'],
-    instructor: 'Dr. Janet Nakato',
-    rating: 4.9,
-    students: 2156
-  },
-  {
-    id: 'se103',
-    title: 'Web Development Full Stack',
-    category: 'software',
-    duration: '16 weeks (48 hours)',
-    format: '3 hours/week',
-    price: 1200000,
-    level: 'Intermediate',
-    description: 'HTML5, CSS3, React.js, Node.js, databases, APIs, testing, and deployment.',
-    topics: ['Frontend development', 'React.js', 'Backend APIs', 'Database design', 'Testing & deployment'],
-    instructor: 'Eden Gilbert Kiseka',
-    rating: 4.9,
-    students: 1567
-  },
-  {
-    id: 'se104',
-    title: 'Machine Learning & AI',
-    category: 'software',
-    duration: '14 weeks (42 hours)',
-    format: '3 hours/week',
-    price: 1500000,
-    level: 'Advanced',
-    description: 'ML fundamentals, neural networks, computer vision, NLP, model deployment, and AI ethics.',
-    topics: ['ML fundamentals', 'Neural networks', 'Computer vision', 'Natural language processing', 'Model deployment'],
-    instructor: 'Dr. Patricia Achan',
-    rating: 4.8,
-    students: 789
-  },
-  // Languages
-  {
-    id: 'en101',
-    title: 'English Beginner',
-    category: 'languages',
-    duration: '12 weeks (36 hours)',
-    format: '3 hours/week',
-    price: 400000,
-    level: 'Beginner',
-    description: 'Basic greetings, present tense, vocabulary, simple conversations, and travel English.',
-    topics: ['Basic greetings', 'Present tense', 'Basic vocabulary', 'Simple questions', 'Travel English'],
-    instructor: 'Dr. Janet Nakato',
-    rating: 4.8,
-    students: 1234
-  },
-  {
-    id: 'fr101',
-    title: 'French Beginner',
-    category: 'languages',
-    duration: '14 weeks (42 hours)',
-    format: '3 hours/week',
-    price: 550000,
-    level: 'Beginner',
-    description: 'French alphabet, pronunciation, basic vocabulary, present tense, and travel French.',
-    topics: ['French basics', 'Pronunciation', 'Basic vocabulary', 'Present tense', 'Travel French'],
-    instructor: 'Prof. Marie Dubois',
-    rating: 4.7,
-    students: 523
-  }
-]
-
 export function EducationPage() {
+  const { user, signIn, signUp, signOut, enrollInCourse } = useAuth()
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login')
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [selectedCourse, setSelectedCourse] = useState<any>(null)
+  const [authEmail, setAuthEmail] = useState('')
+  const [authPassword, setAuthPassword] = useState('')
+  const [authName, setAuthName] = useState('')
+  const [enrolling, setEnrolling] = useState(false)
 
   // Filter courses based on category and search
-  const filteredCourses = allCourses.filter(course => {
+  const filteredCourses = COURSES.filter(course => {
     const matchesCategory = selectedCategory === 'all' || course.category === selectedCategory
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          course.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         course.topics.some(topic => topic.toLowerCase().includes(searchQuery.toLowerCase()))
+                         course.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
     return matchesCategory && matchesSearch
   })
 
   const formatPrice = (price: number) => {
     return `UGX ${price.toLocaleString()}`
+  }
+
+  const handleEnrollClick = (course: any) => {
+    if (!user) {
+      setAuthMode('signup')
+      setShowAuthModal(true)
+      return
+    }
+    setSelectedCourse(course)
+    setShowPaymentModal(true)
+  }
+
+  const handleAuth = async () => {
+    try {
+      if (authMode === 'login') {
+        const { error } = await signIn(authEmail, authPassword)
+        if (error) {
+          alert('Login failed: ' + error.message)
+          return
+        }
+      } else {
+        const { error } = await signUp(authEmail, authPassword, authName)
+        if (error) {
+          alert('Signup failed: ' + error.message)
+          return
+        }
+      }
+      setShowAuthModal(false)
+      setAuthEmail('')
+      setAuthPassword('')
+      setAuthName('')
+    } catch (error) {
+      alert('Authentication error')
+    }
+  }
+
+  const handlePayment = async () => {
+    if (!selectedCourse || !user) return
+    
+    setEnrolling(true)
+    try {
+      await enrollInCourse(selectedCourse.id)
+      setShowPaymentModal(false)
+      alert(`Successfully enrolled in ${selectedCourse?.title}! You can now access the course materials.`)
+    } catch (error) {
+      alert('Enrollment failed. Please try again.')
+    } finally {
+      setEnrolling(false)
+    }
   }
 
   return (
@@ -192,15 +140,34 @@ export function EducationPage() {
               <div className="hidden md:flex items-center gap-6">
                 <a href="#courses" className="text-black/60 hover:text-black transition-colors font-body">Courses</a>
                 <a href="#categories" className="text-black/60 hover:text-black transition-colors font-body">Categories</a>
-                <a href="#pricing" className="text-black/60 hover:text-black transition-colors font-body">Pricing</a>
+                {user && (
+                  <a href="/dashboard" className="text-black/60 hover:text-black transition-colors font-body">My Courses</a>
+                )}
                 <a href="/" className="text-black/60 hover:text-black transition-colors font-body">Home</a>
               </div>
             </div>
             
             <div className="flex items-center gap-4">
-              <Button className="bg-black hover:bg-black/90 text-white rounded-full px-6">
-                Get Started
-              </Button>
+              {user ? (
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-black/60">Welcome, {user.email?.split('@')[0]}</span>
+                  <Button 
+                    variant="outline" 
+                    onClick={signOut}
+                    className="rounded-full"
+                  >
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <Button 
+                  onClick={() => { setAuthMode('login'); setShowAuthModal(true) }}
+                  className="bg-black hover:bg-black/90 text-white rounded-full px-6"
+                >
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Login
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -293,8 +260,8 @@ export function EducationPage() {
             className="absolute right-6 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-6 text-black/40"
           >
             {[
-              "42+ COURSES",
-              "9 CATEGORIES", 
+              `${COURSES.length}+ COURSES`,
+              `${CATEGORIES.length - 1} CATEGORIES`, 
               "UGX PRICING",
               "EXPERT INSTRUCTORS",
               "HANDS-ON PROJECTS",
@@ -344,7 +311,7 @@ export function EducationPage() {
               />
             </div>
             <div className="flex gap-2 flex-wrap">
-              {categories.slice(0, 6).map((category) => (
+              {CATEGORIES.slice(0, 6).map((category) => (
                 <Button
                   key={category.id}
                   variant={selectedCategory === category.id ? "default" : "outline"}
@@ -360,49 +327,6 @@ export function EducationPage() {
               ))}
             </div>
           </motion.div>
-
-          {/* Categories Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-            {categories.slice(1).map((category, index) => (
-              <motion.div
-                key={category.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="group cursor-pointer"
-                onClick={() => setSelectedCategory(category.id)}
-              >
-                <Card className={`h-full transition-all duration-300 border-2 hover:shadow-medium ${
-                  selectedCategory === category.id 
-                    ? 'border-accent bg-accent/5' 
-                    : 'border-black/10 hover:border-black/20'
-                }`}>
-                  <CardHeader className="pb-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <category.icon className={`h-8 w-8 ${
-                        selectedCategory === category.id ? 'text-accent' : 'text-black/60'
-                      }`} />
-                      <Badge variant="outline" className="text-xs">
-                        {category.count} courses
-                      </Badge>
-                    </div>
-                    <CardTitle className="text-xl font-display text-black group-hover:text-accent transition-colors">
-                      {category.name}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-black/60 text-sm mb-4">
-                      Professional courses designed for African industry standards with hands-on projects.
-                    </p>
-                    <div className="flex items-center text-accent text-sm font-medium">
-                      Explore courses
-                      <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -418,29 +342,33 @@ export function EducationPage() {
                 transition={{ delay: index * 0.1 }}
               >
                 <Card className="h-full hover:shadow-medium transition-all duration-300 border border-black/10 hover:border-black/20 group">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start justify-between mb-3">
+                  <div className="relative h-48 bg-gradient-to-br from-accent/10 to-accent/5 rounded-t-lg overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
+                    <div className="absolute top-4 left-4">
                       <Badge 
                         variant="outline" 
-                        className={`text-xs ${
-                          course.level === 'Beginner' ? 'border-green-500/20 text-green-600 bg-green-500/5' :
-                          course.level === 'Intermediate' ? 'border-yellow-500/20 text-yellow-600 bg-yellow-500/5' :
-                          'border-red-500/20 text-red-600 bg-red-500/5'
+                        className={`text-xs bg-white ${
+                          course.level === 'Beginner' ? 'border-green-500/20 text-green-600' :
+                          course.level === 'Intermediate' ? 'border-yellow-500/20 text-yellow-600' :
+                          'border-red-500/20 text-red-600'
                         }`}
                       >
                         {course.level}
                       </Badge>
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-accent">
-                          {formatPrice(course.price)}
-                        </div>
-                        <div className="text-xs text-black/60">{course.duration}</div>
+                    </div>
+                    <div className="absolute top-4 right-4">
+                      <div className="text-white font-bold text-lg">
+                        {course.priceDisplay}
                       </div>
                     </div>
+                  </div>
+                  
+                  <CardHeader className="pb-4">
                     <CardTitle className="text-xl font-display text-black group-hover:text-accent transition-colors line-clamp-2">
                       {course.title}
                     </CardTitle>
                   </CardHeader>
+                  
                   <CardContent className="space-y-4">
                     <p className="text-black/60 text-sm line-clamp-2">
                       {course.description}
@@ -466,19 +394,22 @@ export function EducationPage() {
                     </div>
 
                     <div className="flex flex-wrap gap-1">
-                      {course.topics.slice(0, 3).map((topic, i) => (
+                      {course.tags.slice(0, 3).map((tag, i) => (
                         <Badge key={i} variant="outline" className="text-xs border-black/20">
-                          {topic}
+                          {tag}
                         </Badge>
                       ))}
-                      {course.topics.length > 3 && (
+                      {course.tags.length > 3 && (
                         <Badge variant="outline" className="text-xs border-black/20">
-                          +{course.topics.length - 3} more
+                          +{course.tags.length - 3} more
                         </Badge>
                       )}
                     </div>
 
-                    <Button className="w-full bg-black hover:bg-black/90 text-white rounded-lg">
+                    <Button 
+                      onClick={() => handleEnrollClick(course)}
+                      className="w-full bg-black hover:bg-black/90 text-white rounded-lg"
+                    >
                       <Play className="mr-2 h-4 w-4" />
                       Enroll Now
                     </Button>
@@ -501,6 +432,112 @@ export function EducationPage() {
           )}
         </div>
       </section>
+
+      {/* Auth Modal */}
+      <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              {authMode === 'login' ? 'Login to Carthigan Education' : 'Create Your Account'}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <Input 
+                id="email" 
+                type="email" 
+                placeholder="your@email.com"
+                value={authEmail}
+                onChange={(e) => setAuthEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <Input 
+                id="password" 
+                type="password" 
+                placeholder="••••••••"
+                value={authPassword}
+                onChange={(e) => setAuthPassword(e.target.value)}
+              />
+            </div>
+            {authMode === 'signup' && (
+              <div>
+                <Label htmlFor="name">Full Name</Label>
+                <Input 
+                  id="name" 
+                  placeholder="Your Name"
+                  value={authName}
+                  onChange={(e) => setAuthName(e.target.value)}
+                />
+              </div>
+            )}
+            <Button 
+              onClick={handleAuth}
+              className="w-full bg-black hover:bg-black/90 text-white"
+            >
+              {authMode === 'login' ? 'Login' : 'Create Account'}
+            </Button>
+            <p className="text-center text-sm text-black/60">
+              {authMode === 'login' ? "Don't have an account? " : "Already have an account? "}
+              <button 
+                onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
+                className="text-accent hover:underline"
+              >
+                {authMode === 'login' ? 'Sign up' : 'Login'}
+              </button>
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Payment Modal */}
+      <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Complete Your Enrollment</DialogTitle>
+          </DialogHeader>
+          {selectedCourse && (
+            <div className="space-y-4">
+              <div className="border rounded-lg p-4">
+                <h3 className="font-semibold">{selectedCourse.title}</h3>
+                <p className="text-sm text-black/60">{selectedCourse.duration}</p>
+                <p className="text-lg font-bold text-accent">{selectedCourse.priceDisplay}</p>
+              </div>
+              
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor="cardNumber">Card Number</Label>
+                  <Input id="cardNumber" placeholder="1234 5678 9012 3456" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label htmlFor="expiry">Expiry Date</Label>
+                    <Input id="expiry" placeholder="MM/YY" />
+                  </div>
+                  <div>
+                    <Label htmlFor="cvv">CVV</Label>
+                    <Input id="cvv" placeholder="123" />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="name">Cardholder Name</Label>
+                  <Input id="name" placeholder="Your Name" />
+                </div>
+              </div>
+              
+              <Button 
+                onClick={handlePayment}
+                className="w-full bg-black hover:bg-black/90 text-white"
+              >
+                <CreditCard className="mr-2 h-4 w-4" />
+                Pay {selectedCourse.priceDisplay}
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Footer */}
       <footer className="bg-black text-white py-16">

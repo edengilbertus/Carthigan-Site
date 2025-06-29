@@ -1,11 +1,11 @@
 import { Metadata } from 'next'
-import { EducationClient } from '@/components/education/EducationClient'
+import { EducationPage } from '@/components/education/EducationPage'
 
 export const metadata: Metadata = {
-  title: 'Carthigan Education - Learn Electronics & Programming for Africa',
-  description: 'Master electronics, programming, and tech skills with courses designed for African students. From Arduino to AI, build the future.',
+  title: 'Carthigan Education - Complete Course Catalog with UGX Pricing',
+  description: 'Master engineering, software development, design, and languages with comprehensive courses designed for African professionals. All courses priced in UGX.',
 }
 
-export default function EducationHomePage() {
-  return <EducationClient />
+export default function Education() {
+  return <EducationPage />
 } 

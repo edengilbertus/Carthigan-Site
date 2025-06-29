@@ -65,21 +65,21 @@ export function StudentDashboard() {
   const avgProgress = displayEnrollments.reduce((acc, e) => acc + e.progress, 0) / totalCourses || 0
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white border-b border-black/10">
         <div className="container mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">My Dashboard</h1>
-              <p className="text-gray-600">Welcome back, {user?.email?.split('@')[0]}</p>
+              <h1 className="text-3xl font-bold text-black">My Dashboard</h1>
+              <p className="text-black/60">Welcome back, {user?.email?.split('@')[0]}</p>
             </div>
             <div className="flex items-center gap-4">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="border-black/20 hover:bg-gray-50 text-black">
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
               </Button>
-              <Button variant="outline" size="sm" onClick={signOut}>
+              <Button variant="outline" size="sm" onClick={signOut} className="border-black/20 hover:bg-gray-50 text-black">
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </Button>
@@ -91,60 +91,60 @@ export function StudentDashboard() {
       <div className="container mx-auto px-6 py-8">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
+          <Card className="border-black/10">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Courses</p>
-                  <p className="text-3xl font-bold text-gray-900">{totalCourses}</p>
+                  <p className="text-sm font-medium text-black/60">Total Courses</p>
+                  <p className="text-3xl font-bold text-black">{totalCourses}</p>
                 </div>
-                <BookOpen className="w-8 h-8 text-blue-600" />
+                <BookOpen className="w-8 h-8 text-black/60" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-black/10">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">In Progress</p>
-                  <p className="text-3xl font-bold text-gray-900">{inProgressCourses}</p>
+                  <p className="text-sm font-medium text-black/60">In Progress</p>
+                  <p className="text-3xl font-bold text-black">{inProgressCourses}</p>
                 </div>
-                <Clock className="w-8 h-8 text-yellow-600" />
+                <Clock className="w-8 h-8 text-black/60" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-black/10">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Completed</p>
-                  <p className="text-3xl font-bold text-gray-900">{completedCourses}</p>
+                  <p className="text-sm font-medium text-black/60">Completed</p>
+                  <p className="text-3xl font-bold text-black">{completedCourses}</p>
                 </div>
-                <Trophy className="w-8 h-8 text-green-600" />
+                <Trophy className="w-8 h-8 text-black/60" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-black/10">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Avg Progress</p>
-                  <p className="text-3xl font-bold text-gray-900">{Math.round(avgProgress)}%</p>
+                  <p className="text-sm font-medium text-black/60">Avg Progress</p>
+                  <p className="text-3xl font-bold text-black">{Math.round(avgProgress)}%</p>
                 </div>
-                <BarChart3 className="w-8 h-8 text-purple-600" />
+                <BarChart3 className="w-8 h-8 text-black/60" />
               </div>
             </CardContent>
           </Card>
         </div>
 
         <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="courses">My Courses</TabsTrigger>
-            <TabsTrigger value="progress">Progress</TabsTrigger>
-            <TabsTrigger value="certificates">Certificates</TabsTrigger>
+          <TabsList className="bg-gray-50 border border-black/10">
+            <TabsTrigger value="courses" className="data-[state=active]:bg-black data-[state=active]:text-white">My Courses</TabsTrigger>
+            <TabsTrigger value="progress" className="data-[state=active]:bg-black data-[state=active]:text-white">Progress</TabsTrigger>
+            <TabsTrigger value="certificates" className="data-[state=active]:bg-black data-[state=active]:text-white">Certificates</TabsTrigger>
           </TabsList>
 
           <TabsContent value="courses" className="space-y-6">
@@ -156,30 +156,30 @@ export function StudentDashboard() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className="hover:shadow-lg transition-shadow">
-                    <div className="relative h-48 bg-gradient-to-br from-blue-500 to-purple-600 rounded-t-lg">
+                  <Card className="hover:shadow-lg transition-shadow border-black/10">
+                    <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-lg">
                       <div className="absolute top-4 right-4">
-                        <Badge variant="secondary" className="bg-white/90">
+                        <Badge variant="secondary" className="bg-white border-black/20 text-black">
                           {enrollment.progress}% Complete
                         </Badge>
                       </div>
                     </div>
                     
                     <CardHeader>
-                      <CardTitle className="text-xl">{enrollment.courses.title}</CardTitle>
-                      <p className="text-gray-600">by {enrollment.courses.instructor}</p>
+                      <CardTitle className="text-xl text-black">{enrollment.courses.title}</CardTitle>
+                      <p className="text-black/60">by {enrollment.courses.instructor}</p>
                     </CardHeader>
 
                     <CardContent className="space-y-4">
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
-                          <span>Progress</span>
-                          <span>{enrollment.progress}%</span>
+                          <span className="text-black">Progress</span>
+                          <span className="text-black">{enrollment.progress}%</span>
                         </div>
-                        <Progress value={enrollment.progress} className="h-2" />
+                        <Progress value={enrollment.progress} className="h-2 bg-gray-200 [&>div]:bg-black" />
                       </div>
 
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                      <div className="flex items-center gap-4 text-sm text-black/60">
                         <div className="flex items-center gap-1">
                           <Clock className="w-4 h-4" />
                           {enrollment.courses.duration}
@@ -194,7 +194,7 @@ export function StudentDashboard() {
                         </div>
                       </div>
 
-                      <Button className="w-full">
+                      <Button className="w-full bg-black hover:bg-black/80 text-white">
                         <Play className="w-4 h-4 mr-2" />
                         Continue Learning
                       </Button>
@@ -206,10 +206,10 @@ export function StudentDashboard() {
 
             {displayEnrollments.length === 0 && (
               <div className="text-center py-12">
-                <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No courses yet</h3>
-                <p className="text-gray-600 mb-6">Start your learning journey by enrolling in a course</p>
-                <Button asChild>
+                <BookOpen className="w-16 h-16 text-black/20 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-black mb-2">No courses yet</h3>
+                <p className="text-black/60 mb-6">Start your learning journey by enrolling in a course</p>
+                <Button asChild className="bg-black hover:bg-black/80 text-white">
                   <a href="/education">Browse Courses</a>
                 </Button>
               </div>
@@ -217,19 +217,19 @@ export function StudentDashboard() {
           </TabsContent>
 
           <TabsContent value="progress">
-            <Card>
+            <Card className="border-black/10">
               <CardHeader>
-                <CardTitle>Learning Progress</CardTitle>
+                <CardTitle className="text-black">Learning Progress</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
                   {displayEnrollments.map((enrollment) => (
                     <div key={enrollment.id} className="space-y-2">
                       <div className="flex justify-between items-center">
-                        <h4 className="font-medium">{enrollment.courses.title}</h4>
-                        <span className="text-sm text-gray-600">{enrollment.progress}%</span>
+                        <h4 className="font-medium text-black">{enrollment.courses.title}</h4>
+                        <span className="text-sm text-black/60">{enrollment.progress}%</span>
                       </div>
-                      <Progress value={enrollment.progress} className="h-3" />
+                      <Progress value={enrollment.progress} className="h-3 bg-gray-200 [&>div]:bg-black" />
                     </div>
                   ))}
                 </div>
@@ -238,15 +238,15 @@ export function StudentDashboard() {
           </TabsContent>
 
           <TabsContent value="certificates">
-            <Card>
+            <Card className="border-black/10">
               <CardHeader>
-                <CardTitle>Certificates</CardTitle>
+                <CardTitle className="text-black">Certificates</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-center py-12">
-                  <Trophy className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No certificates yet</h3>
-                  <p className="text-gray-600">Complete courses to earn certificates</p>
+                  <Trophy className="w-16 h-16 text-black/20 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-black mb-2">No certificates yet</h3>
+                  <p className="text-black/60">Complete courses to earn certificates</p>
                 </div>
               </CardContent>
             </Card>

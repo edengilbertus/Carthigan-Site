@@ -9,16 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Course } from '@/lib/data/courses'
 import { Search, Star, Clock, Users, Play, ArrowLeft, BookOpen } from 'lucide-react'
-
-// Make auth optional - only needed for enrollment
-const useOptionalAuth = () => {
-  try {
-    const { useAuth } = require('@/contexts/AuthContext')
-    return useAuth()
-  } catch {
-    return { user: null, loading: false }
-  }
-}
+import { useAuth } from '@/contexts/AuthContext'
 
 interface CourseCardProps {
   course: Course
@@ -35,31 +26,27 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
       className="h-full"
     >
       <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl py-6 shadow-sm h-full hover:shadow-lg transition-all duration-300 border border-black/10 hover:border-black/20 group">
-        <div className="relative h-48 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-t-lg overflow-hidden">
+        <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100 rounded-t-lg overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
           <div className="absolute top-4 left-4">
-            <Badge variant="outline" className={`
-              ${course.level === 'Beginner' ? 'bg-white border-green-500/20 text-green-600' : ''}
-              ${course.level === 'Intermediate' ? 'bg-white border-yellow-500/20 text-yellow-600' : ''}
-              ${course.level === 'Advanced' ? 'bg-white border-red-500/20 text-red-600' : ''}
-            `}>
+            <Badge variant="outline" className="bg-white border-black/20 text-black">
               {course.level}
             </Badge>
           </div>
           <div className="absolute top-4 right-4">
-            <div className="text-white font-bold text-lg bg-black/50 px-3 py-1 rounded-lg">
+            <div className="text-white font-bold text-lg bg-black/70 px-3 py-1 rounded-lg">
               {course.priceDisplay}
             </div>
           </div>
           <div className="absolute bottom-4 left-4">
-            <div className="text-white text-sm bg-black/50 px-3 py-1 rounded-lg">
+            <div className="text-white text-sm bg-black/70 px-3 py-1 rounded-lg">
               {course.duration}
             </div>
           </div>
         </div>
         
         <CardHeader className="px-6 pb-4">
-          <CardTitle className="font-semibold text-xl font-display text-black group-hover:text-blue-600 transition-colors line-clamp-2">
+          <CardTitle className="font-semibold text-xl font-display text-black group-hover:text-black/80 transition-colors line-clamp-2">
             {course.title}
           </CardTitle>
         </CardHeader>
@@ -80,7 +67,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
           
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+              <Star className="h-4 w-4 fill-black text-black" />
               <span className="text-sm font-medium">{course.rating}</span>
             </div>
             <span className="text-sm text-black/60">• {course.instructor}</span>
@@ -117,7 +104,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
           
           <Button 
             onClick={() => onEnroll(course)}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+            className="w-full bg-black hover:bg-black/80 text-white rounded-lg"
           >
             <Play className="mr-2 h-4 w-4" />
             Enroll Now
@@ -137,7 +124,7 @@ interface CategoryPageProps {
 }
 
 export function CategoryPage({ category, title, description, courses, breadcrumb }: CategoryPageProps) {
-  const { user, loading } = useOptionalAuth()
+  const { user, loading } = useAuth()
   const [searchTerm, setSearchTerm] = useState('')
   const [enrollmentModal, setEnrollmentModal] = useState<{
     isOpen: boolean
@@ -178,7 +165,7 @@ export function CategoryPage({ category, title, description, courses, breadcrumb
       </div>
 
       {/* Header Section */}
-      <section className="py-16 bg-gradient-to-br from-blue-50 to-indigo-100">
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -188,14 +175,14 @@ export function CategoryPage({ category, title, description, courses, breadcrumb
           >
             <Link 
               href="/education"
-              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6 transition-colors"
+              className="inline-flex items-center gap-2 text-black/60 hover:text-black mb-6 transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to All Courses
             </Link>
             
             <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="p-3 bg-blue-600 rounded-lg">
+              <div className="p-3 bg-black rounded-lg">
                 <BookOpen className="h-8 w-8 text-white" />
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-black">
@@ -217,7 +204,7 @@ export function CategoryPage({ category, title, description, courses, breadcrumb
                 <span>{courses.reduce((sum, course) => sum + course.students, 0)} Total Students</span>
               </div>
               <div className="flex items-center gap-2">
-                <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                <Star className="h-5 w-5 fill-black text-black" />
                 <span>{(courses.reduce((sum, course) => sum + course.rating, 0) / courses.length).toFixed(1)} Average Rating</span>
               </div>
             </div>
@@ -242,7 +229,7 @@ export function CategoryPage({ category, title, description, courses, breadcrumb
                 placeholder={`Search ${title.toLowerCase()} courses...`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 py-3 border border-black/20 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                className="pl-10 py-3 border border-black/20 rounded-lg focus:border-black focus:ring-2 focus:ring-black/20"
               />
             </div>
           </motion.div>
@@ -306,7 +293,7 @@ export function CategoryPage({ category, title, description, courses, breadcrumb
               <div className="mb-6">
                 <h4 className="font-medium text-black">{enrollmentModal.course.title}</h4>
                 <p className="text-sm text-black/60 mt-1">{enrollmentModal.course.duration}</p>
-                <div className="text-lg font-bold text-blue-600 mt-2">
+                <div className="text-lg font-bold text-black mt-2">
                   {enrollmentModal.course.priceDisplay}
                 </div>
               </div>
@@ -324,7 +311,7 @@ export function CategoryPage({ category, title, description, courses, breadcrumb
                   <div className="space-y-3">
                     {/* Credit Cards */}
                     <button className="w-full p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-3">
-                      <div className="w-8 h-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded"></div>
+                      <div className="w-8 h-6 bg-gray-800 rounded"></div>
                       <span className="text-left">
                         <div className="font-medium">Credit/Debit Card</div>
                         <div className="text-xs text-gray-500">Visa, Mastercard via Stripe</div>
@@ -333,7 +320,7 @@ export function CategoryPage({ category, title, description, courses, breadcrumb
 
                     {/* MTN Mobile Money */}
                     <button className="w-full p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-3">
-                      <div className="w-8 h-6 bg-yellow-500 rounded flex items-center justify-center">
+                      <div className="w-8 h-6 bg-gray-700 rounded flex items-center justify-center">
                         <span className="text-xs font-bold text-white">MTN</span>
                       </div>
                       <span className="text-left">
@@ -344,7 +331,7 @@ export function CategoryPage({ category, title, description, courses, breadcrumb
 
                     {/* Airtel Money */}
                     <button className="w-full p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-3">
-                      <div className="w-8 h-6 bg-red-600 rounded flex items-center justify-center">
+                      <div className="w-8 h-6 bg-gray-600 rounded flex items-center justify-center">
                         <span className="text-xs font-bold text-white">AIR</span>
                       </div>
                       <span className="text-left">
@@ -355,7 +342,7 @@ export function CategoryPage({ category, title, description, courses, breadcrumb
 
                     {/* Bank Transfer */}
                     <button className="w-full p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-3">
-                      <div className="w-8 h-6 bg-green-600 rounded flex items-center justify-center">
+                      <div className="w-8 h-6 bg-gray-800 rounded flex items-center justify-center">
                         <span className="text-xs font-bold text-white">$</span>
                       </div>
                       <span className="text-left">
@@ -366,7 +353,7 @@ export function CategoryPage({ category, title, description, courses, breadcrumb
 
                     {/* Contact Us */}
                     <button className="w-full p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-3">
-                      <div className="w-8 h-6 bg-green-500 rounded flex items-center justify-center">
+                      <div className="w-8 h-6 bg-black rounded flex items-center justify-center">
                         <span className="text-xs font-bold text-white">📱</span>
                       </div>
                       <span className="text-left">

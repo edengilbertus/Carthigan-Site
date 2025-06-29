@@ -353,24 +353,24 @@ export function EducationClient() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
+    <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-purple-100 sticky top-0 z-40">
+      <nav className="bg-white/90 backdrop-blur-md border-b border-black/5 sticky top-0 z-40">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-8">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
                   <GraduationCap className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-xl font-bold text-gray-900">Carthigan Education</span>
+                <span className="text-xl font-bold text-black font-display">Carthigan Education</span>
               </div>
               
               <div className="hidden md:flex items-center gap-6">
-                <a href="#courses" className="text-gray-600 hover:text-purple-600 transition-colors">Courses</a>
-                <a href="#certificates" className="text-gray-600 hover:text-purple-600 transition-colors">Certificates</a>
-                <a href="#tutoring" className="text-gray-600 hover:text-purple-600 transition-colors">Tutoring</a>
-                <a href="#about" className="text-gray-600 hover:text-purple-600 transition-colors">About</a>
+                <a href="#courses" className="text-black/60 hover:text-black transition-colors font-body">Courses</a>
+                <a href="#certificates" className="text-black/60 hover:text-black transition-colors font-body">Certificates</a>
+                <a href="#tutoring" className="text-black/60 hover:text-black transition-colors font-body">Tutoring</a>
+                <a href="#about" className="text-black/60 hover:text-black transition-colors font-body">About</a>
               </div>
             </div>
             
@@ -379,11 +379,11 @@ export function EducationClient() {
                 <img 
                   src={user.avatar} 
                   alt={user.name}
-                  className="w-10 h-10 rounded-full border-2 border-purple-200"
+                  className="w-10 h-10 rounded-full border-2 border-black/10"
                 />
                 <div className="hidden md:block">
-                  <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                  <p className="text-xs text-gray-500">{user.coursesCompleted} courses completed</p>
+                  <p className="text-sm font-medium text-black font-body">{user.name}</p>
+                  <p className="text-xs text-black/60 font-body">{user.coursesCompleted} courses completed</p>
                 </div>
               </div>
             </div>
@@ -391,38 +391,131 @@ export function EducationClient() {
         </div>
       </nav>
 
+      {/* Hero Section */}
+      <section className="min-h-screen pt-32 relative overflow-hidden bg-white">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-dot-pattern opacity-5" />
+        
+        <div className="container mx-auto px-6 relative">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            className="absolute top-20 right-10 w-96 h-96 bg-gradient-mesh rounded-full blur-3xl"
+          />
+
+          <div className="max-w-5xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <h1 className="text-6xl md:text-8xl font-display font-semibold mb-8 tracking-tight">
+                <span className="inline-block overflow-hidden">
+                  <motion.span
+                    className="inline-block"
+                    initial={{ y: "100%" }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: 1, delay: 0.2 }}
+                  >
+                    Invest in Your
+                  </motion.span>
+                </span>
+                <br />
+                <span className="inline-block overflow-hidden">
+                  <motion.span
+                    className="inline-block"
+                    initial={{ y: "100%" }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: 1, delay: 0.3 }}
+                  >
+                    <span className="text-accent">Future</span>
+                  </motion.span>
+                </span>
+              </h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="text-xl md:text-2xl text-black/60 max-w-2xl mb-12 font-body"
+              >
+                Master in-demand skills with our world-class courses and personalized tutoring, designed for Ugandan professionals.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.7 }}
+                className="flex flex-col md:flex-row gap-6"
+              >
+                <Button
+                  asChild
+                  className="bg-black hover:bg-black/90 text-white rounded-full px-8 py-6 text-lg shadow-soft"
+                >
+                  <a href="#courses">
+                    Explore Courses
+                  </a>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="border-2 border-black/10 hover:bg-black/5 text-black rounded-full px-8 py-6 text-lg"
+                >
+                  <a href="#certificates">
+                    View Certificates
+                  </a>
+                </Button>
+              </motion.div>
+            </motion.div>
+          </div>
+
+          {/* Education Tags */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 0.8 }}
+            className="absolute right-6 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-6 text-black/40"
+          >
+            {[
+              "SOFTWARE",
+              "ELECTRONICS", 
+              "BUSINESS",
+              "DESIGN",
+              "LANGUAGES",
+              "TUTORING"
+            ].map((tag, index) => (
+              <div key={tag} className="flex items-center gap-3 font-mono text-sm">
+                <span className="text-accent">0{index + 1} /</span>
+                <span>{tag}</span>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
       <div className="flex">
         {/* Main Content */}
         <main className="flex-1 p-8">
-          {/* Hero Section */}
-          <section className="mb-16">
+          {/* Filters Section */}
+          <section className="mb-16"
+            id="courses">
             <div className="text-center mb-12">
-              <motion.h1 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-5xl md:text-6xl font-bold text-gray-900 mb-6"
-              >
-                Invest in Your Future.
-              </motion.h1>
-              <motion.p 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-xl text-gray-600 max-w-3xl mx-auto mb-8"
-              >
-                Master in-demand skills with our world-class courses and personalized tutoring, designed for Ugandan professionals. Start your learning journey today.
-              </motion.p>
+              <h2 className="text-4xl md:text-5xl font-display font-semibold mb-6">Course Catalog</h2>
+              <p className="text-xl text-black/60 max-w-2xl mx-auto font-body">
+                Discover courses designed for the modern professional
+              </p>
             </div>
 
             {/* Search and Filters */}
             <div className="flex flex-col md:flex-row gap-4 mb-8">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black/40 w-5 h-5" />
                 <Input
                   placeholder="Search courses, instructors, or skills..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 h-12 text-lg border-gray-200 focus:border-purple-300"
+                  className="pl-10 h-12 text-lg border-black/10 focus:border-black/30 rounded-full font-body"
                 />
               </div>
             </div>
@@ -434,10 +527,10 @@ export function EducationClient() {
                   key={category.id}
                   variant={selectedCategory === category.id ? "default" : "outline"}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all ${
+                  className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all font-body ${
                     selectedCategory === category.id 
-                      ? 'bg-purple-600 hover:bg-purple-700 text-white' 
-                      : 'border-purple-200 hover:border-purple-300 hover:bg-purple-50'
+                      ? 'bg-black hover:bg-black/90 text-white shadow-soft' 
+                      : 'border-black/10 hover:border-black/30 hover:bg-black/5 text-black'
                   }`}
                 >
                   <category.icon className="w-4 h-4" />
@@ -449,7 +542,7 @@ export function EducationClient() {
 
           {/* Popular Courses */}
           <section id="courses" className="mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Most Popular Courses</h2>
+            <h2 className="text-4xl font-display font-semibold text-black mb-8">Featured Courses</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredCourses.map((course) => (
                 <motion.div
@@ -839,50 +932,50 @@ export function EducationClient() {
         </main>
 
         {/* Sidebar */}
-        <aside className="w-80 bg-white/50 backdrop-blur-sm border-l border-purple-100 p-6 sticky top-20 h-fit">
+        <aside className="w-80 bg-white border-l border-black/5 p-6 sticky top-20 h-fit">
           {/* User Profile */}
           <div className="text-center mb-8">
             <img 
               src={user.avatar} 
               alt={user.name}
-              className="w-20 h-20 rounded-full mx-auto mb-4 border-4 border-purple-200"
+              className="w-20 h-20 rounded-full mx-auto mb-4 border-4 border-black/5"
             />
-            <h3 className="text-xl font-bold text-gray-900">{user.name}</h3>
-            <p className="text-gray-500 text-sm">{user.friends} learning connections</p>
+            <h3 className="text-xl font-display font-semibold text-black">{user.name}</h3>
+            <p className="text-black/60 text-sm font-body">{user.friends} learning connections</p>
           </div>
 
           {/* Learning Stats */}
-          <Card className="mb-6 border-purple-100">
+          <Card className="mb-6 border-black/5 shadow-soft">
             <CardHeader>
-              <CardTitle className="text-lg">Your Learning Activity</CardTitle>
+              <CardTitle className="text-lg font-display">Your Learning Activity</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">This week</span>
-                  <span className="text-2xl font-bold text-purple-600">{(user.totalHoursLearned / 52).toFixed(1)}h</span>
+                  <span className="text-sm text-black/60 font-body">This week</span>
+                  <span className="text-2xl font-bold text-black font-display">{(user.totalHoursLearned / 52).toFixed(1)}h</span>
                 </div>
                 <div className="h-16 flex items-end gap-2">
                   {[40, 60, 30, 80, 100, 70, 90].map((height, index) => (
                     <div
                       key={index}
-                      className={`flex-1 rounded-t ${index === 6 ? 'bg-purple-600' : 'bg-purple-200'}`}
+                      className={`flex-1 rounded-t ${index === 6 ? 'bg-black' : 'bg-black/10'}`}
                       style={{ height: `${height}%` }}
                     />
                   ))}
                 </div>
                 <div className="flex items-center gap-2 text-green-600">
                   <TrendingUp className="w-4 h-4" />
-                  <span className="text-sm font-medium">Great progress!</span>
+                  <span className="text-sm font-medium font-body">Great progress!</span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Active Courses */}
-          <Card className="border-purple-100">
+          <Card className="border-black/5 shadow-soft">
             <CardHeader>
-              <CardTitle className="text-lg">Continue Learning</CardTitle>
+              <CardTitle className="text-lg font-display">Continue Learning</CardTitle>
             </CardHeader>
             <CardContent>
               {user.activeCourses.length > 0 ? (
@@ -892,13 +985,13 @@ export function EducationClient() {
                     if (!course) return null
                     
                     return (
-                      <div key={activeCourse.courseId} className="p-4 bg-purple-50 rounded-lg">
-                        <h4 className="font-medium text-gray-900 mb-2 text-sm">{course.title}</h4>
+                      <div key={activeCourse.courseId} className="p-4 bg-black/5 rounded-lg">
+                        <h4 className="font-medium text-black mb-2 text-sm font-body">{course.title}</h4>
                         <div className="flex items-center gap-2 mb-2">
                           <Progress value={activeCourse.progress} className="flex-1" />
-                          <span className="text-sm text-gray-600">{activeCourse.progress}%</span>
+                          <span className="text-sm text-black/60 font-body">{activeCourse.progress}%</span>
                         </div>
-                        <Button size="sm" className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+                        <Button size="sm" className="w-full bg-black hover:bg-black/90 text-white rounded-full font-body">
                           <Play className="w-4 h-4 mr-2" />
                           Continue
                         </Button>
@@ -907,7 +1000,7 @@ export function EducationClient() {
                   })}
                 </div>
               ) : (
-                <p className="text-center text-gray-500 py-8">
+                <p className="text-center text-black/60 py-8 font-body">
                   Enroll in a course to start learning!
                 </p>
               )}

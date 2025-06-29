@@ -179,7 +179,7 @@ export function SupplyFooter() {
         {/* Social Media & Copyright */}
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-gray-400 text-sm">
-            © 2024 Carthigan Holdings. All rights reserved.
+            © 2025 Carthigan Holdings. All rights reserved.
           </div>
           
           {/* Social Media Links */}

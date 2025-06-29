@@ -479,7 +479,7 @@ export function CategoryPage({ category, title, description, courses, breadcrumb
             </div>
           </div>
           <div className="border-t border-white/10 mt-12 pt-8 text-center text-white/60">
-            <p>© 2024 Carthigan Education. Investing in African innovation.</p>
+            <p>© 2025 Carthigan Education. Investing in African innovation.</p>
           </div>
         </div>
       </footer>

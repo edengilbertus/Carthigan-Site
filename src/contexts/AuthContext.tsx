@@ -1,8 +1,12 @@
 "use client"
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import type { User } from '@supabase/auth-helpers-nextjs'
+
+interface User {
+  id: string
+  email: string
+  name?: string
+}
 
 interface AuthContextType {
   user: User | null
@@ -20,74 +24,96 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<any | null>(null)
-  const [loading, setLoading] = useState(true)
-  const supabase = createClientComponentClient()
+  const [loading, setLoading] = useState(false)
+  const [enrollments, setEnrollments] = useState<any[]>([])
 
   useEffect(() => {
-    const getInitialSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session?.user) {
-        setUser(session.user)
-      }
-      setLoading(false)
+    // Check for stored user
+    const storedUser = localStorage.getItem('carthigan_user')
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
     }
-
-    getInitialSession()
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (session?.user) {
-          setUser(session.user)
-        } else {
-          setUser(null)
-          setProfile(null)
-        }
-        setLoading(false)
-      }
-    )
-
-    return () => subscription.unsubscribe()
+    setLoading(false)
   }, [])
 
   const signUp = async (email: string, password: string, fullName: string) => {
     try {
-      const { data, error } = await supabase.auth.signUp({
+      // Simulate signup
+      const newUser = {
+        id: Math.random().toString(36).substr(2, 9),
         email,
-        password,
-        options: {
-          data: { full_name: fullName },
-        },
-      })
-      return { data, error }
+        name: fullName
+      }
+      setUser(newUser)
+      localStorage.setItem('carthigan_user', JSON.stringify(newUser))
+      return { data: { user: newUser }, error: null }
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error: { message: 'Signup failed' } }
     }
   }
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      // Simulate login
+      const user = {
+        id: Math.random().toString(36).substr(2, 9),
         email,
-        password,
-      })
-      return { data, error }
+        name: email.split('@')[0]
+      }
+      setUser(user)
+      localStorage.setItem('carthigan_user', JSON.stringify(user))
+      return { data: { user }, error: null }
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error: { message: 'Login failed' } }
     }
   }
 
   const signOut = async () => {
-    await supabase.auth.signOut()
+    setUser(null)
+    setEnrollments([])
+    localStorage.removeItem('carthigan_user')
+    localStorage.removeItem('carthigan_enrollments')
   }
 
   const enrollInCourse = async (courseId: string) => {
-    // Simulate enrollment for demo
-    return { success: true, courseId }
+    if (!user) throw new Error('User not authenticated')
+
+    try {
+      const newEnrollment = {
+        id: Math.random().toString(36).substr(2, 9),
+        user_id: user.id,
+        course_id: courseId,
+        progress: 0,
+        enrolled_at: new Date().toISOString(),
+        status: 'enrolled',
+        payment_status: 'completed'
+      }
+
+      const updatedEnrollments = [...enrollments, newEnrollment]
+      setEnrollments(updatedEnrollments)
+      localStorage.setItem('carthigan_enrollments', JSON.stringify(updatedEnrollments))
+
+      return { enrollment: newEnrollment }
+    } catch (error) {
+      throw error
+    }
   }
 
   const getUserEnrollments = async () => {
-    // Return demo enrollments
-    return []
+    if (!user) return []
+
+    try {
+      const stored = localStorage.getItem('carthigan_enrollments')
+      if (stored) {
+        const enrollmentData = JSON.parse(stored)
+        setEnrollments(enrollmentData)
+        return enrollmentData
+      }
+      return []
+    } catch (error) {
+      console.error('Error fetching enrollments:', error)
+      return []
+    }
   }
 
   const value = {

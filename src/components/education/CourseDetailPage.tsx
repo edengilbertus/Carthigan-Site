@@ -111,7 +111,7 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
       </div>
 
       {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-br from-blue-50 to-indigo-100">
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="container mx-auto px-6">
           <div className="max-w-6xl mx-auto">
             <motion.div
@@ -123,21 +123,21 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
               <div>
                 <Link 
                   href={`/education/${categorySlug}`}
-                  className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6 transition-colors"
+                  className="inline-flex items-center gap-2 text-black/60 hover:text-black mb-6 transition-colors"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   Back to {categoryTitles[categorySlug]}
                 </Link>
 
                 <div className="flex items-center gap-3 mb-4">
-                  <Badge className="bg-blue-100 text-blue-700 border-blue-200">
+                  <Badge className="bg-gray-100 text-black border-gray-200">
                     {course.level}
                   </Badge>
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
                       <Star 
                         key={i} 
-                        className={`h-4 w-4 ${i < Math.floor(course.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+                        className={`h-4 w-4 ${i < Math.floor(course.rating) ? 'fill-black text-black' : 'text-gray-300'}`} 
                       />
                     ))}
                     <span className="text-sm font-medium ml-1">{course.rating}</span>
@@ -170,7 +170,7 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button 
                     onClick={handleEnroll}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
+                    className="bg-black hover:bg-black/80 text-white px-8 py-3 text-lg"
                     size="lg"
                   >
                     <Play className="mr-2 h-5 w-5" />
@@ -178,7 +178,7 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg"
+                    className="border-black/20 text-black hover:bg-gray-50 px-8 py-3 text-lg"
                     size="lg"
                   >
                     <MessageCircle className="mr-2 h-5 w-5" />
@@ -190,7 +190,7 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
               <div className="relative">
                 <div className="bg-white rounded-xl shadow-lg p-8 border border-black/10">
                   <div className="text-center mb-6">
-                    <div className="text-3xl font-bold text-blue-600 mb-2">
+                    <div className="text-3xl font-bold text-black mb-2">
                       {course.priceDisplay}
                     </div>
                     <p className="text-black/60">One-time payment</p>
@@ -198,19 +198,19 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
 
                   <div className="space-y-4 mb-6">
                     <div className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <CheckCircle className="h-5 w-5 text-black" />
                       <span>Lifetime access to course materials</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <CheckCircle className="h-5 w-5 text-black" />
                       <span>Certificate of completion</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <CheckCircle className="h-5 w-5 text-black" />
                       <span>Direct instructor support</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <CheckCircle className="h-5 w-5 text-black" />
                       <span>Access to course community</span>
                     </div>
                   </div>
@@ -253,7 +253,7 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
                           <ul className="space-y-2">
                             {week.topics.map((topic, topicIndex) => (
                               <li key={topicIndex} className="flex items-start gap-2">
-                                <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                                <CheckCircle className="h-4 w-4 text-black mt-0.5 flex-shrink-0" />
                                 <span className="text-black/70">{topic}</span>
                               </li>
                             ))}
@@ -269,8 +269,8 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
                 <Card className="border border-black/10">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                        <Award className="h-8 w-8 text-blue-600" />
+                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+                        <Award className="h-8 w-8 text-black" />
                       </div>
                       <div className="flex-1">
                         <h4 className="text-xl font-semibold mb-2">{course.instructor}</h4>
@@ -280,7 +280,7 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
                         </p>
                         <div className="flex items-center gap-4 text-sm text-black/60">
                           <div className="flex items-center gap-1">
-                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                            <Star className="h-4 w-4 fill-black text-black" />
                             <span>{course.rating} rating</span>
                           </div>
                           <div className="flex items-center gap-1">
@@ -302,7 +302,7 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
                       {[...Array(5)].map((_, i) => (
                         <Star 
                           key={i} 
-                          className={`h-5 w-5 ${i < Math.floor(course.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+                          className={`h-5 w-5 ${i < Math.floor(course.rating) ? 'fill-black text-black' : 'text-gray-300'}`} 
                         />
                       ))}
                     </div>
@@ -330,8 +330,8 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
                       <Card key={index} className="border border-black/10">
                         <CardContent className="p-4">
                           <div className="flex items-start gap-3">
-                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                              <span className="text-sm font-medium text-blue-600">
+                            <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                              <span className="text-sm font-medium text-black">
                                 {review.name.charAt(0)}
                               </span>
                             </div>
@@ -342,7 +342,7 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
                                   {[...Array(5)].map((_, i) => (
                                     <Star 
                                       key={i} 
-                                      className={`h-3 w-3 ${i < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+                                      className={`h-3 w-3 ${i < review.rating ? 'fill-black text-black' : 'text-gray-300'}`} 
                                     />
                                   ))}
                                 </div>
@@ -375,10 +375,10 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
                   <Card key={relatedCourse.id} className="bg-white border border-black/10 hover:shadow-lg transition-all">
                     <CardHeader>
                       <div className="flex items-center justify-between mb-2">
-                        <Badge className="bg-blue-100 text-blue-700 border-blue-200">
+                        <Badge className="bg-gray-100 text-black border-gray-200">
                           {relatedCourse.level}
                         </Badge>
-                        <span className="font-bold text-blue-600">{relatedCourse.priceDisplay}</span>
+                        <span className="font-bold text-black">{relatedCourse.priceDisplay}</span>
                       </div>
                       <CardTitle className="text-lg line-clamp-2">{relatedCourse.title}</CardTitle>
                     </CardHeader>
@@ -392,12 +392,12 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
                           <span>{relatedCourse.duration.split(' ')[0]} weeks</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <Star className="h-4 w-4 fill-black text-black" />
                           <span>{relatedCourse.rating}</span>
                         </div>
                       </div>
                       <Link href={`/education/${categorySlug}/${relatedCourse.id}`}>
-                        <Button className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white">
+                        <Button className="w-full mt-4 bg-black hover:bg-black/80 text-white">
                           View Course
                         </Button>
                       </Link>
@@ -443,7 +443,7 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
                   <p className="text-black/60 mb-4">
                     Please login to enroll in <strong>{course.title}</strong>
                   </p>
-                  <Button onClick={handleLogin} className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                  <Button onClick={handleLogin} className="w-full bg-black hover:bg-black/80 text-white">
                     Login / Sign Up
                   </Button>
                   <p className="text-xs text-black/60 text-center">
@@ -454,10 +454,10 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
 
               {enrollmentModal.step === 'payment' && (
                 <div className="space-y-6">
-                  <div className="bg-blue-50 p-4 rounded-lg">
+                  <div className="bg-gray-50 p-4 rounded-lg">
                     <div className="flex items-center justify-between">
                       <span className="font-medium">Course: {course.title}</span>
-                      <span className="font-bold text-blue-600">{course.priceDisplay}</span>
+                      <span className="font-bold text-black">{course.priceDisplay}</span>
                     </div>
                   </div>
 
@@ -494,7 +494,7 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
                     <Button 
                       onClick={() => handlePayment('whatsapp')}
                       variant="outline" 
-                      className="w-full justify-start bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
+                      className="w-full justify-start bg-gray-50 border-gray-200 text-black hover:bg-gray-100"
                     >
                       <MessageCircle className="mr-3 h-5 w-5" />
                       Pay via WhatsApp (+256 123 456 789)
@@ -519,16 +519,16 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
 
               {enrollmentModal.step === 'confirmation' && (
                 <div className="text-center space-y-4">
-                  <div className="w-16 h-16 bg-green-100 rounded-full mx-auto flex items-center justify-center">
-                    <CheckCircle className="h-8 w-8 text-green-600" />
+                  <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto flex items-center justify-center">
+                    <CheckCircle className="h-8 w-8 text-black" />
                   </div>
-                  <h4 className="text-lg font-semibold text-green-700">Welcome to the Course!</h4>
+                  <h4 className="text-lg font-semibold text-black">Welcome to the Course!</h4>
                   <p className="text-black/60">
                     You've successfully enrolled in <strong>{course.title}</strong>. 
                     Check your email for course access details.
                   </p>
                   <div className="space-y-2">
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                    <Button className="w-full bg-black hover:bg-black/80 text-white">
                       Access Course Materials
                     </Button>
                     <Button 

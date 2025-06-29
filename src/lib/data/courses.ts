@@ -3,6 +3,16 @@ export interface CourseWeek {
   topics: string[]
 }
 
+export interface CourseMaterial {
+  id: string
+  title: string
+  type: 'pdf' | 'video' | 'document' | 'slides' | 'code'
+  size: string
+  url: string
+  week?: string
+  uploadedAt: string
+}
+
 export interface Course {
   id: string
   title: string
@@ -20,6 +30,7 @@ export interface Course {
   image: string
   tags: string[]
   featured?: boolean
+  materials?: CourseMaterial[]
 }
 
 export const COURSES: Course[] = [
@@ -104,8 +115,8 @@ export const COURSES: Course[] = [
     level: 'Beginner',
     duration: '8 weeks (24 hours)',
     format: '3 hours/week',
-    price: 650000,
-    priceDisplay: 'UGX 650,000',
+    price: 300000,
+    priceDisplay: 'UGX 300,000',
     description: 'Arduino programming, sensors, communication protocols, and IoT integration projects.',
     outline: [
       { week: 'Week 1-2', topics: ['Arduino basics', 'IDE setup', 'basic programming'] },
@@ -118,7 +129,63 @@ export const COURSES: Course[] = [
     students: 1456,
     image: '/images/courses/microcontroller.jpg',
     tags: ['Arduino', 'IoT', 'Embedded Systems'],
-    featured: true
+    featured: true,
+    materials: [
+      {
+        id: 'ee104-mat-01',
+        title: 'Arduino IDE Setup Guide',
+        type: 'pdf',
+        size: '2.5 MB',
+        url: '/materials/ee104/arduino-ide-setup.pdf',
+        week: 'Week 1-2',
+        uploadedAt: '2024-01-15T10:30:00Z'
+      },
+      {
+        id: 'ee104-mat-02',
+        title: 'Programming Fundamentals Slides',
+        type: 'slides',
+        size: '8.2 MB',
+        url: '/materials/ee104/programming-fundamentals.pptx',
+        week: 'Week 1-2',
+        uploadedAt: '2024-01-15T14:20:00Z'
+      },
+      {
+        id: 'ee104-mat-03',
+        title: 'Digital IO Examples Code',
+        type: 'code',
+        size: '125 KB',
+        url: '/materials/ee104/digital-io-examples.zip',
+        week: 'Week 3-4',
+        uploadedAt: '2024-01-22T09:15:00Z'
+      },
+      {
+        id: 'ee104-mat-04',
+        title: 'Sensor Integration Guide',
+        type: 'pdf',
+        size: '4.1 MB',
+        url: '/materials/ee104/sensor-integration-guide.pdf',
+        week: 'Week 3-4',
+        uploadedAt: '2024-01-22T16:45:00Z'
+      },
+      {
+        id: 'ee104-mat-05',
+        title: 'Serial Communication Tutorial',
+        type: 'video',
+        size: '156 MB',
+        url: '/materials/ee104/serial-communication-tutorial.mp4',
+        week: 'Week 5-6',
+        uploadedAt: '2024-01-29T11:30:00Z'
+      },
+      {
+        id: 'ee104-mat-06',
+        title: 'IoT Project Templates',
+        type: 'code',
+        size: '2.8 MB',
+        url: '/materials/ee104/iot-project-templates.zip',
+        week: 'Week 7-8',
+        uploadedAt: '2024-02-05T13:20:00Z'
+      }
+    ]
   },
   {
     id: 'ee105',

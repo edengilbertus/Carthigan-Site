@@ -14,9 +14,10 @@ import { useAuth } from '@/contexts/AuthContext'
 interface CourseCardProps {
   course: Course
   onEnroll: (course: Course) => void
+  categorySlug: string
 }
 
-const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
+const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll, categorySlug }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -46,9 +47,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
         </div>
         
         <CardHeader className="px-6 pb-4">
-          <CardTitle className="font-semibold text-xl font-display text-black group-hover:text-black/80 transition-colors line-clamp-2">
-            {course.title}
-          </CardTitle>
+          <Link href={`/education/${categorySlug}/${course.id}`}>
+            <CardTitle className="font-semibold text-xl font-display text-black group-hover:text-black/80 transition-colors line-clamp-2 cursor-pointer hover:text-blue-600">
+              {course.title}
+            </CardTitle>
+          </Link>
         </CardHeader>
         
         <CardContent className="px-6 space-y-4">
@@ -102,13 +105,24 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
             )}
           </div>
           
-          <Button 
-            onClick={() => onEnroll(course)}
-            className="w-full bg-black hover:bg-black/80 text-white rounded-lg"
-          >
-            <Play className="mr-2 h-4 w-4" />
-            Enroll Now
-          </Button>
+          <div className="flex gap-2">
+            <Link href={`/education/${categorySlug}/${course.id}`} className="flex-1">
+              <Button 
+                variant="outline"
+                className="w-full border-black/20 hover:bg-gray-50 text-black"
+              >
+                <BookOpen className="mr-2 h-4 w-4" />
+                View Details
+              </Button>
+            </Link>
+            <Button 
+              onClick={() => onEnroll(course)}
+              className="flex-1 bg-black hover:bg-black/80 text-white rounded-lg"
+            >
+              <Play className="mr-2 h-4 w-4" />
+              Enroll
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </motion.div>
@@ -124,7 +138,7 @@ interface CategoryPageProps {
 }
 
 export function CategoryPage({ category, title, description, courses, breadcrumb }: CategoryPageProps) {
-  const { user, loading } = useAuth()
+  const { user, loading, signOut } = useAuth()
   const [searchTerm, setSearchTerm] = useState('')
   const [enrollmentModal, setEnrollmentModal] = useState<{
     isOpen: boolean
@@ -151,6 +165,64 @@ export function CategoryPage({ category, title, description, courses, breadcrumb
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Header with Login */}
+      <header className="bg-white border-b border-black/10 sticky top-0 z-40">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Link href="/education" className="text-2xl font-bold text-black hover:text-black/80 transition-colors">
+                Carthigan Education
+              </Link>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              {user ? (
+                <div className="flex items-center space-x-4">
+                  <div className="text-sm text-black/70">
+                    Welcome, <span className="font-medium text-black">{user.name}</span>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="border-black/20 hover:bg-gray-50 text-black"
+                    onClick={() => window.location.href = '/dashboard'}
+                  >
+                    Dashboard
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="border-black/20 hover:bg-gray-50 text-black"
+                    onClick={signOut}
+                  >
+                    Sign Out
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <div className="text-sm text-black/60">
+                    Already have an account?
+                  </div>
+                  <Button 
+                    variant="outline"
+                    size="sm"
+                    className="border-black/20 hover:bg-gray-50 text-black"
+                  >
+                    Login
+                  </Button>
+                  <Button 
+                    size="sm"
+                    className="bg-black hover:bg-black/80 text-white"
+                  >
+                    Sign Up
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Breadcrumb */}
       <div className="bg-gray-50 py-4">
         <div className="container mx-auto px-6">
@@ -247,6 +319,7 @@ export function CategoryPage({ category, title, description, courses, breadcrumb
                     key={course.id}
                     course={course}
                     onEnroll={handleEnroll}
+                    categorySlug={breadcrumb}
                   />
                 ))}
               </AnimatePresence>

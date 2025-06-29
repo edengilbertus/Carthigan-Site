@@ -146,7 +146,7 @@ const itemVariants = {
     y: 0,
     opacity: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 100,
     },
   },
@@ -241,8 +241,8 @@ export function ServicesShowcase() {
                 className={`w-full ${service.textColor} hover:bg-surface/20 rounded-2xl`}
                 asChild
               >
-                <Link href={service.id === 'translation' ? '/services' : `/supply/services/${service.id}`}>
-                  {service.id === 'translation' ? 'Learn More' : 'Request Quote'}
+                <Link href="/services">
+                  Learn More
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -301,7 +301,7 @@ export function ServicesShowcase() {
                 className="bg-primary hover:bg-primary/90 text-on-primary px-8 py-4 rounded-full"
                 asChild
               >
-                <Link href="/supply/services/consultation">
+                <Link href="/services">
                   Free Consultation
                 </Link>
               </Button>
@@ -311,7 +311,7 @@ export function ServicesShowcase() {
                 className="border-2 border-primary text-primary hover:bg-primary/5 px-8 py-4 rounded-full"
                 asChild
               >
-                <Link href="/supply/services">
+                <Link href="/services">
                   View All Services
                 </Link>
               </Button>

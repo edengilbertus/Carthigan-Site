@@ -5,6 +5,8 @@ import { ToolProduct, allTools } from './tools'
 import { EducationalKit, allEducationalKits } from './educational-kits'
 import { SensorModule, allSensorsModules } from './sensors-modules'
 import { PowerComponent, allPowerComponents } from './power-components'
+import { AudioVideoProduct, allAudioVideoProducts } from './audio-video'
+import { ThreeDPrintingProduct, allThreeDPrintingProducts } from './3d-printing'
 
 // Unified product interface
 export interface UnifiedProduct {
@@ -25,7 +27,7 @@ export interface UnifiedProduct {
   projects: string[]
   leadTime: string
   tags: string[]
-  type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool' | 'educational-kit' | 'sensor-module' | 'power-component'
+  type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool' | 'educational-kit' | 'sensor-module' | 'power-component' | 'audio-video' | '3d-printing'
   // Additional fields that may exist in some products
   supplier?: string
   keyFeatures?: string[]
@@ -127,6 +129,28 @@ const powerComponentsAsUnified: UnifiedProduct[] = allPowerComponents.map(compon
   specifications: component.specifications || {}
 }))
 
+// Convert audio-video products to unified format
+const audioVideoAsUnified: UnifiedProduct[] = allAudioVideoProducts.map(product => ({
+  ...product,
+  type: 'audio-video' as const,
+  studentPrice: product.studentPrice || product.price,
+  compatibility: product.compatibility || [],
+  projects: [],
+  leadTime: product.leadTime || 'In Stock',
+  specifications: product.specifications || {}
+}))
+
+// Convert 3D printing products to unified format
+const threeDPrintingAsUnified: UnifiedProduct[] = allThreeDPrintingProducts.map(product => ({
+  ...product,
+  type: '3d-printing' as const,
+  studentPrice: product.studentPrice || product.price,
+  compatibility: product.compatibility || [],
+  projects: [],
+  leadTime: product.leadTime || 'In Stock',
+  specifications: product.specifications || {}
+}))
+
 // All products combined
 export const allProducts: UnifiedProduct[] = [
   ...electronicsAsUnified,
@@ -135,7 +159,9 @@ export const allProducts: UnifiedProduct[] = [
   ...toolsAsUnified,
   ...educationalKitsAsUnified,
   ...sensorsModulesAsUnified,
-  ...powerComponentsAsUnified
+  ...powerComponentsAsUnified,
+  ...audioVideoAsUnified,
+  ...threeDPrintingAsUnified
 ]
 
 // Helper functions
@@ -147,7 +173,7 @@ export function getProductsByCategory(category: string): UnifiedProduct[] {
   return allProducts.filter(product => product.category === category)
 }
 
-export function getProductsByType(type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool' | 'educational-kit' | 'sensor-module' | 'power-component'): UnifiedProduct[] {
+export function getProductsByType(type: 'electronics' | 'development-board' | 'mcu-chip' | 'tool' | 'educational-kit' | 'sensor-module' | 'power-component' | 'audio-video' | '3d-printing'): UnifiedProduct[] {
   return allProducts.filter(product => product.type === type)
 }
 
@@ -199,5 +225,15 @@ export const productCategories = {
     name: 'Power Components',
     count: powerComponentsAsUnified.length,
     href: '/supply/category/power'
+  },
+  'audio-video': {
+    name: 'Audio & Video',
+    count: audioVideoAsUnified.length,
+    href: '/supply/category/audio-video'
+  },
+  '3d-printing': {
+    name: '3D Printing',
+    count: threeDPrintingAsUnified.length,
+    href: '/supply/category/3d-printing'
   }
 }

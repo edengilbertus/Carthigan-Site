@@ -20,7 +20,7 @@ import {
 } from 'lucide-react'
 
 export default function AccountPage() {
-  const { user, login, logout } = useAuth()
+  const { user, signIn, signOut } = useAuth()
   const [isEditing, setIsEditing] = useState(false)
   const [loginForm, setLoginForm] = useState({ email: '', password: '' })
   const [signupForm, setSignupForm] = useState({ name: '', email: '', password: '', confirmPassword: '' })
@@ -29,7 +29,10 @@ export default function AccountPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await login(loginForm.email, loginForm.password)
+      const result = await signIn(loginForm.email, loginForm.password)
+      if (!result.success) {
+        console.error('Login failed:', result.error)
+      }
     } catch (error) {
       console.error('Login failed:', error)
     }
@@ -181,7 +184,7 @@ export default function AccountPage() {
                     <p className="text-sm text-on-surface/60">{user.email}</p>
                   </div>
                 </div>
-                <Button onClick={logout} variant="outline" className="w-full">
+                                 <Button onClick={signOut} variant="outline" className="w-full">
                   Sign Out
                 </Button>
               </CardContent>

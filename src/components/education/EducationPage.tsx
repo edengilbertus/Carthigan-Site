@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { COURSES, Course } from '@/lib/data/courses'
-import { Search, Star, Clock, Users, Play, BookOpen, Award, TrendingUp, X, CreditCard, Smartphone, MessageCircle, Phone, CheckCircle } from 'lucide-react'
+import { Search, Star, Clock, Users, Play, BookOpen, Award, TrendingUp, X, CreditCard, Smartphone, MessageCircle, Phone, CheckCircle, Eye } from 'lucide-react'
 import Link from 'next/link'
 
 import { useAuth } from '@/contexts/AuthContext'
@@ -74,9 +74,10 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
 interface CourseCardProps {
   course: Course
   onEnroll: (course: Course) => void
+  onViewDetails: (course: Course) => void
 }
 
-const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
+const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll, onViewDetails }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -90,27 +91,30 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
           <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
           <div className="absolute top-4 left-4">
             <Badge className={`${
-              course.level === 'Beginner' ? 'bg-white border-green-500/20 text-green-600' :
-              course.level === 'Intermediate' ? 'bg-white border-yellow-500/20 text-yellow-600' :
-              'bg-white border-red-500/20 text-red-600'
+              course.level === 'Beginner' ? 'bg-white border-black/20 text-black' :
+              course.level === 'Intermediate' ? 'bg-black/10 border-black/20 text-black' :
+              'bg-black/20 border-black/20 text-black'
             }`}>
               {course.level}
             </Badge>
           </div>
           <div className="absolute top-4 right-4">
-            <div className="text-white font-bold text-lg bg-black/50 px-3 py-1 rounded-lg">
+            <div className="text-white font-bold text-lg bg-black/70 px-3 py-1 rounded-lg">
               {course.priceDisplay}
             </div>
           </div>
           <div className="absolute bottom-4 left-4">
-            <div className="text-white text-sm bg-black/50 px-3 py-1 rounded-lg">
+            <div className="text-white text-sm bg-black/70 px-3 py-1 rounded-lg">
               {course.duration}
             </div>
           </div>
         </div>
         
         <CardHeader className="px-6 pb-4">
-          <CardTitle className="text-xl font-display text-black group-hover:text-gray-600 transition-colors line-clamp-2">
+          <CardTitle 
+            className="text-xl font-display text-black group-hover:text-gray-600 transition-colors line-clamp-2 cursor-pointer"
+            onClick={() => onViewDetails(course)}
+          >
             {course.title}
           </CardTitle>
         </CardHeader>
@@ -134,7 +138,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
               {[...Array(5)].map((_, i) => (
                 <Star 
                   key={i} 
-                  className={`h-4 w-4 ${i < Math.floor(course.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+                  className={`h-4 w-4 ${i < Math.floor(course.rating) ? 'fill-black text-black' : 'text-gray-300'}`} 
                 />
               ))}
               <span className="text-sm font-medium">{course.rating}</span>
@@ -143,45 +147,57 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onEnroll }) => {
           </div>
 
           <div className="space-y-3">
-            <div className="text-sm font-medium text-black">Course Outline:</div>
+            <div className="text-sm font-medium text-black">Course Preview:</div>
             <div className="space-y-1">
-              {course.outline.slice(0, 3).map((week, index) => (
+              {course.outline.slice(0, 2).map((week, index) => (
                 <div key={index} className="text-xs text-black/60">
-                  <span className="font-medium">{week.week}:</span> {week.topics.join(', ')}
+                  <span className="font-medium">{week.week}:</span> {week.topics.slice(0, 2).join(', ')}
                 </div>
               ))}
-              {course.outline.length > 3 && (
-                <div className="text-xs text-black/60 italic">
-                  +{course.outline.length - 3} more weeks...
-                </div>
-              )}
+              <button 
+                onClick={() => onViewDetails(course)}
+                className="text-xs text-black hover:text-black/80 underline"
+              >
+                View Full Outline ({course.outline.length} weeks)
+              </button>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-1">
-            {course.tags.map((tag, index) => (
+            {course.tags.slice(0, 3).map((tag, index) => (
               <Badge key={index} className="text-xs border-black/20 bg-white text-black">
                 {tag}
               </Badge>
             ))}
           </div>
 
-          <Button 
-            onClick={() => onEnroll(course)}
-            className="w-full bg-black hover:bg-black/80 text-white rounded-lg"
-          >
-            <Play className="mr-2 h-4 w-4" />
-            Enroll Now
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => onViewDetails(course)}
+              variant="outline"
+              className="flex-1 border-black/20 hover:bg-gray-50 text-black"
+            >
+              <Eye className="mr-2 h-4 w-4" />
+              View Details
+            </Button>
+            <Button 
+              onClick={() => onEnroll(course)}
+              className="flex-1 bg-black hover:bg-black/80 text-white rounded-lg"
+            >
+              <Play className="mr-2 h-4 w-4" />
+              Enroll Now
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </motion.div>
   )
 }
 
-interface EnrollmentModalState {
+interface ModalState {
   isOpen: boolean
   course: Course | null
+  type: 'details' | 'enrollment'
   step: 'auth' | 'payment' | 'confirmation'
 }
 
@@ -189,9 +205,10 @@ const EducationPage: React.FC = () => {
   const auth = useAuth()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const [enrollmentModal, setEnrollmentModal] = useState<EnrollmentModalState>({
+  const [modal, setModal] = useState<ModalState>({
     isOpen: false,
     course: null,
+    type: 'details',
     step: 'auth'
   })
   const [loginForm, setLoginForm] = useState({
@@ -236,16 +253,20 @@ const EducationPage: React.FC = () => {
 
   const featuredCourses = COURSES.filter(course => course.featured).slice(0, 6)
 
+  const handleViewDetails = (course: Course) => {
+    setModal({ isOpen: true, course, type: 'details', step: 'auth' })
+  }
+
   const handleEnroll = (course: Course) => {
     if (auth.user) {
-      setEnrollmentModal({ isOpen: true, course, step: 'payment' })
+      setModal({ isOpen: true, course, type: 'enrollment', step: 'payment' })
     } else {
-      setEnrollmentModal({ isOpen: true, course, step: 'auth' })
+      setModal({ isOpen: true, course, type: 'enrollment', step: 'auth' })
     }
   }
 
   const closeModal = () => {
-    setEnrollmentModal({ isOpen: false, course: null, step: 'auth' })
+    setModal({ isOpen: false, course: null, type: 'details', step: 'auth' })
     setLoginForm({ email: '', password: '', isLogin: true, fullName: '' })
   }
 
@@ -253,14 +274,14 @@ const EducationPage: React.FC = () => {
     if (loginForm.isLogin) {
       const result = await auth.signIn(loginForm.email, loginForm.password)
       if (result.success) {
-        setEnrollmentModal(prev => ({ ...prev, step: 'payment' }))
+        setModal(prev => ({ ...prev, step: 'payment' }))
       } else {
         alert(result.error || 'Login failed')
       }
     } else {
       const result = await auth.signUp(loginForm.email, loginForm.password, loginForm.fullName)
       if (result.success) {
-        setEnrollmentModal(prev => ({ ...prev, step: 'payment' }))
+        setModal(prev => ({ ...prev, step: 'payment' }))
       } else {
         alert(result.error || 'Sign up failed')
       }
@@ -269,11 +290,72 @@ const EducationPage: React.FC = () => {
 
   const handlePayment = (method: string) => {
     console.log(`Processing payment with ${method}`)
-    setEnrollmentModal(prev => ({ ...prev, step: 'confirmation' }))
+    setModal(prev => ({ ...prev, step: 'confirmation' }))
   }
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Header with Login */}
+      <header className="bg-white border-b border-black/10 sticky top-0 z-40">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <h1 className="text-2xl font-bold text-black">Carthigan Education</h1>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              {auth.user ? (
+                <div className="flex items-center space-x-4">
+                  <div className="text-sm text-black/70">
+                    Welcome, <span className="font-medium text-black">{auth.user.name}</span>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="border-black/20 hover:bg-gray-50 text-black"
+                    onClick={() => window.location.href = '/dashboard'}
+                  >
+                    Dashboard
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="border-black/20 hover:bg-gray-50 text-black"
+                    onClick={auth.signOut}
+                  >
+                    Sign Out
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <div className="text-sm text-black/60">
+                    Already have an account?
+                  </div>
+                  <Button 
+                    variant="outline"
+                    size="sm"
+                    className="border-black/20 hover:bg-gray-50 text-black"
+                    onClick={() => setModal({ isOpen: true, course: null, type: 'enrollment', step: 'auth' })}
+                  >
+                    Login
+                  </Button>
+                  <Button 
+                    size="sm"
+                    className="bg-black hover:bg-black/80 text-white"
+                    onClick={() => {
+                      setLoginForm(prev => ({ ...prev, isLogin: false }))
+                      setModal({ isOpen: true, course: null, type: 'enrollment', step: 'auth' })
+                    }}
+                  >
+                    Sign Up
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
         <div className="container mx-auto px-6">
@@ -355,6 +437,7 @@ const EducationPage: React.FC = () => {
                   key={course.id}
                   course={course}
                   onEnroll={handleEnroll}
+                  onViewDetails={handleViewDetails}
                 />
               ))}
             </div>
@@ -389,12 +472,12 @@ const EducationPage: React.FC = () => {
               </div>
 
               <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-                <TabsList className="grid w-full grid-cols-4 lg:grid-cols-5">
-                  <TabsTrigger value="all">All</TabsTrigger>
-                  <TabsTrigger value="electrical">Electrical</TabsTrigger>
-                  <TabsTrigger value="mechanical">Mechanical</TabsTrigger>
-                  <TabsTrigger value="software">Software</TabsTrigger>
-                  <TabsTrigger value="design">Design</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-4 lg:grid-cols-5 bg-gray-50 border border-black/10">
+                  <TabsTrigger value="all" className="data-[state=active]:bg-black data-[state=active]:text-white">All</TabsTrigger>
+                  <TabsTrigger value="electrical" className="data-[state=active]:bg-black data-[state=active]:text-white">Electrical</TabsTrigger>
+                  <TabsTrigger value="mechanical" className="data-[state=active]:bg-black data-[state=active]:text-white">Mechanical</TabsTrigger>
+                  <TabsTrigger value="software" className="data-[state=active]:bg-black data-[state=active]:text-white">Software</TabsTrigger>
+                  <TabsTrigger value="design" className="data-[state=active]:bg-black data-[state=active]:text-white">Design</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
@@ -405,6 +488,7 @@ const EducationPage: React.FC = () => {
                   key={course.id}
                   course={course}
                   onEnroll={handleEnroll}
+                  onViewDetails={handleViewDetails}
                 />
               ))}
             </div>
@@ -439,9 +523,9 @@ const EducationPage: React.FC = () => {
         </section>
       )}
 
-      {/* Enrollment Modal */}
+      {/* Course Detail & Enrollment Modal */}
       <AnimatePresence>
-        {enrollmentModal.isOpen && enrollmentModal.course && (
+        {modal.isOpen && modal.course && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -453,21 +537,104 @@ const EducationPage: React.FC = () => {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto"
+              className="bg-white rounded-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold text-black">
-                  {enrollmentModal.step === 'auth' && (loginForm.isLogin ? 'Login to Enroll' : 'Create Account')}
-                  {enrollmentModal.step === 'payment' && 'Choose Payment Method'}
-                  {enrollmentModal.step === 'confirmation' && 'Enrollment Confirmed!'}
+                  {modal.type === 'details' && 'Course Details'}
+                  {modal.type === 'enrollment' && modal.step === 'auth' && (loginForm.isLogin ? 'Login to Enroll' : 'Create Account')}
+                  {modal.type === 'enrollment' && modal.step === 'payment' && 'Choose Payment Method'}
+                  {modal.type === 'enrollment' && modal.step === 'confirmation' && 'Enrollment Confirmed!'}
                 </h3>
                 <button onClick={closeModal} className="text-black/40 hover:text-black">
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
-              {enrollmentModal.step === 'auth' && (
+              {/* Course Details Modal */}
+              {modal.type === 'details' && (
+                <div className="space-y-6">
+                  <div className="border-b border-black/10 pb-4">
+                    <h2 className="text-2xl font-bold text-black mb-2">{modal.course.title}</h2>
+                    <div className="flex items-center gap-4 text-sm text-black/60 mb-4">
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        {modal.course.duration}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Users className="h-4 w-4" />
+                        {modal.course.students} students
+                      </div>
+                      <div className="flex items-center gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <Star 
+                            key={i} 
+                            className={`h-4 w-4 ${i < Math.floor(modal.course.rating) ? 'fill-black text-black' : 'text-gray-300'}`} 
+                          />
+                        ))}
+                        <span className="font-medium">{modal.course.rating}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-3xl font-bold text-black">{modal.course.priceDisplay}</span>
+                      <Badge className="bg-black/10 text-black border-black/20">{modal.course.level}</Badge>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium text-black mb-2">Course Description</h4>
+                    <p className="text-black/70">{modal.course.description}</p>
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium text-black mb-2">Instructor</h4>
+                    <p className="text-black/70">{modal.course.instructor}</p>
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium text-black mb-4">Complete Course Outline</h4>
+                    <div className="space-y-3">
+                      {modal.course.outline.map((week, index) => (
+                        <div key={index} className="border border-black/10 rounded-lg p-4">
+                          <h5 className="font-medium text-black mb-2">{week.week}</h5>
+                          <ul className="space-y-1">
+                            {week.topics.map((topic, topicIndex) => (
+                              <li key={topicIndex} className="text-sm text-black/70 flex items-start">
+                                <span className="w-1.5 h-1.5 bg-black rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                                {topic}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <Button 
+                      onClick={closeModal}
+                      variant="outline"
+                      className="flex-1 border-black/20 hover:bg-gray-50 text-black"
+                    >
+                      Close
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        setModal(prev => ({ ...prev, type: 'enrollment' }))
+                        handleEnroll(modal.course)
+                      }}
+                      className="flex-1 bg-black hover:bg-black/80 text-white"
+                    >
+                      <Play className="mr-2 h-4 w-4" />
+                      Enroll Now
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Enrollment Steps */}
+              {modal.type === 'enrollment' && modal.step === 'auth' && (
                 <div className="space-y-4">
                   <div className="bg-gray-50 p-4 rounded-lg border">
                     <p className="text-sm text-black/70 mb-2">Demo Login Credentials:</p>
@@ -514,12 +681,12 @@ const EducationPage: React.FC = () => {
                 </div>
               )}
 
-              {enrollmentModal.step === 'payment' && (
+              {modal.type === 'enrollment' && modal.step === 'payment' && (
                 <div className="space-y-6">
                   <div className="bg-gray-50 p-4 rounded-lg border">
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-black">Course: {enrollmentModal.course.title}</span>
-                      <span className="font-bold text-black">{enrollmentModal.course.priceDisplay}</span>
+                      <span className="font-medium text-black">Course: {modal.course.title}</span>
+                      <span className="font-bold text-black">{modal.course.priceDisplay}</span>
                     </div>
                   </div>
 
@@ -579,14 +746,14 @@ const EducationPage: React.FC = () => {
                 </div>
               )}
 
-              {enrollmentModal.step === 'confirmation' && (
+              {modal.type === 'enrollment' && modal.step === 'confirmation' && (
                 <div className="text-center space-y-4">
                   <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto flex items-center justify-center">
                     <CheckCircle className="h-8 w-8 text-black" />
                   </div>
                   <h4 className="text-lg font-semibold text-black">Welcome to the Course!</h4>
                   <p className="text-black/60">
-                    You've successfully enrolled in <strong>{enrollmentModal.course.title}</strong>. 
+                    You've successfully enrolled in <strong>{modal.course.title}</strong>. 
                     Check your email for course access details.
                   </p>
                   <div className="space-y-2">

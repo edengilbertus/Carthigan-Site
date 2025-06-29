@@ -23,26 +23,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/contexts/AuthContext'
 
 export function StudentDashboard() {
-  const { user, signOut, getUserEnrollments } = useAuth()
+  const { user, signOut } = useAuth()
   const [enrollments, setEnrollments] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    if (user) {
-      loadEnrollments()
-    }
-  }, [user])
-
-  const loadEnrollments = async () => {
-    try {
-      const data = await getUserEnrollments()
-      setEnrollments(data)
-    } catch (error) {
-      console.error('Error loading enrollments:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const [loading, setLoading] = useState(false)
 
   // Demo data for development
   const demoEnrollments = [
@@ -203,7 +186,11 @@ export function StudentDashboard() {
                         </div>
                         <div className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
-                          Enrolled {new Date(enrollment.enrolled_at).toLocaleDateString()}
+                          Enrolled {new Date(enrollment.enrolled_at).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'short', 
+                            day: 'numeric' 
+                          })}
                         </div>
                       </div>
 

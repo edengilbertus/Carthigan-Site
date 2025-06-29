@@ -22,11 +22,11 @@ const categoryTitles: Record<string, { title: string; description: string }> = {
   },
   mechanical: {
     title: 'Mechanical Engineering', 
-    description: 'Learn thermodynamics, fluid mechanics, manufacturing processes, and mechanical design principles.'
+    description: 'Learn thermodynamics, fluid mechanics, mechanics of materials, and mechanical system design.'
   },
   computer: {
     title: 'Computer Engineering',
-    description: 'Dive into computer architecture, embedded systems, VLSI design, and digital signal processing.'
+    description: 'Explore computer architecture, embedded systems, VLSI design, and digital signal processing.'
   },
   software: {
     title: 'Software Engineering',
@@ -34,62 +34,41 @@ const categoryTitles: Record<string, { title: string; description: string }> = {
   },
   design: {
     title: 'UI/UX Design',
-    description: 'Create beautiful, user-centered designs with modern tools and design thinking methodologies.'
+    description: 'Master user interface design, user experience principles, and design thinking methodologies.'
   },
   writing: {
     title: 'Creative Writing',
-    description: 'Develop your writing skills across fiction, non-fiction, journalism, and professional communication.'
+    description: 'Develop skills in fiction writing, content creation, copywriting, and professional communication.'
   },
   music: {
     title: 'Music Production',
-    description: 'Master audio engineering, music theory, electronic production, and professional recording techniques.'
+    description: 'Learn audio engineering, music theory, DAW mastery, and professional music production techniques.'
   },
   language: {
     title: 'Languages',
-    description: 'Learn English, French, Spanish, Italian, Hebrew, and other languages for global communication.'
+    description: 'Master English, French, Spanish, Italian, Hebrew, and other languages for global communication.'
   },
   'creative-software': {
     title: 'Creative Software',
-    description: 'Master industry-standard creative tools like Photoshop, Illustrator, Final Cut Pro, and Figma.'
+    description: 'Master Adobe Creative Suite, Final Cut Pro, and other professional creative software tools.'
   }
 }
 
-interface Props {
-  params: {
-    category: string
-  }
+interface CategoryPageProps {
+  params: Promise<{ category: string }>
 }
 
-export async function generateStaticParams() {
-  return Object.keys(categoryMap).map((category) => ({
-    category,
-  }))
-}
-
-export async function generateMetadata({ params }: Props) {
-  const categoryKey = categoryMap[params.category]
-  const categoryInfo = categoryTitles[categoryKey]
-  
-  if (!categoryInfo) {
-    return {
-      title: 'Category Not Found',
-    }
-  }
-
-  return {
-    title: `${categoryInfo.title} Courses - Carthigan Education`,
-    description: categoryInfo.description,
-  }
-}
-
-export default function Category({ params }: Props) {
-  const categoryKey = categoryMap[params.category]
+export default async function Category({ params }: CategoryPageProps) {
+  const { category } = await params
+  const categoryKey = categoryMap[category]
   
   if (!categoryKey || !categoryTitles[categoryKey]) {
     notFound()
   }
 
   const categoryInfo = categoryTitles[categoryKey]
+  
+  // Get courses for this category
   const courses = COURSES.filter(course => course.category === categoryKey)
 
   return (
@@ -98,7 +77,25 @@ export default function Category({ params }: Props) {
       title={categoryInfo.title}
       description={categoryInfo.description}
       courses={courses}
-      breadcrumb={params.category}
+      breadcrumb={category}
     />
   )
+}
+
+export async function generateMetadata({ params }: CategoryPageProps) {
+  const { category } = await params
+  const categoryKey = categoryMap[category]
+  const categoryInfo = categoryTitles[categoryKey]
+  
+  if (!categoryInfo) {
+    return {
+      title: 'Category Not Found - Carthigan Education',
+      description: 'The requested course category could not be found.'
+    }
+  }
+
+  return {
+    title: `${categoryInfo.title} Courses - Carthigan Education`,
+    description: categoryInfo.description
+  }
 }

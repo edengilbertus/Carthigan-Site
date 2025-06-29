@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
-import { EducationPage } from '@/components/education/EducationPage'
-import { AuthProvider } from '@/contexts/AuthContext'
+import EducationPage from '@/components/education/EducationPage'
 
 export const metadata: Metadata = {
   title: 'Carthigan Education - Complete Course Catalog with UGX Pricing',
@@ -8,9 +7,5 @@ export const metadata: Metadata = {
 }
 
 export default function Education() {
-  return (
-    <AuthProvider>
-      <EducationPage />
-    </AuthProvider>
-  )
+  return <EducationPage />
 } 

@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button"
 
 const footerLinks = {
   ecosystem: [
-    { name: "Education", href: "#" },
-    { name: "Supply", href: "#" },
-    { name: "Technologies", href: "#" }
+    { name: "Education", href: "/education" },
+    { name: "Supply", href: "/supply" },
+    { name: "Technologies", href: "/services" }
   ],
   company: [
     { name: "About Us", href: "#" },
@@ -15,9 +15,9 @@ const footerLinks = {
     { name: "Contact", href: "#" }
   ],
   resources: [
-    { name: "Open Source", href: "#" },
-    { name: "Developer API", href: "#" },
-    { name: "Documentation", href: "#" }
+    { name: "Open Source", href: "https://github.com/carthiganelectronics" },
+    { name: "Developer API", href: "https://github.com/carthiganelectronics" },
+    { name: "Documentation", href: "https://github.com/carthiganelectronics" }
   ]
 }
 

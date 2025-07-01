@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
@@ -17,6 +17,34 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'error'>('checking')
+
+  // Check Supabase connection on page load
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        // Simple test query to verify connection
+        const { error } = await supabase
+          .from('profiles')
+          .select('count')
+          .limit(1)
+        
+        if (error) {
+          console.error('Supabase connection error:', error)
+          setConnectionStatus('error')
+          setError(`Database connection failed: ${error.message}. Make sure Supabase is running.`)
+        } else {
+          setConnectionStatus('connected')
+        }
+      } catch (err: any) {
+        console.error('Unexpected connection error:', err)
+        setConnectionStatus('error')
+        setError(`Connection error: ${err.message}. Make sure Supabase is running and configured.`)
+      }
+    }
+
+    checkConnection()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -24,6 +52,11 @@ export default function AdminLoginPage() {
     setIsLoading(true)
 
     try {
+      // Skip authentication if connection failed
+      if (connectionStatus === 'error') {
+        throw new Error('Cannot authenticate while database connection is down')
+      }
+
       // Authenticate using Supabase
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -66,6 +99,28 @@ export default function AdminLoginPage() {
           <CardDescription>
             Enter your credentials to access the admin dashboard
           </CardDescription>
+          
+          {/* Connection status indicator */}
+          {connectionStatus === 'checking' && (
+            <div className="flex items-center text-amber-600 text-sm mt-2">
+              <div className="animate-pulse bg-amber-500 rounded-full h-2 w-2 mr-2"></div>
+              Checking database connection...
+            </div>
+          )}
+          
+          {connectionStatus === 'connected' && (
+            <div className="flex items-center text-green-600 text-sm mt-2">
+              <div className="bg-green-500 rounded-full h-2 w-2 mr-2"></div>
+              Database connected
+            </div>
+          )}
+          
+          {connectionStatus === 'error' && (
+            <div className="flex items-center text-red-600 text-sm mt-2">
+              <div className="bg-red-500 rounded-full h-2 w-2 mr-2"></div>
+              Database connection failed
+            </div>
+          )}
         </CardHeader>
         <CardContent>
           {error && (
@@ -80,10 +135,11 @@ export default function AdminLoginPage() {
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@example.com"
+                placeholder="admin@carthigan.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={connectionStatus === 'error' || isLoading}
               />
             </div>
             <div className="space-y-2">
@@ -94,12 +150,30 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                disabled={connectionStatus === 'error' || isLoading}
               />
             </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button 
+              type="submit" 
+              className="w-full" 
+              disabled={connectionStatus === 'error' || connectionStatus === 'checking' || isLoading}
+            >
               {isLoading ? 'Logging in...' : 'Login'}
             </Button>
           </form>
+
+          {/* Connection troubleshooting guide */}
+          {connectionStatus === 'error' && (
+            <div className="mt-6 p-4 bg-gray-50 rounded-md text-sm">
+              <h4 className="font-semibold mb-2">Troubleshooting Steps:</h4>
+              <ol className="list-decimal list-inside space-y-1">
+                <li>Ensure Supabase is running locally (<code>npx supabase start</code>)</li>
+                <li>Check your <code>.env.local</code> file for correct credentials</li>
+                <li>Try refreshing the page</li>
+                <li>Check browser console for specific error messages</li>
+              </ol>
+            </div>
+          )}
         </CardContent>
         <CardFooter className="flex justify-center">
           <Link href="/" className="text-sm text-gray-500 hover:text-gray-800">

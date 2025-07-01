@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { analyticsApi, realtimeApi } from '@/lib/api'
+import { analyticsApi, realtimeApi, authApi } from '@/lib/api'
+import { supabase } from '@/lib/supabase'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -16,6 +17,7 @@ import {
   Activity
 } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 interface DashboardStats {
   totalProducts: number
@@ -27,13 +29,56 @@ interface DashboardStats {
 }
 
 export default function AdminDashboard() {
+  const router = useRouter()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [isConnected, setIsConnected] = useState(false)
+  const [authStatus, setAuthStatus] = useState<{user: any, isAdmin: boolean, error: string | null}>({
+    user: null,
+    isAdmin: false,
+    error: null
+  })
 
   useEffect(() => {
+    checkAuthentication()
     loadDashboardData()
   }, [])
+
+  const checkAuthentication = async () => {
+    try {
+      console.log("Checking authentication status...")
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      console.log("Current user:", user)
+      
+      let isAdmin = false
+      let error = null
+      
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single()
+          
+        console.log("User profile:", profile)
+        isAdmin = profile?.role === 'admin'
+      } else {
+        error = "No authenticated user found"
+      }
+      
+      setAuthStatus({ user, isAdmin, error })
+      
+      // If not authenticated, redirect to login
+      if (!user || !isAdmin) {
+        console.log("Redirecting to login page...")
+        router.push('/admin/login')
+      }
+    } catch (err: any) {
+      console.error("Authentication check error:", err)
+      setAuthStatus(prev => ({ ...prev, error: err.message || "Authentication check failed" }))
+    }
+  }
 
   const loadDashboardData = async () => {
     try {
@@ -56,6 +101,18 @@ export default function AdminDashboard() {
       currency: 'UGX',
       minimumFractionDigits: 0,
     }).format(amount)
+  }
+
+  if (authStatus.error) {
+    return (
+      <div className="p-8 bg-white rounded-md shadow">
+        <h2 className="text-2xl font-bold text-red-600 mb-4">Authentication Error</h2>
+        <p className="mb-4">{authStatus.error}</p>
+        <Button onClick={() => router.push('/admin/login')}>
+          Go to Login
+        </Button>
+      </div>
+    )
   }
 
   if (loading) {
@@ -92,6 +149,18 @@ export default function AdminDashboard() {
           Refresh
         </Button>
       </div>
+
+      {/* Auth Status Debug (Remove in production) */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Authentication Status</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p><strong>User ID:</strong> {authStatus.user?.id || 'Not logged in'}</p>
+          <p><strong>Email:</strong> {authStatus.user?.email || 'N/A'}</p>
+          <p><strong>Is Admin:</strong> {authStatus.isAdmin ? 'Yes' : 'No'}</p>
+        </CardContent>
+      </Card>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

@@ -250,6 +250,21 @@ export const productApi = {
     return handleApiResponse(result, 'Failed to get product')
   },
 
+  async getProductForAdmin(id: string): Promise<ApiResponse<Product>> {
+    const isAdmin = await authApi.isAdmin()
+    if (!isAdmin) {
+      return { data: null, error: 'Unauthorized', success: false }
+    }
+
+    const result = await supabase
+      .from('products')
+      .select('*')
+      .eq('id', id)
+      .single()
+
+    return handleApiResponse(result, 'Failed to get product')
+  },
+
   async createProduct(product: ProductInsert): Promise<ApiResponse<Product>> {
     const isAdmin = await authApi.isAdmin()
     if (!isAdmin) {

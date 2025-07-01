@@ -99,7 +99,7 @@ export function Footer() {
                 asChild
               >
                 <a href="https://github.com/carthiganelectronics" target="_blank" rel="noopener noreferrer">
-                  <GitHubIcon />
+                <GitHubIcon />
                 </a>
               </Button>
             </div>

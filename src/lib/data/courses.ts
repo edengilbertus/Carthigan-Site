@@ -1543,3 +1543,4 @@ export const CATEGORIES = [
   { id: 'language', name: 'Languages', icon: 'Languages', count: COURSES.filter(c => c.category === 'language').length },
   { id: 'creative-software', name: 'Creative Software', icon: 'Layers', count: COURSES.filter(c => c.category === 'creative-software').length }
 ]
+ 

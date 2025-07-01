@@ -624,7 +624,5 @@ INSERT INTO payment_providers (name, slug, type, configuration, fees, is_active)
   ('Paystack', 'paystack', 'card', '{"currencies": ["UGX", "USD"], "countries": ["UG"]}', '{"percentage": 3.9, "fixed": 100}', false)
 ON CONFLICT (slug) DO NOTHING;
 
--- Create initial admin user in profiles (you'll need to create the auth user separately)
-INSERT INTO profiles (id, email, full_name, role) VALUES
-  ('00000000-0000-0000-0000-000000000000', 'admin@carthigan.com', 'Carthigan Admin', 'admin')
-ON CONFLICT (id) DO NOTHING; 
+-- Note: Admin user profile will be created automatically when admin user is created in auth.users
+-- The create_profile_for_new_user() trigger will handle this automatically 

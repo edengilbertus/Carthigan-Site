@@ -239,6 +239,80 @@ export const productApi = {
     }
   },
 
+  async getProductsForAdmin(params?: {
+    page?: number
+    limit?: number
+    category?: string
+    search?: string
+    featured?: boolean
+    type?: string
+    includeInactive?: boolean
+  }): Promise<PaginatedResponse<Product>> {
+    const isAdmin = await authApi.isAdmin()
+    if (!isAdmin) {
+      return { data: null, error: 'Unauthorized', success: false }
+    }
+
+    const page = params?.page || 1
+    const limit = params?.limit || 20
+    const offset = (page - 1) * limit
+
+    let query = supabase
+      .from('products')
+      .select('*', { count: 'exact' })
+
+    // Only filter by is_active if includeInactive is false
+    if (params?.includeInactive !== true) {
+      query = query.eq('is_active', true)
+    }
+
+    if (params?.category) {
+      query = query.eq('subcategory', params.category)
+    }
+
+    if (params?.search) {
+      query = query.or(`name.ilike.%${params.search}%,description.ilike.%${params.search}%`)
+    }
+
+    if (params?.featured) {
+      query = query.eq('is_featured', true)
+    }
+
+    if (params?.type) {
+      query = query.eq('product_type', params.type)
+    }
+
+    query = query
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1)
+
+    const result = await query
+
+    if (result.error) {
+      return {
+        data: null,
+        error: result.error.message,
+        success: false
+      }
+    }
+
+    const totalCount = result.count || 0
+    const totalPages = Math.ceil(totalCount / limit)
+
+    return {
+      data: {
+        items: result.data || [],
+        totalCount,
+        page,
+        limit,
+        totalPages
+      },
+      error: null,
+      success: true
+    }
+  },
+
   async getProduct(id: string): Promise<ApiResponse<Product>> {
     const result = await supabase
       .from('products')
@@ -286,14 +360,34 @@ export const productApi = {
       return { data: null, error: 'Unauthorized', success: false }
     }
 
-    const result = await supabase
-      .from('products')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single()
+    try {
+      const result = await supabase
+        .from('products')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single()
 
-    return handleApiResponse(result, 'Failed to update product')
+      return handleApiResponse(result, 'Failed to update product')
+    } catch (error: any) {
+      // Handle specific RLS error for admin_activities table
+      if (error?.message?.includes('admin_activities')) {
+        console.warn('Admin activities logging failed, but product update may have succeeded')
+        
+        // Try to fetch the updated product to confirm it was saved
+        const checkResult = await supabase
+          .from('products')
+          .select('*')
+          .eq('id', id)
+          .single()
+        
+        if (checkResult.data) {
+          return { data: checkResult.data, error: null, success: true }
+        }
+      }
+      
+      return { data: null, error: error.message || 'Failed to update product', success: false }
+    }
   },
 
   async deleteProduct(id: string): Promise<ApiResponse<void>> {

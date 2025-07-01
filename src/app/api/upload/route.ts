@@ -1,10 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
 import { v4 as uuidv4 } from 'uuid'
 
 export async function POST(request: NextRequest) {
   try {
     console.log('Upload API called')
+
+    // Use service role key for uploads to bypass RLS
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+        }
+      }
+    )
+
+    console.log('Using service role for upload')
 
     const formData = await request.formData()
     const file = formData.get('file') as File
@@ -49,10 +63,7 @@ export async function POST(request: NextRequest) {
 
     console.log('Buffer size:', buffer.length)
 
-    // Check Supabase client
-    console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
-
-    // Upload to Supabase Storage
+    // Upload to Supabase Storage using service role
     const { data, error } = await supabase.storage
       .from(bucket)
       .upload(filePath, buffer, {

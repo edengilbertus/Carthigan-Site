@@ -16,7 +16,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ArrowLeft, Save, Loader2 } from 'lucide-react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import { ArrowLeft, Save, Loader2, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { ImageUpload } from '@/components/admin/ImageUpload'
 
@@ -31,6 +42,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
   const { id: productId } = use(params)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const [product, setProduct] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
   const [images, setImages] = useState<string[]>([])
@@ -162,6 +174,27 @@ export default function EditProductPage({ params }: EditProductPageProps) {
       }
     } catch (error) {
       console.error('Stock update error:', error)
+    }
+  }
+
+  const handleDeleteProduct = async () => {
+    if (!product) return
+    
+    try {
+      setDeleting(true)
+      const response = await productApi.deleteProduct(productId)
+      
+      if (response.success) {
+        alert(`Product "${product.name}" has been deleted successfully.`)
+        router.push('/admin/products')
+      } else {
+        alert(`Failed to delete product: ${response.error}`)
+      }
+    } catch (error) {
+      console.error('Delete error:', error)
+      alert('Failed to delete product')
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -435,25 +468,64 @@ export default function EditProductPage({ params }: EditProductPageProps) {
         </Card>
 
         {/* Actions */}
-        <div className="flex justify-end gap-4">
-          <Link href="/admin/products">
-            <Button variant="outline" type="button">
-              Cancel
+        <div className="flex justify-between">
+          <div>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" type="button" disabled={deleting}>
+                  {deleting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete Product
+                    </>
+                  )}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete Product</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to delete "{product.name}"? This will mark the product as inactive but preserve its data for historical purposes. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDeleteProduct}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    Delete Product
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+          
+          <div className="flex gap-4">
+            <Link href="/admin/products">
+              <Button variant="outline" type="button">
+                Cancel
+              </Button>
+            </Link>
+            <Button type="submit" disabled={saving}>
+              {saving ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Changes
+                </>
+              )}
             </Button>
-          </Link>
-          <Button type="submit" disabled={saving}>
-            {saving ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              <>
-                <Save className="h-4 w-4 mr-2" />
-                Save Changes
-              </>
-            )}
-          </Button>
+          </div>
         </div>
       </form>
     </div>

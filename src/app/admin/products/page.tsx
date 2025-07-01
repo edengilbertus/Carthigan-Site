@@ -14,6 +14,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { 
   Search, 
   Plus, 
@@ -26,6 +37,7 @@ import Link from 'next/link'
 export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [deleting, setDeleting] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -53,6 +65,27 @@ export default function ProductsPage() {
       console.error('Failed to load products:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleDeleteProduct = async (productId: string, productName: string) => {
+    try {
+      setDeleting(productId)
+      const response = await productApi.deleteProduct(productId)
+      
+      if (response.success) {
+        // Remove product from local state
+        setProducts(prev => prev.filter(p => p.id !== productId))
+        setTotalProducts(prev => prev - 1)
+        alert(`Product "${productName}" has been deleted successfully.`)
+      } else {
+        alert(`Failed to delete product: ${response.error}`)
+      }
+    } catch (error) {
+      console.error('Delete error:', error)
+      alert('Failed to delete product')
+    } finally {
+      setDeleting(null)
     }
   }
 
@@ -102,20 +135,26 @@ export default function ProductsPage() {
                 <TableHead>Category</TableHead>
                 <TableHead>Price</TableHead>
                 <TableHead>Stock</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8">
+                  <TableCell colSpan={6} className="text-center py-8">
                     Loading products...
                   </TableCell>
                 </TableRow>
               ) : (
                 products.map((product) => (
                   <TableRow key={product.id}>
-                    <TableCell>{product.name}</TableCell>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{product.name}</div>
+                        <div className="text-sm text-gray-500">{product.sku}</div>
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <Badge variant="outline">{product.subcategory || product.product_type}</Badge>
                     </TableCell>
@@ -126,11 +165,47 @@ export default function ProductsPage() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Link href={`/admin/products/${product.id}/edit`}>
-                        <Button variant="ghost" size="sm">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                      </Link>
+                      <Badge variant={product.is_active ? 'default' : 'secondary'}>
+                        {product.is_active ? 'Active' : 'Inactive'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex gap-2 justify-end">
+                        <Link href={`/admin/products/${product.id}/edit`}>
+                          <Button variant="ghost" size="sm">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                        
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              disabled={deleting === product.id}
+                            >
+                              <Trash2 className="h-4 w-4 text-red-500" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete Product</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to delete "{product.name}"? This will mark the product as inactive but preserve its data for historical purposes.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDeleteProduct(product.id, product.name)}
+                                className="bg-red-600 hover:bg-red-700"
+                              >
+                                Delete Product
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))
@@ -139,6 +214,32 @@ export default function ProductsPage() {
           </Table>
         </CardContent>
       </Card>
+
+      {totalPages > 1 && (
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex justify-between items-center">
+              <Button 
+                variant="outline" 
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              <span className="text-sm text-gray-600">
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button 
+                variant="outline" 
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

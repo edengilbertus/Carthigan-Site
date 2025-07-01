@@ -69,16 +69,25 @@ export default function AdminLoginPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Authentication failed')
 
-      const { data: profile } = await supabase
+      console.log('Authenticated user:', user.id, user.email)
+
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', user.id)
         .single()
 
+      console.log('Profile query result:', { profile, profileError })
+
       // Verify user is an admin
-      if (profile?.role !== 'admin') {
+      if (profileError || !profile) {
+        console.error('Profile fetch error:', profileError)
+        throw new Error(`Profile not found or inaccessible. ${profileError?.message || 'Please check if profile exists in database.'}`)
+      }
+
+      if (profile.role !== 'admin') {
         await supabase.auth.signOut() // Sign out if not admin
-        throw new Error('You do not have admin privileges')
+        throw new Error(`You do not have admin privileges. Current role: ${profile.role}`)
       }
 
       // Success - redirect to admin dashboard

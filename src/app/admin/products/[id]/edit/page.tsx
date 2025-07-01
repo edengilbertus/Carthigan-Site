@@ -133,10 +133,21 @@ export default function EditProductPage({ params }: EditProductPageProps) {
         is_featured: formData.is_featured,
       }
 
+      console.log('🚀 Submitting product update:', {
+        productId,
+        imagesCount: images.length,
+        images: images,
+        updates
+      })
+
       const response = await productApi.updateProduct(productId, updates)
       
+      console.log('📝 Update response:', response)
+      
       if (response.success) {
-        router.push('/admin/products')
+        alert('Product updated successfully!')
+        // Reload the product to see the changes
+        await loadProduct()
       } else {
         alert('Failed to update product: ' + response.error)
       }
@@ -237,6 +248,28 @@ export default function EditProductPage({ params }: EditProductPageProps) {
 
   return (
     <div className="space-y-6">
+      {/* Debug Information - Temporary */}
+      <Card className="bg-yellow-50 border-yellow-200">
+        <CardHeader>
+          <CardTitle className="text-yellow-800">Debug Information</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2 text-sm">
+            <p><strong>Product ID:</strong> {productId}</p>
+            <p><strong>Images in state:</strong> {images.length} images</p>
+            <div className="bg-gray-100 p-2 rounded text-xs">
+              <strong>Image URLs:</strong>
+              <pre>{JSON.stringify(images, null, 2)}</pre>
+            </div>
+            <p><strong>Product Images from DB:</strong> {product?.images?.length || 0} images</p>
+            <div className="bg-gray-100 p-2 rounded text-xs">
+              <strong>DB Image URLs:</strong>
+              <pre>{JSON.stringify(product?.images || [], null, 2)}</pre>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link href="/admin/products">

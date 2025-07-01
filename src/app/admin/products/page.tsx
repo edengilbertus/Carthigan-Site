@@ -33,6 +33,8 @@ import {
   Package
 } from 'lucide-react'
 import Link from 'next/link'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([])
@@ -42,18 +44,20 @@ export default function ProductsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalProducts, setTotalProducts] = useState(0)
+  const [showInactive, setShowInactive] = useState(false)
 
   useEffect(() => {
     loadProducts()
-  }, [currentPage, searchQuery])
+  }, [currentPage, searchQuery, showInactive])
 
   const loadProducts = async () => {
     try {
       setLoading(true)
-      const response = await productApi.getProducts({
+      const response = await productApi.getProductsForAdmin({
         page: currentPage,
         limit: 20,
-        search: searchQuery
+        search: searchQuery,
+        includeInactive: showInactive
       })
 
       if (response.success && response.data) {
@@ -114,14 +118,26 @@ export default function ProductsPage() {
 
       <Card>
         <CardContent className="p-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
+          <div className="flex gap-4 items-center">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="show-inactive"
+                checked={showInactive}
+                onCheckedChange={setShowInactive}
+              />
+              <Label htmlFor="show-inactive" className="text-sm">
+                Show inactive products
+              </Label>
+            </div>
           </div>
         </CardContent>
       </Card>

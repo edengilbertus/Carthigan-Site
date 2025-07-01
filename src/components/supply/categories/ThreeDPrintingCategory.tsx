@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react"
 import { motion } from "framer-motion"
+import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -39,10 +40,6 @@ interface Product {
   is_active: boolean
   images?: string[]
   features?: string[]
-  rating: number
-  reviews: number
-  tags: string[]
-  specifications: Record<string, string>
 }
 
 export function ThreeDPrintingCategory() {
@@ -71,17 +68,8 @@ export function ThreeDPrintingCategory() {
         })
         
         if (response.success && response.data) {
-          const mappedProducts = response.data.items.map(item => ({
-            ...item,
-            subcategory: item.subcategory || '',
-            student_price: item.student_price || undefined,
-            rating: 0,
-            reviews: 0,
-            tags: [],
-            specifications: {}
-          }))
-          setProducts(mappedProducts)
-          console.log('Loaded 3D printing products:', mappedProducts.length)
+          setProducts(response.data.items)
+          console.log('Loaded 3d-printing products:', response.data.items.length)
         } else {
           setError('Failed to load products')
         }
@@ -147,7 +135,7 @@ export function ThreeDPrintingCategory() {
       id: product.id,
       name: product.name,
       price: product.student_price || product.price,
-      image: product.images?.[0] || '',
+      image: product.images?.[0],
       sku: product.id
     })
   }
@@ -196,13 +184,7 @@ export function ThreeDPrintingCategory() {
             className="bg-surface rounded-3xl border border-outline-variant/20 overflow-hidden hover:shadow-xl transition-all duration-300"
           >
             <div className="aspect-video bg-surface-variant/30 p-6 flex items-center justify-center">
-              <Image
-                src={product.images?.[0] || '/placeholder.jpg'}
-                alt={product.name}
-                width={100}
-                height={100}
-                className="w-full h-full object-cover"
-              />
+              <Printer className="w-16 h-16 text-primary/40" />
             </div>
             
             <div className="p-6">

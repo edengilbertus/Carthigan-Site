@@ -26,7 +26,7 @@ import { productApi } from "@/lib/api"
 import { useCartStore } from "@/lib/store/cart"
 
 type ViewMode = 'grid' | 'list'
-type SortOption = 'name' | 'price-low' | 'price-high' | 'rating' | 'availability'
+type SortOption = 'name' | 'price-low' | 'price-high' | 'rating'
 
 interface Product {
   id: string
@@ -41,16 +41,11 @@ interface Product {
   is_active: boolean
   images?: string[]
   features?: string[]
-  rating: number
-  reviews: number
-  tags: string[]
-  specifications: Record<string, string>
 }
 
 export function AudioVideoCategory() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>("all")
-  const [availabilityFilter, setAvailabilityFilter] = useState<string>("all")
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [sortBy, setSortBy] = useState<SortOption>('name')
   const [showFilters, setShowFilters] = useState(false)
@@ -75,17 +70,8 @@ export function AudioVideoCategory() {
         })
         
         if (response.success && response.data) {
-          const mappedProducts = response.data.items.map(item => ({
-            ...item,
-            subcategory: item.subcategory || '',
-            student_price: item.student_price || undefined,
-            rating: 0,
-            reviews: 0,
-            tags: [],
-            specifications: {}
-          }))
-          setProducts(mappedProducts)
-          console.log('Loaded audio-video products:', mappedProducts.length)
+          setProducts(response.data.items)
+          console.log('Loaded audio-video products:', response.data.items.length)
         } else {
           setError('Failed to load products')
         }

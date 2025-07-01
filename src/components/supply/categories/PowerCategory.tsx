@@ -41,8 +41,6 @@ interface Product {
   is_active: boolean
   images?: string[]
   features?: string[]
-  rating: number
-  reviews: number
   tags: string[]
   specifications: Record<string, string>
 }
@@ -79,8 +77,6 @@ export function PowerCategory() {
             ...item,
             subcategory: item.subcategory || '',
             student_price: item.student_price || undefined,
-            rating: 0,
-            reviews: 0,
             tags: [],
             specifications: {}
           }))

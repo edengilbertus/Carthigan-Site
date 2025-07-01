@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { motion } from "framer-motion"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -16,13 +17,33 @@ import {
   Package,
   Wrench,
   Zap,
-  Layers
+  Layers,
+  AlertCircle
 } from "lucide-react"
-import { getProductsByType } from "@/lib/data/unified-products"
+import { productApi } from "@/lib/api"
 import { useCartStore } from "@/lib/store/cart"
 
 type ViewMode = 'grid' | 'list'
 type SortOption = 'name' | 'price-low' | 'price-high' | 'rating'
+
+interface Product {
+  id: string
+  name: string
+  description: string
+  price: number
+  student_price?: number
+  product_type: string
+  subcategory: string
+  stock_quantity: number
+  stock_status: string
+  is_active: boolean
+  images?: string[]
+  features?: string[]
+  rating: number
+  reviews: number
+  tags: string[]
+  specifications: Record<string, string>
+}
 
 export function ThreeDPrintingCategory() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -30,10 +51,53 @@ export function ThreeDPrintingCategory() {
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [sortBy, setSortBy] = useState<SortOption>('name')
 
+  // Database state
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
   const { addItem } = useCartStore()
 
+  // Load products from database
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        const response = await productApi.getProducts({
+          type: '3d-printing',
+          limit: 1000
+        })
+        
+        if (response.success && response.data) {
+          const mappedProducts = response.data.items.map(item => ({
+            ...item,
+            subcategory: item.subcategory || '',
+            student_price: item.student_price || undefined,
+            rating: 0,
+            reviews: 0,
+            tags: [],
+            specifications: {}
+          }))
+          setProducts(mappedProducts)
+          console.log('Loaded 3D printing products:', mappedProducts.length)
+        } else {
+          setError('Failed to load products')
+        }
+      } catch (error) {
+        console.error('Error loading products:', error)
+        setError('Failed to load products')
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    loadProducts()
+  }, [])
+
   // Get all 3D printing products
-  const allThreeDPrintingData = getProductsByType('3d-printing')
+  const allThreeDPrintingData = products
   
   // Get unique subcategories
   const threeDPrintingSubcategories = useMemo(() => {
@@ -82,8 +146,8 @@ export function ThreeDPrintingCategory() {
     addItem({
       id: product.id,
       name: product.name,
-      price: product.studentPrice || product.price,
-      image: product.image,
+      price: product.student_price || product.price,
+      image: product.images?.[0] || '',
       sku: product.id
     })
   }
@@ -132,7 +196,13 @@ export function ThreeDPrintingCategory() {
             className="bg-surface rounded-3xl border border-outline-variant/20 overflow-hidden hover:shadow-xl transition-all duration-300"
           >
             <div className="aspect-video bg-surface-variant/30 p-6 flex items-center justify-center">
-              <Printer className="w-16 h-16 text-primary/40" />
+              <Image
+                src={product.images?.[0] || '/placeholder.jpg'}
+                alt={product.name}
+                width={100}
+                height={100}
+                className="w-full h-full object-cover"
+              />
             </div>
             
             <div className="p-6">
@@ -164,11 +234,11 @@ export function ThreeDPrintingCategory() {
 
               <div className="mb-4">
                 <div className="text-xl font-bold text-primary">
-                  UGX {(product.studentPrice || product.price).toLocaleString()}
+                  UGX {(product.student_price || product.price).toLocaleString()}
                 </div>
-                {product.studentPrice && (
+                {product.student_price && (
                   <div className="text-xs text-success">
-                    Student: UGX {product.studentPrice.toLocaleString()}
+                    Student: UGX {product.student_price.toLocaleString()}
                   </div>
                 )}
               </div>

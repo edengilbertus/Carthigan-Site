@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -17,25 +18,90 @@ import {
   Mic,
   Headphones,
   Camera,
-  Speaker
+  Speaker,
+  Package,
+  AlertCircle
 } from "lucide-react"
-import { getProductsByType } from "@/lib/data/unified-products"
+import { productApi } from "@/lib/api"
 import { useCartStore } from "@/lib/store/cart"
 
 type ViewMode = 'grid' | 'list'
-type SortOption = 'name' | 'price-low' | 'price-high' | 'rating'
+type SortOption = 'name' | 'price-low' | 'price-high' | 'rating' | 'availability'
+
+interface Product {
+  id: string
+  name: string
+  description: string
+  price: number
+  student_price?: number
+  product_type: string
+  subcategory: string
+  stock_quantity: number
+  stock_status: string
+  is_active: boolean
+  images?: string[]
+  features?: string[]
+  rating: number
+  reviews: number
+  tags: string[]
+  specifications: Record<string, string>
+}
 
 export function AudioVideoCategory() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>("all")
+  const [availabilityFilter, setAvailabilityFilter] = useState<string>("all")
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [sortBy, setSortBy] = useState<SortOption>('name')
   const [showFilters, setShowFilters] = useState(false)
 
+  // Database state
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
   const { addItem } = useCartStore()
 
+  // Load products from database
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        const response = await productApi.getProducts({
+          type: 'audio-video',
+          limit: 1000
+        })
+        
+        if (response.success && response.data) {
+          const mappedProducts = response.data.items.map(item => ({
+            ...item,
+            subcategory: item.subcategory || '',
+            student_price: item.student_price || undefined,
+            rating: 0,
+            reviews: 0,
+            tags: [],
+            specifications: {}
+          }))
+          setProducts(mappedProducts)
+          console.log('Loaded audio-video products:', mappedProducts.length)
+        } else {
+          setError('Failed to load products')
+        }
+      } catch (error) {
+        console.error('Error loading products:', error)
+        setError('Failed to load products')
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    loadProducts()
+  }, [])
+
   // Get all audio-video products
-  const allAudioVideoData = getProductsByType('audio-video')
+  const allAudioVideoData = products
   
   // Get unique subcategories
   const audioVideoSubcategories = useMemo(() => {
@@ -84,8 +150,8 @@ export function AudioVideoCategory() {
     addItem({
       id: product.id,
       name: product.name,
-      price: product.studentPrice || product.price,
-      image: product.image,
+      price: product.student_price || product.price,
+      image: product.images?.[0] || '',
       sku: product.id
     })
   }
@@ -310,11 +376,11 @@ function ProductCard({ product, onAddToCart, viewMode }: {
 
         <div className="mb-4">
           <div className="text-xl font-bold text-primary">
-            UGX {(product.studentPrice || product.price).toLocaleString()}
+            UGX {(product.student_price || product.price).toLocaleString()}
           </div>
-          {product.studentPrice && (
+          {product.student_price && (
             <div className="text-xs text-success">
-              Student: UGX {product.studentPrice.toLocaleString()}
+              Student: UGX {product.student_price.toLocaleString()}
             </div>
           )}
         </div>

@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -16,14 +17,35 @@ import {
   Zap,
   Battery,
   CircuitBoard,
-  Shield
+  Shield,
+  Package,
+  AlertCircle
 } from "lucide-react"
 import { CategoryHeader } from "./CategoryHeader"
-import { getProductsByType } from "@/lib/data/unified-products"
+import { productApi } from "@/lib/api"
 import { useCartStore } from "@/lib/store/cart"
 
 type ViewMode = 'grid' | 'list'
 type SortOption = 'name' | 'price-low' | 'price-high' | 'rating' | 'availability'
+
+interface Product {
+  id: string
+  name: string
+  description: string
+  price: number
+  student_price?: number
+  product_type: string
+  subcategory: string
+  stock_quantity: number
+  stock_status: string
+  is_active: boolean
+  images?: string[]
+  features?: string[]
+  rating: number
+  reviews: number
+  tags: string[]
+  specifications: Record<string, string>
+}
 
 export function PowerCategory() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -33,10 +55,53 @@ export function PowerCategory() {
   const [sortBy, setSortBy] = useState<SortOption>('name')
   const [showFilters, setShowFilters] = useState(false)
 
+  // Database state
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
   const { addItem } = useCartStore()
 
+  // Load products from database
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        const response = await productApi.getProducts({
+          type: 'power',
+          limit: 1000
+        })
+        
+        if (response.success && response.data) {
+          const mappedProducts = response.data.items.map(item => ({
+            ...item,
+            subcategory: item.subcategory || '',
+            student_price: item.student_price || undefined,
+            rating: 0,
+            reviews: 0,
+            tags: [],
+            specifications: {}
+          }))
+          setProducts(mappedProducts)
+          console.log('Loaded power products:', mappedProducts.length)
+        } else {
+          setError('Failed to load products')
+        }
+      } catch (error) {
+        console.error('Error loading products:', error)
+        setError('Failed to load products')
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    loadProducts()
+  }, [])
+
   // Get all power components from unified system
-  const allPowerData = getProductsByType('power-component')
+  const allPowerData = products
   
   // Get unique subcategories from the unified data
   const powerSubcategories = useMemo(() => {
@@ -66,9 +131,9 @@ export function PowerCategory() {
     // Availability filter
     if (availabilityFilter !== "all") {
       filtered = filtered.filter(product => {
-        if (availabilityFilter === "in-stock") return product.inStock && product.stockLevel > 0
-        if (availabilityFilter === "out-of-stock") return !product.inStock || product.stockLevel === 0
-        if (availabilityFilter === "low-stock") return product.inStock && product.stockLevel > 0 && product.stockLevel <= 10
+        if (availabilityFilter === "in-stock") return product.stock_status === "in-stock"
+        if (availabilityFilter === "out-of-stock") return product.stock_status === "out-of-stock"
+        if (availabilityFilter === "low-stock") return product.stock_status === "low-stock"
         return true
       })
     }
@@ -85,7 +150,7 @@ export function PowerCategory() {
         case 'rating':
           return b.rating - a.rating
         case 'availability':
-          return b.stockLevel - a.stockLevel
+          return b.stock_quantity - a.stock_quantity
         default:
           return 0
       }
@@ -99,7 +164,7 @@ export function PowerCategory() {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image,
+      image: product.images?.[0] || '',
       sku: product.id
     })
   }
@@ -321,8 +386,8 @@ function PowerProductCard({
   getCategoryIcon: (subcategory: string) => JSX.Element
 }) {
   const getStockStatus = () => {
-    if (!product.inStock || product.stockLevel === 0) return { text: "Out of Stock", color: "bg-error text-on-error" }
-    if (product.stockLevel <= 10) return { text: "Low Stock", color: "bg-warning text-on-warning" }
+    if (product.stock_status === "out-of-stock") return { text: "Out of Stock", color: "bg-error text-on-error" }
+    if (product.stock_status === "low-stock") return { text: "Low Stock", color: "bg-warning text-on-warning" }
     return { text: "In Stock", color: "bg-success text-on-success" }
   }
 
@@ -357,9 +422,9 @@ function PowerProductCard({
             <div className="text-xl font-bold text-primary mb-2">
               UGX {product.price.toLocaleString()}
             </div>
-            {product.studentPrice && (
+            {product.student_price && (
               <div className="text-sm text-success mb-2">
-                Student: UGX {product.studentPrice.toLocaleString()}
+                Student: UGX {product.student_price.toLocaleString()}
               </div>
             )}
             <Button
@@ -367,7 +432,7 @@ function PowerProductCard({
                 e.preventDefault()
                 onAddToCart(product)
               }}
-              disabled={!product.inStock || product.stockLevel === 0}
+              disabled={product.stock_status === "out-of-stock"}
               className="bg-primary hover:bg-primary/90 text-on-primary rounded-2xl"
             >
               <ShoppingCart className="mr-2 h-4 w-4" />
@@ -427,9 +492,9 @@ function PowerProductCard({
           <div className="text-xl font-bold text-primary">
             UGX {product.price.toLocaleString()}
           </div>
-          {product.studentPrice && (
+          {product.student_price && (
             <div className="text-xs text-success">
-              Student: UGX {product.studentPrice.toLocaleString()}
+              Student: UGX {product.student_price.toLocaleString()}
             </div>
           )}
         </div>
@@ -439,11 +504,11 @@ function PowerProductCard({
             e.preventDefault()
             onAddToCart(product)
           }}
-          disabled={!product.inStock || product.stockLevel === 0}
+          disabled={product.stock_status === "out-of-stock"}
           className="w-full bg-primary hover:bg-primary/90 text-on-primary rounded-2xl"
         >
           <ShoppingCart className="mr-2 h-4 w-4" />
-          {(!product.inStock || product.stockLevel === 0) ? 'Out of Stock' : 'Add to Cart'}
+          {product.stock_status === "out-of-stock" ? 'Out of Stock' : 'Add to Cart'}
         </Button>
       </div>
     </div>

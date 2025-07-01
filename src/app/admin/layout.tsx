@@ -46,9 +46,17 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const checkAdminAccess = async () => {
     try {
+      // Skip authentication check for login page
+      if (window.location.pathname === '/admin/login') {
+        setIsLoading(false)
+        setIsAuthorized(true)
+        return
+      }
+      
       const isAdmin = await authApi.isAdmin()
       if (!isAdmin) {
-        router.push('/')
+        // Redirect to admin login page instead of homepage
+        router.push('/admin/login')
         return
       }
 
@@ -57,11 +65,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         setUser(userResponse.data)
         setIsAuthorized(true)
       } else {
-        router.push('/')
+        router.push('/admin/login')
       }
     } catch (error) {
       console.error('Admin access check failed:', error)
-      router.push('/')
+      router.push('/admin/login')
     } finally {
       setIsLoading(false)
     }
@@ -85,6 +93,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
       </div>
     )
+  }
+
+  // For login page, render children without admin layout
+  if (window.location.pathname === '/admin/login') {
+    return <>{children}</>
   }
 
   if (!isAuthorized) {

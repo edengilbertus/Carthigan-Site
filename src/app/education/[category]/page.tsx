@@ -99,3 +99,4 @@ export async function generateMetadata({ params }: CategoryPageProps) {
     description: categoryInfo.description
   }
 }
+ 

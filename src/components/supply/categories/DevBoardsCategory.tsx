@@ -1,15 +1,35 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { Search, Grid, List, Filter, SortAsc } from "lucide-react"
+import Image from "next/image"
+import { Search, Grid, List, Filter, SortAsc, Package, AlertCircle } from "lucide-react"
 import { CategoryHeader } from "./CategoryHeader"
-import { getProductsByType } from "@/lib/data/unified-products"
+import { productApi } from "@/lib/api"
 import { useCartStore } from "@/lib/store/cart"
 
 type ViewMode = 'grid' | 'list'
 type SortOption = 'name' | 'price' | 'rating' | 'availability'
+
+interface Product {
+  id: string
+  name: string
+  description: string
+  price: number
+  student_price?: number
+  product_type: string
+  subcategory: string
+  stock_quantity: number
+  stock_status: string
+  is_active: boolean
+  images?: string[]
+  features?: string[]
+  rating: number
+  reviews: number
+  tags: string[]
+  specifications: Record<string, string>
+}
 
 export function DevBoardsCategory() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -17,10 +37,53 @@ export function DevBoardsCategory() {
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [sortBy, setSortBy] = useState<SortOption>('name')
   
+  // Database state
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  
   const { addItem } = useCartStore()
 
+  // Load products from database
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        const response = await productApi.getProducts({
+          type: 'dev-board',
+          limit: 1000
+        })
+        
+        if (response.success && response.data) {
+          const mappedProducts = response.data.items.map(item => ({
+            ...item,
+            subcategory: item.subcategory || '',
+            student_price: item.student_price || undefined,
+            rating: 0,
+            reviews: 0,
+            tags: [],
+            specifications: {}
+          }))
+          setProducts(mappedProducts)
+          console.log('Loaded dev board products:', mappedProducts.length)
+        } else {
+          setError('Failed to load products')
+        }
+      } catch (error) {
+        console.error('Error loading products:', error)
+        setError('Failed to load products')
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    loadProducts()
+  }, [])
+
   // Get all development board products from unified system
-  const allDevelopmentBoards = getProductsByType('development-board')
+  const allDevelopmentBoards = products
 
   // Get unique categories from the unified data
   const categories = useMemo(() => {
@@ -56,7 +119,7 @@ export function DevBoardsCategory() {
         case 'rating':
           return b.rating - a.rating
         case 'availability':
-          return b.stockLevel - a.stockLevel
+          return b.stock_quantity - a.stock_quantity
         default:
           return 0
       }
@@ -65,14 +128,37 @@ export function DevBoardsCategory() {
     return filtered
   }, [searchTerm, selectedCategory, sortBy, allDevelopmentBoards])
 
-  const handleAddToCart = (board: any) => {
+  const handleAddToCart = (board: Product) => {
     addItem({
       id: board.id,
       name: board.name,
       price: board.price,
-      image: board.image,
+      image: board.images?.[0] || '',
       sku: board.id
     })
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-32 pb-20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-on-surface/60">Loading development boards...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen pt-32 pb-20 flex items-center justify-center">
+        <div className="text-center">
+          <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-on-surface mb-2">Error Loading Products</h2>
+          <p className="text-on-surface/60">{error}</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -197,8 +283,8 @@ function DevBoardCard({ board, onAddToCart, viewMode }: {
   viewMode: ViewMode 
 }) {
   const getStockStatus = () => {
-    if (!board.inStock || board.stockLevel === 0) return { text: "Out of Stock", color: "bg-error text-on-error" }
-    if (board.stockLevel <= 10) return { text: "Low Stock", color: "bg-warning text-on-warning" }
+    if (!board.is_active || board.stock_quantity === 0) return { text: "Out of Stock", color: "bg-error text-on-error" }
+    if (board.stock_quantity <= 10) return { text: "Low Stock", color: "bg-warning text-on-warning" }
     return { text: "In Stock", color: "bg-success text-on-success" }
   }
 
@@ -208,11 +294,19 @@ function DevBoardCard({ board, onAddToCart, viewMode }: {
     return (
       <div className="bg-surface rounded-3xl border border-outline-variant/20 p-6 hover:shadow-lg transition-all duration-300">
         <div className="flex gap-6">
-          <img 
-            src={board.image} 
-            alt={board.name}
-            className="w-24 h-24 object-cover rounded-2xl bg-surface-variant"
-          />
+          <div className="w-24 h-24 bg-surface-variant rounded-2xl flex items-center justify-center relative overflow-hidden">
+            {board.images && board.images.length > 0 ? (
+              <Image
+                src={board.images[0]}
+                alt={board.name}
+                fill
+                className="object-contain p-2"
+                sizes="96px"
+              />
+            ) : (
+              <Package className="w-8 h-8 text-primary/40" />
+            )}
+          </div>
           <div className="flex-1">
             <div className="flex items-start justify-between mb-2">
               <div>
@@ -225,9 +319,9 @@ function DevBoardCard({ board, onAddToCart, viewMode }: {
                 <p className="text-2xl font-bold text-primary">
                   UGX {board.price.toLocaleString()}
                 </p>
-                {board.studentPrice && (
+                {board.student_price && (
                   <p className="text-sm text-success">
-                  Student: UGX {board.studentPrice.toLocaleString()}
+                  Student: UGX {board.student_price.toLocaleString()}
                 </p>
                 )}
               </div>
@@ -250,7 +344,7 @@ function DevBoardCard({ board, onAddToCart, viewMode }: {
               
               <button
                 onClick={() => onAddToCart(board)}
-                disabled={!board.inStock || board.stockLevel === 0}
+                disabled={!board.is_active || board.stock_quantity === 0}
                 className="px-6 py-2 bg-primary text-on-primary rounded-2xl font-medium hover:bg-primary/90 disabled:bg-surface-variant disabled:text-on-surface-variant transition-colors"
               >
                 Add to Cart
@@ -270,11 +364,19 @@ function DevBoardCard({ board, onAddToCart, viewMode }: {
       className="bg-surface rounded-3xl border border-outline-variant/20 overflow-hidden hover:shadow-lg transition-all duration-300"
     >
       <div className="aspect-square bg-surface-variant relative">
-        <img 
-          src={board.image} 
-          alt={board.name}
-          className="w-full h-full object-cover"
-        />
+        {board.images && board.images.length > 0 ? (
+          <Image
+            src={board.images[0]}
+            alt={board.name}
+            fill
+            className="object-contain p-4"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <Package className="w-16 h-16 text-primary/40" />
+          </div>
+        )}
         <span className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-medium ${stockStatus.color}`}>
           {stockStatus.text}
         </span>
@@ -311,9 +413,9 @@ function DevBoardCard({ board, onAddToCart, viewMode }: {
             <p className="text-lg font-bold text-primary">
               UGX {board.price.toLocaleString()}
             </p>
-            {board.studentPrice && (
+            {board.student_price && (
               <p className="text-xs text-success">
-              Student: UGX {board.studentPrice.toLocaleString()}
+              Student: UGX {board.student_price.toLocaleString()}
             </p>
             )}
           </div>
@@ -321,7 +423,7 @@ function DevBoardCard({ board, onAddToCart, viewMode }: {
         
         <button
           onClick={() => onAddToCart(board)}
-          disabled={!board.inStock || board.stockLevel === 0}
+          disabled={!board.is_active || board.stock_quantity === 0}
           className="w-full py-2 bg-primary text-on-primary rounded-2xl font-medium hover:bg-primary/90 disabled:bg-surface-variant disabled:text-on-surface-variant transition-colors"
         >
           Add to Cart

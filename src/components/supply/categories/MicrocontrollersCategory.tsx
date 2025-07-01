@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -25,10 +25,30 @@ import {
 } from "lucide-react"
 import { useCartStore } from "@/lib/store/cart"
 import { CategoryHeader } from "./CategoryHeader"
-import { getProductsByType } from "@/lib/data/unified-products"
+import { productApi } from "@/lib/api"
+import Image from "next/image"
 
 type ViewMode = "grid" | "list"
-type SortOption = "name" | "price" | "rating" | "popularity"
+type SortOption = "popularity" | "name" | "price" | "rating"
+
+interface Product {
+  id: string
+  name: string
+  description: string
+  price: number
+  student_price?: number
+  product_type: string
+  subcategory: string
+  stock_quantity: number
+  stock_status: string
+  is_active: boolean
+  images?: string[]
+  features?: string[]
+  rating: number
+  reviews: number
+  tags: string[]
+  specifications: Record<string, string>
+}
 
 export function MicrocontrollersCategory() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -38,38 +58,80 @@ export function MicrocontrollersCategory() {
   const [viewMode, setViewMode] = useState<ViewMode>("grid")
   const [sortBy, setSortBy] = useState<SortOption>("popularity")
   const [availabilityFilter, setAvailabilityFilter] = useState("all")
+  
+  // Database state
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const { addItem, toggleCart } = useCartStore()
 
-  // Get all microcontroller products from unified system
-  const allMicrocontrollerProducts = getProductsByType('mcu-chip')
+  // Load products from database
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        // Load microcontroller products from database
+        const response = await productApi.getProducts({
+          type: 'microcontroller',
+          limit: 1000 // Get all microcontroller products
+        })
+        
+        if (response.success && response.data) {
+          // Map database products to our interface, handling null values
+          const mappedProducts = response.data.items.map(item => ({
+            ...item,
+            subcategory: item.subcategory || '',
+            student_price: item.student_price || undefined,
+            rating: item.rating || 0,
+            reviews: item.reviews || 0,
+            tags: item.tags || [],
+            specifications: item.specifications || {}
+          }))
+          setProducts(mappedProducts)
+          console.log('Loaded microcontroller products:', mappedProducts.length)
+        } else {
+          setError('Failed to load products')
+          console.error('Failed to load products:', response.error)
+        }
+      } catch (error) {
+        console.error('Error loading products:', error)
+        setError('Failed to load products')
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    loadProducts()
+  }, [])
 
-  // Get unique subcategories and types
+  // Get unique subcategories and types from database products
   const subcategories = useMemo(() => {
-    const cats = allMicrocontrollerProducts.map(p => p.subcategory)
+    const cats = products.map(p => p.subcategory).filter(Boolean)
     return [...new Set(cats)]
-  }, [allMicrocontrollerProducts])
+  }, [products])
 
   const productTypes = useMemo(() => {
-    const types = allMicrocontrollerProducts.map(p => p.type || 'chip')
+    const types = products.map(p => p.product_type).filter(Boolean)
     return [...new Set(types)]
-  }, [allMicrocontrollerProducts])
+  }, [products])
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
-    let filtered = allMicrocontrollerProducts.filter(product => {
+    let filtered = products.filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          (product.tags || []).some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+                          product.description.toLowerCase().includes(searchTerm.toLowerCase())
       
       const matchesSubcategory = selectedSubcategory === "all" || product.subcategory === selectedSubcategory
-      const matchesType = selectedType === "all" || (product.type || 'chip') === selectedType
+      const matchesType = selectedType === "all" || product.product_type === selectedType
       const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1]
       
       const matchesAvailability = (() => {
-        if (availabilityFilter === "in-stock") return product.inStock && product.stockLevel > 0
-        if (availabilityFilter === "out-of-stock") return !product.inStock || product.stockLevel === 0
-        if (availabilityFilter === "low-stock") return product.inStock && product.stockLevel > 0 && product.stockLevel <= 30
+        if (availabilityFilter === "in-stock") return product.stock_status === 'in_stock' && product.stock_quantity > 0
+        if (availabilityFilter === "out-of-stock") return product.stock_status === 'out_of_stock' || product.stock_quantity === 0
+        if (availabilityFilter === "low-stock") return product.stock_status === 'low_stock' || (product.stock_quantity > 0 && product.stock_quantity <= 30)
         return true
       })()
 
@@ -81,59 +143,75 @@ export function MicrocontrollersCategory() {
       switch (sortBy) {
         case "name": return a.name.localeCompare(b.name)
         case "price": return a.price - b.price
-        case "rating": return b.rating - a.rating
-        case "popularity": return b.reviews - a.reviews
+        case "rating": return (b.rating || 0) - (a.rating || 0)
+        case "popularity": return (b.reviews || 0) - (a.reviews || 0)
         default: return 0
       }
     })
 
     return filtered
-  }, [searchTerm, selectedSubcategory, selectedType, priceRange, sortBy, availabilityFilter, allMicrocontrollerProducts])
+  }, [searchTerm, selectedSubcategory, selectedType, priceRange, sortBy, availabilityFilter, products])
 
-  const handleAddToCart = (product: any) => {
+  const handleAddToCart = (product: Product) => {
     addItem({
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image,
+      image: product.images?.[0] || '/images/placeholder-product.jpg',
       sku: product.id
     })
     toggleCart()
   }
 
-  const getStockStatus = (product: any) => {
-    if (!product.inStock || product.stockLevel === 0) return { text: "Out of Stock", color: "bg-error text-on-error" }
-    if (product.stockLevel <= 30) return { text: "Low Stock", color: "bg-warning text-on-warning" }
+  const getStockStatus = (product: Product) => {
+    if (product.stock_status === 'out_of_stock' || product.stock_quantity === 0) {
+      return { text: "Out of Stock", color: "bg-error text-on-error" }
+    }
+    if (product.stock_status === 'low_stock' || product.stock_quantity <= 30) {
+      return { text: "Low Stock", color: "bg-warning text-on-warning" }
+    }
     return { text: "In Stock", color: "bg-success text-on-success" }
   }
 
   const getTypeIcon = (type: string) => {
-    switch (type) {
-      case "chip": return <CircuitBoard className="h-4 w-4" />
-      case "board": return <Cpu className="h-4 w-4" />
-      default: return <Package className="h-4 w-4" />
-    }
+    if (type?.toLowerCase().includes('board')) return <Cpu className="h-4 w-4" />
+    if (type?.toLowerCase().includes('chip')) return <CircuitBoard className="h-4 w-4" />
+    return <Package className="h-4 w-4" />
   }
 
   const getCategoryDisplayName = (subcategory: string) => {
     const displayNames: Record<string, string> = {
-      "8bit-avr": "8-bit AVR Chips",
-      "arm-cortex-m4": "ARM Cortex-M4 Chips", 
-      "arm-cortex-m0plus": "ARM Cortex-M0+ Chips",
-      "wifi-bluetooth-soc": "Wi-Fi + Bluetooth SoCs",
-      "wifi-soc": "Wi-Fi SoCs",
-      "risc-v": "RISC-V Chips",
-      "high-performance-soc": "High-Performance SoCs",
-      "media-soc": "Media SoCs",
-      "arduino-boards": "Arduino Boards",
-      "esp32-boards": "ESP32 Boards",
-      "esp8266-boards": "ESP8266 Boards",
-      "stm32-boards": "STM32 Boards",
-      "raspberry-pi-boards": "Raspberry Pi Boards",
-      "seeed-boards": "Seeed Boards",
-      "teensy-boards": "Teensy Boards"
+      "microcontroller": "Microcontrollers",
+      "development-board": "Development Boards",
+      "arduino": "Arduino Compatible",
+      "esp32": "ESP32 Boards",
+      "stm32": "STM32 Boards",
+      "raspberry-pi": "Raspberry Pi"
     }
     return displayNames[subcategory] || subcategory.charAt(0).toUpperCase() + subcategory.slice(1).replace('-', ' ')
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-32 pb-20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-on-surface/60">Loading microcontroller products...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen pt-32 pb-20 flex items-center justify-center">
+        <div className="text-center">
+          <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-on-surface mb-2">Error Loading Products</h2>
+          <p className="text-on-surface/60">{error}</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -142,8 +220,7 @@ export function MicrocontrollersCategory() {
       <CategoryHeader
         title="Microcontrollers & MCU Chips"
         description="Complete microcontroller ecosystem - from development boards to bare silicon chips"
-        productCount={allMicrocontrollerProducts.length}
-        backgroundGradient="from-blue-600 via-purple-600 to-indigo-700"
+        productCount={products.length}
         icon={<Cpu className="h-8 w-8" />}
       />
 
@@ -231,7 +308,7 @@ export function MicrocontrollersCategory() {
                       <Wifi className="h-4 w-4 text-primary" />
                       <span className="text-sm">WiFi Capable</span>
                       <Badge className="bg-primary/10 text-primary text-xs">
-                        {allMicrocontrollerProducts.filter(p => 
+                        {products.filter(p => 
                           (p.specifications?.["Connectivity"] || "").toLowerCase().includes('wifi') ||
                           (p.tags || []).some(t => t.toLowerCase().includes('wifi'))
                         ).length}
@@ -241,7 +318,7 @@ export function MicrocontrollersCategory() {
                       <Bluetooth className="h-4 w-4 text-secondary" />
                       <span className="text-sm">Bluetooth</span>
                       <Badge className="bg-secondary/10 text-secondary text-xs">
-                        {allMicrocontrollerProducts.filter(p => 
+                        {products.filter(p => 
                           (p.specifications?.["Connectivity"] || "").toLowerCase().includes('bluetooth') ||
                           p.subcategory?.includes('bluetooth')
                         ).length}
@@ -251,7 +328,7 @@ export function MicrocontrollersCategory() {
                       <Brain className="h-4 w-4 text-purple-600" />
                       <span className="text-sm">RISC-V</span>
                       <Badge className="bg-purple-100 text-purple-600 text-xs">
-                        {allMicrocontrollerProducts.filter(p => 
+                        {products.filter(p => 
                           p.subcategory === 'risc-v' ||
                           (p.specifications?.["Architecture"] || "").toLowerCase().includes('risc-v') ||
                           (p.tags || []).some(t => t.toLowerCase().includes('risc-v'))
@@ -285,12 +362,12 @@ export function MicrocontrollersCategory() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-on-surface/70">Total Products</span>
-                  <Badge className="bg-primary/10 text-primary">{allMicrocontrollerProducts.length}</Badge>
+                  <Badge className="bg-primary/10 text-primary">{products.length}</Badge>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-on-surface/70">In Stock</span>
                   <Badge className="bg-success/10 text-success">
-                    {allMicrocontrollerProducts.filter(p => p.inStock && p.stockLevel > 0).length}
+                    {products.filter(p => p.stock_status === 'in_stock' && p.stock_quantity > 0).length}
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center">
@@ -307,7 +384,7 @@ export function MicrocontrollersCategory() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <div className="flex items-center gap-4">
                 <span className="text-sm text-on-surface/60">
-                  Showing {filteredProducts.length} of {allMicrocontrollerProducts.length} products
+                  Showing {filteredProducts.length} of {products.length} products
                 </span>
               </div>
 
@@ -343,8 +420,8 @@ export function MicrocontrollersCategory() {
                     <List className="h-4 w-4" />
                   </Button>
                 </div>
-                        </div>
-                      </div>
+              </div>
+            </div>
 
             {/* Products Grid */}
             {filteredProducts.length === 0 ? (
@@ -354,7 +431,7 @@ export function MicrocontrollersCategory() {
                 <p className="text-on-surface/60 mb-6">
                   Try adjusting your search criteria or filters
                 </p>
-                          <Button
+                <Button
                   onClick={() => {
                     setSearchTerm("")
                     setSelectedSubcategory("all")
@@ -364,8 +441,8 @@ export function MicrocontrollersCategory() {
                   className="bg-primary hover:bg-primary/90 text-on-primary rounded-2xl"
                 >
                   Clear All Filters
-                          </Button>
-                        </div>
+                </Button>
+              </div>
             ) : (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -405,21 +482,31 @@ export function MicrocontrollersCategory() {
 
 // Product Card Component
 function ProductCard({ product, onAddToCart, viewMode, getStockStatus, getTypeIcon }: { 
-  product: any
-  onAddToCart: (product: any) => void
+  product: Product
+  onAddToCart: (product: Product) => void
   viewMode: ViewMode
-  getStockStatus: (product: any) => { text: string; color: string }
+  getStockStatus: (product: Product) => { text: string; color: string }
   getTypeIcon: (type: string) => JSX.Element
 }) {
   const stockStatus = getStockStatus(product)
-  const type = product.type || 'chip'
+  const type = product.product_type || 'chip'
 
   if (viewMode === "list") {
     return (
       <div className="bg-surface rounded-3xl border border-outline-variant/20 p-6 hover:shadow-lg transition-all duration-300">
         <div className="flex gap-6">
-          <div className="w-20 h-20 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl flex items-center justify-center">
-            {getTypeIcon(type)}
+          <div className="w-20 h-20 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl flex items-center justify-center relative overflow-hidden">
+            {product.images && product.images.length > 0 ? (
+              <Image
+                src={product.images[0]}
+                alt={product.name}
+                fill
+                className="object-contain p-2"
+                sizes="80px"
+              />
+            ) : (
+              getTypeIcon(type)
+            )}
           </div>
           
           <div className="flex-1">
@@ -437,7 +524,7 @@ function ProductCard({ product, onAddToCart, viewMode, getStockStatus, getTypeIc
                 {stockStatus.text}
               </Badge>
               <Badge className="bg-secondary/10 text-secondary text-xs">
-                {product.subcategory.replace('-', ' ')}
+                {product.subcategory?.replace('-', ' ') || 'N/A'}
               </Badge>
             </div>
 
@@ -471,9 +558,9 @@ function ProductCard({ product, onAddToCart, viewMode, getStockStatus, getTypeIc
             <div className="text-xl font-bold text-primary mb-1">
               UGX {product.price.toLocaleString()}
             </div>
-            {product.studentPrice && (
+            {product.student_price && (
               <div className="text-sm text-success mb-3">
-                Student: UGX {product.studentPrice.toLocaleString()}
+                Student: UGX {product.student_price.toLocaleString()}
               </div>
             )}
             
@@ -482,7 +569,7 @@ function ProductCard({ product, onAddToCart, viewMode, getStockStatus, getTypeIc
                 e.preventDefault()
                 onAddToCart(product)
               }}
-              disabled={!product.inStock || product.stockLevel === 0}
+              disabled={product.stock_status !== 'in_stock' || product.stock_quantity === 0}
               className="bg-primary hover:bg-primary/90 text-on-primary rounded-2xl"
             >
               <ShoppingCart className="mr-2 h-4 w-4" />
@@ -497,9 +584,19 @@ function ProductCard({ product, onAddToCart, viewMode, getStockStatus, getTypeIc
   return (
     <div className="bg-surface rounded-3xl border border-outline-variant/20 overflow-hidden hover:shadow-xl transition-all duration-300 group">
       <div className="aspect-square bg-gradient-to-br from-primary/5 to-secondary/5 p-6 flex items-center justify-center relative">
-        <div className="text-4xl text-primary/30 group-hover:scale-110 transition-transform duration-300">
-          {getTypeIcon(type)}
-        </div>
+        {product.images && product.images.length > 0 ? (
+          <Image
+            src={product.images[0]}
+            alt={product.name}
+            fill
+            className="object-contain p-4"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="text-4xl text-primary/30 group-hover:scale-110 transition-transform duration-300">
+            {getTypeIcon(type)}
+          </div>
+        )}
         <Badge className="absolute top-3 right-3 bg-primary/10 text-primary text-xs">
           {type === 'chip' ? 'Chip' : 'Board'}
         </Badge>
@@ -507,7 +604,7 @@ function ProductCard({ product, onAddToCart, viewMode, getStockStatus, getTypeIc
       
       <div className="p-4">
         <Badge className="bg-secondary/10 text-secondary text-xs mb-2">
-          {product.subcategory.replace('-', ' ')}
+          {product.subcategory?.replace('-', ' ') || 'N/A'}
         </Badge>
         
         <h3 className="text-lg font-bold text-on-surface mb-2 line-clamp-2 group-hover:text-primary transition-colors">
@@ -551,9 +648,9 @@ function ProductCard({ product, onAddToCart, viewMode, getStockStatus, getTypeIc
           <div className="text-xl font-bold text-primary">
             UGX {product.price.toLocaleString()}
           </div>
-          {product.studentPrice && (
+          {product.student_price && (
             <div className="text-xs text-success">
-              Student: UGX {product.studentPrice.toLocaleString()}
+              Student: UGX {product.student_price.toLocaleString()}
             </div>
           )}
         </div>
@@ -563,11 +660,11 @@ function ProductCard({ product, onAddToCart, viewMode, getStockStatus, getTypeIc
             e.preventDefault()
             onAddToCart(product)
           }}
-          disabled={!product.inStock || product.stockLevel === 0}
-          className="w-full bg-primary hover:bg-primary/90 text-on-primary rounded-2xl group-hover:bg-secondary group-hover:text-on-secondary transition-colors"
+          disabled={product.stock_status !== 'in_stock' || product.stock_quantity === 0}
+          className="w-full bg-primary hover:bg-primary/90 text-on-primary rounded-2xl"
         >
           <ShoppingCart className="mr-2 h-4 w-4" />
-          {(!product.inStock || product.stockLevel === 0) ? 'Out of Stock' : 'Add to Cart'}
+          Add to Cart
         </Button>
       </div>
     </div>

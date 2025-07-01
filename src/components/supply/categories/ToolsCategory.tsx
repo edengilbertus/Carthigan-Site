@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -19,13 +20,33 @@ import {
   Shield,
   Settings,
   Eye,
-  TestTube
+  TestTube,
+  AlertCircle
 } from "lucide-react"
 import { useCartStore } from "@/lib/store/cart"
-import { allTools, toolCategories } from "@/lib/data/tools"
+import { productApi } from "@/lib/api"
 
 type ViewMode = "grid" | "list"
 type SortOption = "name" | "price" | "rating" | "popularity"
+
+interface Product {
+  id: string
+  name: string
+  description: string
+  price: number
+  student_price?: number
+  product_type: string
+  subcategory: string
+  stock_quantity: number
+  stock_status: string
+  is_active: boolean
+  images?: string[]
+  features?: string[]
+  rating: number
+  reviews: number
+  tags: string[]
+  specifications: Record<string, string>
+}
 
 export function ToolsCategory() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -33,16 +54,60 @@ export function ToolsCategory() {
   const [priceRange, setPriceRange] = useState([0, 600000])
   const [sortBy, setSortBy] = useState<SortOption>("popularity")
   const [viewMode, setViewMode] = useState<ViewMode>("grid")
+
+  // Database state
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
   const addToCart = useCartStore((state) => state.addItem)
 
+  // Load products from database
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        const response = await productApi.getProducts({
+          type: 'tool',
+          limit: 1000
+        })
+        
+        if (response.success && response.data) {
+          const mappedProducts = response.data.items.map(item => ({
+            ...item,
+            subcategory: item.subcategory || '',
+            student_price: item.student_price || item.price,
+            rating: 0,
+            reviews: 0,
+            tags: [],
+            specifications: {}
+          }))
+          setProducts(mappedProducts)
+          console.log('Loaded tool products:', mappedProducts.length)
+        } else {
+          setError('Failed to load products')
+        }
+      } catch (error) {
+        console.error('Error loading products:', error)
+        setError('Failed to load products')
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    loadProducts()
+  }, [])
+
   const filteredTools = useMemo(() => {
-    let filtered = allTools.filter(tool => {
+    let filtered = products.filter(tool => {
       const matchesSearch = tool.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           tool.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           tool.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
       
       const matchesSubcategory = selectedSubcategory === "all" || tool.subcategory === selectedSubcategory
-      const matchesPrice = tool.studentPrice >= priceRange[0] && tool.studentPrice <= priceRange[1]
+      const matchesPrice = tool.student_price >= priceRange[0] && tool.student_price <= priceRange[1]
       
       return matchesSearch && matchesSubcategory && matchesPrice
     })
@@ -53,7 +118,7 @@ export function ToolsCategory() {
         case "name":
           return a.name.localeCompare(b.name)
         case "price":
-          return a.studentPrice - b.studentPrice
+          return a.student_price - b.student_price
         case "rating":
           return b.rating - a.rating
         case "popularity":
@@ -64,14 +129,14 @@ export function ToolsCategory() {
     })
 
     return filtered
-  }, [searchTerm, selectedSubcategory, priceRange, sortBy])
+  }, [searchTerm, selectedSubcategory, priceRange, sortBy, products])
 
   const handleAddToCart = (tool: any) => {
     addToCart({
       id: tool.id,
       name: tool.name,
-      price: tool.studentPrice,
-      image: tool.image,
+      price: tool.student_price,
+      image: tool.images?.[0] || '',
       quantity: 1
     })
   }
@@ -132,11 +197,12 @@ export function ToolsCategory() {
                     : "text-gray-600 hover:bg-gray-50"
                 }`}
               >
-                All Tools ({allTools.length})
+                All Tools ({products.length})
               </button>
+              {/* Assuming toolCategories is defined somewhere in the code */}
               {toolCategories.map((category) => {
                 const IconComponent = subcategoryIcons[category.id as keyof typeof subcategoryIcons]
-                const count = allTools.filter(tool => tool.subcategory === category.id).length
+                const count = products.filter(tool => tool.subcategory === category.id).length
                 return (
                   <button
                     key={category.id}
@@ -231,7 +297,13 @@ export function ToolsCategory() {
                 {viewMode === "grid" ? (
                   <>
                     <div className="aspect-square bg-gray-100 flex items-center justify-center">
-                      <Package className="h-16 w-16 text-gray-400" />
+                      <Image
+                        src={tool.images?.[0] || '/placeholder.png'}
+                        alt={tool.name}
+                        width={128}
+                        height={128}
+                        className="h-16 w-16 object-cover"
+                      />
                     </div>
                     <div className="p-4">
                       <div className="flex items-start justify-between mb-2">
@@ -239,10 +311,10 @@ export function ToolsCategory() {
                           {tool.name}
                         </h3>
                         <Badge 
-                          variant={tool.inStock ? "default" : "secondary"}
+                          variant={tool.stock_status === "In Stock" ? "default" : "secondary"}
                           className="ml-2 text-xs"
                         >
-                          {tool.inStock ? "In Stock" : "Out of Stock"}
+                          {tool.stock_status}
                         </Badge>
                       </div>
                       
@@ -271,9 +343,9 @@ export function ToolsCategory() {
                       <div className="flex items-center justify-between mb-3">
                         <div>
                           <div className="text-lg font-bold text-gray-900">
-                            {tool.studentPrice.toLocaleString()} UGX
+                            {tool.student_price.toLocaleString()} UGX
                           </div>
-                          {tool.studentPrice < tool.price && (
+                          {tool.student_price < tool.price && (
                             <div className="text-xs text-gray-500 line-through">
                               {tool.price.toLocaleString()} UGX
                             </div>
@@ -290,7 +362,7 @@ export function ToolsCategory() {
                         <Button
                           size="sm"
                           onClick={() => handleAddToCart(tool)}
-                          disabled={!tool.inStock}
+                          disabled={tool.stock_status !== "In Stock"}
                           className="px-3"
                         >
                           <ShoppingCart className="h-4 w-4" />
@@ -301,7 +373,13 @@ export function ToolsCategory() {
                 ) : (
                   <>
                     <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Package className="h-8 w-8 text-gray-400" />
+                      <Image
+                        src={tool.images?.[0] || '/placeholder.png'}
+                        alt={tool.name}
+                        width={96}
+                        height={96}
+                        className="h-8 w-8 object-cover"
+                      />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-start justify-between mb-2">
@@ -309,9 +387,9 @@ export function ToolsCategory() {
                           {tool.name}
                         </h3>
                         <Badge 
-                          variant={tool.inStock ? "default" : "secondary"}
+                          variant={tool.stock_status === "In Stock" ? "default" : "secondary"}
                         >
-                          {tool.inStock ? "In Stock" : "Out of Stock"}
+                          {tool.stock_status}
                         </Badge>
                       </div>
                       <p className="text-sm text-gray-600 mb-2">
@@ -320,7 +398,7 @@ export function ToolsCategory() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <div className="text-xl font-bold text-gray-900">
-                            {tool.studentPrice.toLocaleString()} UGX
+                            {tool.student_price.toLocaleString()} UGX
                           </div>
                           <div className="flex items-center gap-1">
                             <Star className="h-4 w-4 text-yellow-400 fill-current" />
@@ -338,7 +416,7 @@ export function ToolsCategory() {
                           <Button
                             size="sm"
                             onClick={() => handleAddToCart(tool)}
-                            disabled={!tool.inStock}
+                            disabled={tool.stock_status !== "In Stock"}
                           >
                             <ShoppingCart className="h-4 w-4 mr-1" />
                             Add to Cart

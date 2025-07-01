@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -19,14 +20,34 @@ import {
   Wind,
   Zap,
   Waves,
-  Gauge
+  Gauge,
+  AlertCircle
 } from "lucide-react"
 import { CategoryHeader } from "./CategoryHeader"
-import { getProductsByType } from "@/lib/data/unified-products"
+import { productApi } from "@/lib/api"
 import { useCartStore } from "@/lib/store/cart"
 
 type ViewMode = 'grid' | 'list'
 type SortOption = 'name' | 'price-low' | 'price-high' | 'rating' | 'availability'
+
+interface Product {
+  id: string
+  name: string
+  description: string
+  price: number
+  student_price?: number
+  product_type: string
+  subcategory: string
+  stock_quantity: number
+  stock_status: string
+  is_active: boolean
+  images?: string[]
+  features?: string[]
+  rating: number
+  reviews: number
+  tags: string[]
+  specifications: Record<string, string>
+}
 
 export function SensorsCategory() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -37,10 +58,53 @@ export function SensorsCategory() {
   const [sortBy, setSortBy] = useState<SortOption>('name')
   const [showFilters, setShowFilters] = useState(false)
 
+  // Database state
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
   const { addItem } = useCartStore()
 
+  // Load products from database
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        const response = await productApi.getProducts({
+          type: 'sensor',
+          limit: 1000
+        })
+        
+        if (response.success && response.data) {
+          const mappedProducts = response.data.items.map(item => ({
+            ...item,
+            subcategory: item.subcategory || '',
+            student_price: item.student_price || undefined,
+            rating: 0,
+            reviews: 0,
+            tags: [],
+            specifications: {}
+          }))
+          setProducts(mappedProducts)
+          console.log('Loaded sensor products:', mappedProducts.length)
+        } else {
+          setError('Failed to load products')
+        }
+      } catch (error) {
+        console.error('Error loading products:', error)
+        setError('Failed to load products')
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    loadProducts()
+  }, [])
+
   // Get all sensor products
-  const allSensorProducts = getProductsByType('sensor-module')
+  const allSensorProducts = products
 
   // Get unique subcategories
   const subcategories = useMemo(() => {
@@ -57,8 +121,6 @@ export function SensorsCategory() {
       filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.subcategory.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
       )
     }
@@ -76,9 +138,9 @@ export function SensorsCategory() {
     // Availability filter
     if (availabilityFilter !== "all") {
       filtered = filtered.filter(product => {
-        if (availabilityFilter === "in-stock") return product.inStock && product.stockLevel > 0
-        if (availabilityFilter === "out-of-stock") return !product.inStock || product.stockLevel === 0
-        if (availabilityFilter === "low-stock") return product.inStock && product.stockLevel > 0 && product.stockLevel <= 10
+        if (availabilityFilter === "in-stock") return product.stock_status === "in-stock"
+        if (availabilityFilter === "out-of-stock") return product.stock_status === "out-of-stock"
+        if (availabilityFilter === "low-stock") return product.stock_status === "low-stock"
         return true
       })
     }
@@ -95,7 +157,7 @@ export function SensorsCategory() {
         case 'rating':
           return b.rating - a.rating
         case 'availability':
-          return b.stockLevel - a.stockLevel
+          return b.stock_quantity - a.stock_quantity
         default:
           return 0
       }
@@ -109,7 +171,7 @@ export function SensorsCategory() {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image,
+      image: product.images?.[0] || '',
       sku: product.id
     })
   }
@@ -127,6 +189,29 @@ export function SensorsCategory() {
     return subcategory.split('-').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' ')
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-32 pb-20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-on-surface/60">Loading sensors...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen pt-32 pb-20 flex items-center justify-center">
+        <div className="text-center">
+          <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-on-surface mb-2">Error Loading Products</h2>
+          <p className="text-on-surface/60">{error}</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -336,8 +421,8 @@ function ProductCard({ product, onAddToCart, viewMode }: {
   viewMode: ViewMode 
 }) {
   const getStockStatus = () => {
-    if (!product.inStock || product.stockLevel === 0) return { text: "Out of Stock", color: "bg-error text-on-error" }
-    if (product.stockLevel <= 10) return { text: "Low Stock", color: "bg-warning text-on-warning" }
+    if (product.stock_status === "out-of-stock") return { text: "Out of Stock", color: "bg-error text-on-error" }
+    if (product.stock_status === "low-stock") return { text: "Low Stock", color: "bg-warning text-on-warning" }
     return { text: "In Stock", color: "bg-success text-on-success" }
   }
 
@@ -347,8 +432,18 @@ function ProductCard({ product, onAddToCart, viewMode }: {
     return (
       <div className="bg-surface rounded-3xl border border-outline-variant/20 p-6 hover:shadow-lg transition-all duration-300">
         <div className="flex gap-6">
-          <div className="w-24 h-24 bg-surface-variant/30 rounded-2xl flex items-center justify-center">
-            <Package className="w-8 h-8 text-primary/40" />
+          <div className="w-24 h-24 bg-surface-variant/30 rounded-2xl flex items-center justify-center relative overflow-hidden">
+            {product.images && product.images.length > 0 ? (
+              <Image
+                src={product.images[0]}
+                alt={product.name}
+                fill
+                className="object-contain p-2"
+                sizes="96px"
+              />
+            ) : (
+              <Package className="w-8 h-8 text-primary/40" />
+            )}
           </div>
           
           <div className="flex-1">
@@ -368,9 +463,9 @@ function ProductCard({ product, onAddToCart, viewMode }: {
             <div className="text-xl font-bold text-primary mb-2">
               UGX {product.price.toLocaleString()}
             </div>
-            {product.studentPrice && (
+            {product.student_price && (
               <div className="text-sm text-success mb-2">
-                Student: UGX {product.studentPrice.toLocaleString()}
+                Student: UGX {product.student_price.toLocaleString()}
               </div>
             )}
             <Button
@@ -378,7 +473,7 @@ function ProductCard({ product, onAddToCart, viewMode }: {
                 e.preventDefault()
                 onAddToCart(product)
               }}
-              disabled={!product.inStock || product.stockLevel === 0}
+              disabled={product.stock_status === "out-of-stock"}
               className="bg-primary hover:bg-primary/90 text-on-primary rounded-2xl"
             >
               <ShoppingCart className="mr-2 h-4 w-4" />
@@ -392,8 +487,18 @@ function ProductCard({ product, onAddToCart, viewMode }: {
 
   return (
     <div className="bg-surface rounded-3xl border border-outline-variant/20 overflow-hidden hover:shadow-xl transition-all duration-300">
-      <div className="aspect-square bg-surface-variant/30 p-4 flex items-center justify-center">
-        <Package className="w-16 h-16 text-primary/40" />
+      <div className="aspect-square bg-surface-variant/30 p-4 flex items-center justify-center relative">
+        {product.images && product.images.length > 0 ? (
+          <Image
+            src={product.images[0]}
+            alt={product.name}
+            fill
+            className="object-contain p-4"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        ) : (
+          <Package className="w-16 h-16 text-primary/40" />
+        )}
       </div>
       
       <div className="p-4">
@@ -435,9 +540,9 @@ function ProductCard({ product, onAddToCart, viewMode }: {
           <div className="text-xl font-bold text-primary">
             UGX {product.price.toLocaleString()}
           </div>
-          {product.studentPrice && (
+          {product.student_price && (
             <div className="text-xs text-success">
-              Student: UGX {product.studentPrice.toLocaleString()}
+              Student: UGX {product.student_price.toLocaleString()}
             </div>
           )}
         </div>
@@ -447,11 +552,11 @@ function ProductCard({ product, onAddToCart, viewMode }: {
             e.preventDefault()
             onAddToCart(product)
           }}
-          disabled={!product.inStock || product.stockLevel === 0}
+          disabled={product.stock_status === "out-of-stock"}
           className="w-full bg-primary hover:bg-primary/90 text-on-primary rounded-2xl"
         >
           <ShoppingCart className="mr-2 h-4 w-4" />
-          {(!product.inStock || product.stockLevel === 0) ? 'Out of Stock' : 'Add to Cart'}
+          {product.stock_status === "out-of-stock" ? 'Out of Stock' : 'Add to Cart'}
         </Button>
       </div>
     </div>

@@ -36,17 +36,36 @@ export default function BlogsPage() {
   const loadBlogs = async () => {
     try {
       setLoading(true)
-      const response = await blogApi.getBlogs({
-        status: 'all', // Show all statuses in admin
+      
+      // Try admin API first, fallback to direct query if needed
+      const response = await blogApi.getBlogsForAdmin({
+        search: searchQuery,
         page: 1,
         limit: 50
       })
 
       if (response.success && response.data) {
         setBlogs(response.data.items)
+      } else {
+        console.log('Admin API failed, trying regular API:', response.error)
+        
+        // Fallback to regular blog API but include all statuses for admin
+        const fallbackResponse = await blogApi.getBlogs({
+          page: 1,
+          limit: 50,
+          includeAllStatuses: true
+        })
+        
+        if (fallbackResponse.success && fallbackResponse.data) {
+          setBlogs(fallbackResponse.data.items)
+        } else {
+          console.error('All API calls failed:', fallbackResponse.error)
+          setBlogs([])
+        }
       }
     } catch (error) {
       console.error('Failed to load blogs:', error)
+      setBlogs([])
     } finally {
       setLoading(false)
     }

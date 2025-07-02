@@ -4,7 +4,7 @@ import { Navigation } from "@/components/sections/Navigation"
 import { Hero } from "@/components/sections/Hero"
 import { CorePhilosophy } from "@/components/sections/CorePhilosophy"
 import { Services } from "@/components/sections/Services"
-import { Pulse } from "@/components/sections/Pulse"
+import Pulse from "@/components/sections/Pulse"
 import { Roadmap } from "@/components/sections/Roadmap"
 import { Footer } from "@/components/sections/Footer"
 

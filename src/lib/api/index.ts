@@ -523,6 +523,7 @@ export const blogApi = {
     category?: string
     status?: string
     featured?: boolean
+    includeAllStatuses?: boolean
   }): Promise<PaginatedResponse<Blog>> {
     const page = params?.page || 1
     const limit = params?.limit || 10
@@ -532,10 +533,13 @@ export const blogApi = {
       .from('blogs')
       .select('*', { count: 'exact' })
 
-    if (params?.status) {
-      query = query.eq('status', params.status)
-    } else {
-      query = query.eq('status', 'published')
+    // Only filter by status if not explicitly requesting all statuses
+    if (!params?.includeAllStatuses) {
+      if (params?.status) {
+        query = query.eq('status', params.status)
+      } else {
+        query = query.eq('status', 'published')
+      }
     }
 
     if (params?.featured) {
@@ -543,7 +547,59 @@ export const blogApi = {
     }
 
     query = query
-      .order('published_at', { ascending: false })
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1)
+
+    const result = await query
+
+    if (result.error) {
+      return {
+        data: null,
+        error: result.error.message,
+        success: false
+      }
+    }
+
+    const totalCount = result.count || 0
+    const totalPages = Math.ceil(totalCount / limit)
+
+    return {
+      data: {
+        items: result.data || [],
+        totalCount,
+        page,
+        limit,
+        totalPages
+      },
+      error: null,
+      success: true
+    }
+  },
+
+  async getBlogsForAdmin(params?: {
+    page?: number
+    limit?: number
+    search?: string
+  }): Promise<PaginatedResponse<Blog>> {
+    const isAdmin = await authApi.isAdmin()
+    if (!isAdmin) {
+      return { data: null, error: 'Unauthorized', success: false }
+    }
+
+    const page = params?.page || 1
+    const limit = params?.limit || 50
+    const offset = (page - 1) * limit
+
+    let query = supabase
+      .from('blogs')
+      .select('*', { count: 'exact' })
+
+    if (params?.search) {
+      query = query.or(`title.ilike.%${params.search}%,content.ilike.%${params.search}%`)
+    }
+
+    query = query
+      .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
     const result = await query

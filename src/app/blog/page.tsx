@@ -24,7 +24,7 @@ export default async function BlogPage() {
   try {
     const response = await blogApi.getBlogs({
       page: 1,
-      limit: 20
+      limit: 6
     })
     if (response.success && response.data) {
       initialBlogs = response.data.items

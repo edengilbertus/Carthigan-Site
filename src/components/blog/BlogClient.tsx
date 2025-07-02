@@ -41,8 +41,12 @@ const categories = [
 export default function BlogClient({ initialBlogs = [] }: BlogClientProps) {
   const [blogs, setBlogs] = useState<Blog[]>(initialBlogs)
   const [loading, setLoading] = useState(!initialBlogs.length)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [featuredBlog, setFeaturedBlog] = useState<Blog | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [hasMoreBlogs, setHasMoreBlogs] = useState(true)
+  const [totalBlogs, setTotalBlogs] = useState(0)
 
   useEffect(() => {
     if (!initialBlogs.length) {
@@ -51,34 +55,63 @@ export default function BlogClient({ initialBlogs = [] }: BlogClientProps) {
       // Set featured blog from initial data
       const featured = initialBlogs.find(blog => blog.is_featured)
       setFeaturedBlog(featured || initialBlogs[0])
+      // Initialize pagination state
+      setTotalBlogs(initialBlogs.length)
+      setCurrentPage(1)
+      // Assume there might be more if we have exactly 6 or more
+      setHasMoreBlogs(initialBlogs.length >= 6)
     }
   }, [initialBlogs])
 
-  const loadBlogs = async () => {
+  const loadBlogs = async (page = 1, append = false) => {
     try {
-      setLoading(true)
+      if (!append) {
+        setLoading(true)
+      } else {
+        setLoadingMore(true)
+      }
+      
       const response = await blogApi.getBlogs({
-        status: 'published',
-        page: 1,
-        limit: 20
+        page: page,
+        limit: 6 // Load 6 at a time for better UX
       })
 
       if (response.success && response.data) {
-        setBlogs(response.data.items)
-        const featured = response.data.items.find(blog => blog.is_featured)
-        setFeaturedBlog(featured || response.data.items[0])
+        const newBlogs = response.data.items
+        
+        if (append) {
+          // Filter out any blogs that already exist to prevent duplicates
+          const existingIds = new Set(blogs.map(blog => blog.id))
+          const uniqueNewBlogs = newBlogs.filter(blog => !existingIds.has(blog.id))
+          setBlogs(prevBlogs => [...prevBlogs, ...uniqueNewBlogs])
+        } else {
+          setBlogs(newBlogs)
+          const featured = newBlogs.find(blog => blog.is_featured)
+          setFeaturedBlog(featured || newBlogs[0])
+        }
+        
+        setTotalBlogs(response.data.totalCount)
+        setCurrentPage(page)
+        setHasMoreBlogs(newBlogs.length === 6 && page < response.data.totalPages)
       }
     } catch (error) {
       console.error('Failed to load blogs:', error)
     } finally {
       setLoading(false)
+      setLoadingMore(false)
+    }
+  }
+
+  const loadMoreBlogs = async () => {
+    if (!loadingMore && hasMoreBlogs) {
+      await loadBlogs(currentPage + 1, true)
     }
   }
 
   const filteredBlogs = selectedCategory === "All" 
-    ? blogs.filter(blog => !blog.is_featured) // Don't show featured blog in regular list
+    ? blogs.filter(blog => featuredBlog ? blog.id !== featuredBlog.id : true) // Don't show featured blog in regular list
     : blogs.filter(blog => 
-        !blog.is_featured && 
+        (featuredBlog ? blog.id !== featuredBlog.id : true) && 
         blog.tags.some(tag => 
           tag.toLowerCase().includes(selectedCategory.toLowerCase()) ||
           selectedCategory.toLowerCase().includes(tag.toLowerCase())
@@ -194,41 +227,47 @@ export default function BlogClient({ initialBlogs = [] }: BlogClientProps) {
 
           {/* Featured Post */}
           {featuredBlog && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-              <div className="relative aspect-[16/9] rounded-2xl overflow-hidden">
-                <Image
-                  src={featuredBlog.featured_image || "https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg"}
-                  alt={featuredBlog.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div>
-                <span className="inline-block px-4 py-1 rounded-full text-xs font-medium bg-black/5 text-black mb-4">
-                  {featuredBlog.tags[0] || 'Featured'}
-                </span>
-                <h2 className="text-3xl font-display font-semibold mb-4 text-black">
-                  {featuredBlog.title}
-                </h2>
-                <p className="text-black/60 mb-6">
-                  {featuredBlog.excerpt}
-                </p>
-                <div className="flex items-center gap-4 text-sm text-black/40">
-                  <span>By Carthigan</span>
-                  <span>•</span>
-                  <span>{getReadTime(featuredBlog.content)} read</span>
-                  <span>•</span>
-                  <span>{formatDate(featuredBlog.published_at || featuredBlog.created_at)}</span>
+            <Link href={`/blog/${featuredBlog.slug}`} className="block group mb-20">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="relative aspect-[16/9] rounded-2xl overflow-hidden">
+                  <Image
+                    src={featuredBlog.featured_image || "https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg"}
+                    alt={featuredBlog.title}
+                    fill
+                    className="object-cover filter grayscale group-hover:grayscale-0 transform group-hover:scale-105 transition duration-700"
+                  />
+                </div>
+                <div>
+                  <span className="inline-block px-4 py-1 rounded-full text-xs font-medium bg-black/5 text-black mb-4">
+                    {featuredBlog.tags[0] || 'Featured'}
+                  </span>
+                  <h2 className="text-3xl font-display font-semibold mb-4 text-black group-hover:text-accent transition-colors">
+                    {featuredBlog.title}
+                  </h2>
+                  <p className="text-black/60 mb-6">
+                    {featuredBlog.excerpt}
+                  </p>
+                  <div className="flex items-center gap-4 text-sm text-black/40">
+                    <span>By Carthigan</span>
+                    <span>•</span>
+                    <span>{getReadTime(featuredBlog.content)} read</span>
+                    <span>•</span>
+                    <span>{formatDate(featuredBlog.published_at || featuredBlog.created_at)}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           )}
 
           {/* Latest Posts Grid */}
           {filteredBlogs.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {filteredBlogs.map((blog) => (
-                <div key={blog.id} className="group relative overflow-hidden rounded-2xl bg-white shadow-medium border border-black/5">
+                <Link 
+                  key={blog.id} 
+                  href={`/blog/${blog.slug}`}
+                  className="group relative overflow-hidden rounded-2xl bg-white shadow-medium border border-black/5 block"
+                >
                   <div className="aspect-[16/9] relative overflow-hidden">
                     <Image
                       src={blog.featured_image || "https://images.pexels.com/photos/1036936/pexels-photo-1036936.jpeg"}
@@ -260,7 +299,7 @@ export default function BlogClient({ initialBlogs = [] }: BlogClientProps) {
                     </div>
                   </div>
                   <div className="absolute bottom-0 left-0 w-full h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (
@@ -270,11 +309,29 @@ export default function BlogClient({ initialBlogs = [] }: BlogClientProps) {
           )}
 
           {/* Load More Button */}
-          {filteredBlogs.length > 0 && (
+          {filteredBlogs.length > 0 && hasMoreBlogs && (
             <div className="text-center mt-16">
-              <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all disabled:pointer-events-none disabled:opacity-50 shadow-xs h-9 bg-black hover:bg-black/90 text-white rounded-full px-8 py-6 text-lg shadow-soft">
-                Load More Articles
+              <button 
+                onClick={loadMoreBlogs}
+                disabled={loadingMore}
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-all disabled:pointer-events-none disabled:opacity-50 shadow-xs h-9 bg-black hover:bg-black/90 text-white rounded-full px-8 py-6 text-lg shadow-soft"
+              >
+                {loadingMore ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Loading...
+                  </>
+                ) : (
+                  'Load More Articles'
+                )}
               </button>
+            </div>
+          )}
+          
+          {/* No more articles message */}
+          {filteredBlogs.length > 0 && !hasMoreBlogs && totalBlogs > 6 && (
+            <div className="text-center mt-16">
+              <p className="text-black/60">You've reached the end of our blog posts!</p>
             </div>
           )}
         </div>

@@ -1,1 +1,19 @@
- 
+<svg width="400" height="225" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="webBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#61DAFB;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#21232A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F7DF1E;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="225" fill="url(#webBg)"/>
+  <rect x="50" y="50" width="300" height="125" fill="#1a1a1a" stroke="#61DAFB" stroke-width="2"/>
+  <rect x="60" y="60" width="280" height="20" fill="#333"/>
+  <circle cx="70" cy="70" r="6" fill="#FF5F56"/>
+  <circle cx="90" cy="70" r="6" fill="#FFBD2E"/>
+  <circle cx="110" cy="70" r="6" fill="#27CA3F"/>
+  <text x="70" y="105" fill="#61DAFB" font-family="monospace" font-size="12">&lt;div className="app"&gt;</text>
+  <text x="70" y="125" fill="#F7DF1E" font-family="monospace" font-size="12">  React.js</text>
+  <text x="70" y="145" fill="#61DAFB" font-family="monospace" font-size="12">&lt;/div&gt;</text>
+  <text x="200" y="200" text-anchor="middle" fill="white" font-family="Arial" font-size="16" font-weight="bold">Full Stack Development</text>
+</svg> 

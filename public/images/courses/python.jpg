@@ -1,1 +1,13 @@
- 
+<svg width="400" height="225" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="pythonBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3776ab;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffd43b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="225" fill="url(#pythonBg)"/>
+  <circle cx="200" cy="112" r="50" fill="#3776ab"/>
+  <circle cx="185" cy="100" r="8" fill="#ffd43b"/>
+  <circle cx="215" cy="124" r="8" fill="#ffd43b"/>
+  <text x="200" y="190" text-anchor="middle" fill="white" font-family="Arial" font-size="18" font-weight="bold">Python Programming</text>
+</svg> 
